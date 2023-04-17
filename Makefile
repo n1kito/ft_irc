@@ -50,9 +50,12 @@ fclean: clean
 
 re: fclean all
 
+run: all
+	@./${NAME} 1.1.1.1 8080
+
 -include $(OBJ_FILES:%.o=%.d)
 
-.PHONY: all clean fclean re title
+.PHONY: all clean fclean re title run
 
 #░░░░█░█░▀█▀░▀█▀░█░░░▀█▀░▀█▀░▀█▀░█▀▀░█▀▀░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
 #░░░░█░█░░█░░░█░░█░░░░█░░░█░░░█░░█▀▀░▀▀█░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
