@@ -7,10 +7,10 @@ void	checkArguments(const int& argc, char** arguments, int& port, std::string& p
 		throw std::invalid_argument("wrong argument count. Usage: ./ircserv <PORT> <PASSWORD>");
 	std::string			portStr(arguments[1]);
 	if (portStr.length() > 5)
-		throw std::invalid_argument("port value is too large");
+		throw std::invalid_argument("port value is too long");
 	for (size_t i = 0; arguments[1][i]; ++i)
 		if (!isdigit(static_cast<int>(arguments[1][i])))
-			throw std::invalid_argument("port number can only cotnain digits");
+			throw std::invalid_argument("port number can only contain digits");
 	port = -1;
 	std::stringstream	argumentStream;
 	argumentStream << arguments[1];
@@ -18,8 +18,7 @@ void	checkArguments(const int& argc, char** arguments, int& port, std::string& p
 	// TODO is this check enough for cases where user passes port like 8080a ?
 	if (port == -1 || port > 65535)
 		throw std::invalid_argument("invalid port value");
-	argumentStream << arguments[2];
-	argumentStream >> password;
+	password = std::string(arguments[2]);
 	// Check that password is not too short
 	if (password.length() < 12)
 		throw std::invalid_argument("password too short");
@@ -32,7 +31,7 @@ void	checkArguments(const int& argc, char** arguments, int& port, std::string& p
 		if (password[i] == ' ' || password[i] == '\t')
 			throw std::invalid_argument("password contains whitespaces");
 		else if (isupper(static_cast<int>(password[i])))
-			containsUppercase = false;
+			containsUppercase = true;
 		else if (islower(static_cast<int>(password[i])))
 			containsLowercase = true;
 		else if (isdigit(static_cast<int>(password[i])))
@@ -42,6 +41,7 @@ void	checkArguments(const int& argc, char** arguments, int& port, std::string& p
 		else
 			throw std::invalid_argument("password contains forbidden characters. Allowed: [a-z], [A-Z], [! - #]");
 	}
+	// TODO error when using ! in the password
 	if (containsLowercase == false)
 		throw std::invalid_argument("password must contain at least one lowercase letter");
 	else if (containsUppercase == false)
@@ -49,12 +49,12 @@ void	checkArguments(const int& argc, char** arguments, int& port, std::string& p
 	else if (containsDigits == false)
 		throw std::invalid_argument("password must contain at least one digit");
 	else if (containsSpecialChar == false)
-		throw std::invalid_argument("password must contain at least one special character. Allowed: [! - #] ");
+		throw std::invalid_argument("password must contain at least one special character. Allowed: [_ - #] ");
 }
 
 // Not really needed in a separate function
 // but useful if we want to accept more special characters later on.
 bool	isSpecialCharacter(char checkMe)
 {
-	return (checkMe == '!' || checkMe == '-' || checkMe == '#');
+	return (checkMe == '_' || checkMe == '-' || checkMe == '#');
 }

@@ -22,6 +22,10 @@
 # define WHITE_BLOC "\033[30;47m"
 # define YELLOW_BLOC "\033[30;43m"
 # define RED_BLOC "\033[30;41m"
+# define UNDERLINE "\033[4m"
+# define DIM "\033[2m"
+# define BOLD "\033[1m"
+# define ITALIC "\033[3m"
 # define RESET "\033[0m"
 
 #include <iostream>
@@ -34,6 +38,8 @@
 #include <cstring>
 #include <sstream>
 #include <cctype>
+#include <limits>
+#include <iostream>
 
 // Prototypes
 
