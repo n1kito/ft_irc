@@ -9,7 +9,11 @@ CXX_FLAGS		:=	-g -Wall -Wextra -Werror -std=c++98
 
 BIN_DIR			:=	bin
 
-SRC_FILES		:=	main
+SRC_FILES		:=	main\
+					Server\
+					Client\
+					Command\
+					utils
 OBJ_FILES		:=	$(addprefix $(BIN_DIR)/, $(addsuffix .o, $(SRC_FILES)))
 OBJ_TEST_FILES	:=	$(addprefix $(BIN_DIR)/, $(addsuffix .o, $(SRC_TEST_FILES)))
 SRC_DIR			:=	src
