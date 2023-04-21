@@ -39,7 +39,7 @@ void	checkArguments(const int& argc, char** arguments, int& port, std::string& p
 		else if (isSpecialCharacter(password[i]))
 			containsSpecialChar = true;
 		else
-			throw std::invalid_argument("password contains forbidden characters. Allowed: [a-z], [A-Z], [- _ #]");
+			throw std::invalid_argument("password contains forbidden characters. Allowed: [a-z], [A-Z], [- . @]");
 	}
 	if (containsLowercase == false)
 		throw std::invalid_argument("password must contain at least one lowercase letter");
@@ -48,12 +48,12 @@ void	checkArguments(const int& argc, char** arguments, int& port, std::string& p
 	else if (containsDigits == false)
 		throw std::invalid_argument("password must contain at least one digit");
 	else if (containsSpecialChar == false)
-		throw std::invalid_argument("password must contain at least one special character. Allowed: [- _ #]");
+		throw std::invalid_argument("password must contain at least one special character. Allowed: [- . @]");
 }
 
 // Not really needed in a separate function
 // but useful if we want to accept more special characters later on.
 bool	isSpecialCharacter(char checkMe)
 {
-	return (checkMe == '_' || checkMe == '-' || checkMe == '#');
+	return (checkMe == '-' || checkMe == '.' || checkMe == '@');
 }
