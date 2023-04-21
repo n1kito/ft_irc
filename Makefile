@@ -12,7 +12,7 @@ BIN_DIR			:=	bin
 SRC_FILES		:=	main\
 					Server\
 					Client\
-					Command\
+					ACommand\
 					utils
 OBJ_FILES		:=	$(addprefix $(BIN_DIR)/, $(addsuffix .o, $(SRC_FILES)))
 OBJ_TEST_FILES	:=	$(addprefix $(BIN_DIR)/, $(addsuffix .o, $(SRC_TEST_FILES)))

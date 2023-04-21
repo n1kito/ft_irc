@@ -24,6 +24,8 @@
 # define RED_BLOC "\033[30;41m"
 # define RESET "\033[0m"
 
+# define PRINT(x,y) std::cout << x << ": " << y << std::endl
+
 #include <iostream>
 #include <sys/socket.h>
 #include <netinet/in.h>

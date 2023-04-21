@@ -2,11 +2,13 @@
 # define SERVER_HPP
 
 #include "Client.hpp"
-#include "Command.hpp"
+#include "ACommand.hpp"
 #include "ft_irc.hpp"
 #include <map>
 #include <sys/epoll.h>
+#include <cstdarg> // for va_arg
 // #include <cerrno>
+#include <vector>
 
 #define MAX_EVENTS 10
 
@@ -19,15 +21,18 @@ class Server
 		int									getPort() const;
 		std::string							getPassword() const;
 		std::map< int, Client >				getClients() const;
-		std::map< std::string, Command >	getCommands() const;
+		std::map< std::string, ACommand* >	getCommands() const;
 
 		void								setPort( int port );
 		void								setPassword( std::string password );
 		void								setClients( std::map< int, Client > clients );
-		void								setCommands( std::map< std::string, Command > commands );
+		void								setCommands( std::map< std::string, ACommand* > commands );
 
 		void								addClient( int fd, Client client );
 		void								removeClient( int fd );
+		void								handleRequest(const Client& client, const std::string& request);
+		void								sendNumericReplies(const Client& target, const int count, ...);
+
 	protected:
 		// add protected elements here
 
@@ -41,9 +46,8 @@ class Server
 		int									_port;
 		std::string							_password;
 		std::map< int, Client >				_clients;
-		std::map< std::string, Command >	_commands;
-		// add private elements here
-		
+		std::map< std::string, ACommand* >	_commands;
+		// TODO: add server creation date for RPL_YOURHOST 002
 		Server();
 
 

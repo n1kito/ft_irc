@@ -33,6 +33,20 @@ Client& Client::operator = (const Client &copyMe)
 	return *this;
 }
 
+/* ACCESSORS ******************************************************************/
+bool			Client::getRegisterState() const { return _isRegistered; }
+std::string		Client::getUsername() const { return _username; }
+std::string		Client::getRealname() const { return _realname; }
+std::string		Client::getNickname() const { return _nickname; }
+std::string		Client::getPassword() const { return _password; }
+
+void			Client::setRegisterState(bool state) { _isRegistered = state; }
+void			Client::setUsername(std::string username) { _username = username; }
+void			Client::setRealname(std::string realname) { _realname = realname; }
+void			Client::setNickname(std::string nickname) { _nickname = nickname; }
+void			Client::setPassword(std::string password) { _password = password; }
+
+
 /* METHODS ********************************************************************/
 
 

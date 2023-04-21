@@ -1,13 +1,13 @@
-#include "Command.hpp"
+#include "ACommand.hpp"
 
 /* CONSTRUCTORS ***************************************************************/
 
-Command::Command()
+ACommand::ACommand()
 {
 	// std::cout << "Default constructor called" << std::endl;
 }
 
-Command::Command(const Command &copyMe)
+ACommand::ACommand(const ACommand &copyMe)
 {
 	// std::cout << "Copy constructor called" << std::endl;
 	*this = copyMe;
@@ -15,14 +15,14 @@ Command::Command(const Command &copyMe)
 
 /* DESTRUCTORS ****************************************************************/
 
-Command::~Command()
+ACommand::~ACommand()
 {
 	// std::cout << "Destructor called" << std::endl;
 }
 
 /* OVERLOADS ******************************************************************/
 
-Command& Command::operator = (const Command &copyMe)
+ACommand& ACommand::operator = (const ACommand &copyMe)
 {
 	(void)copyMe;
 	// std::cout << "Copy assignment operator called" << std::endl;
