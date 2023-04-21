@@ -15,9 +15,12 @@ int	main(int argc, char* argv[])
 	try
 	{
 		errno = 0;
-		int			port = 0;
-		std::string	password;
-		checkArguments(argc, argv, port, password);
+		// int			port = 0;
+		// std::string	password;
+		// checkArguments(argc, argv, port, password);
+
+		(void)argc;
+		int port = 6667;
 		Server	server(port, argv[2]);
 		return (0);	
 	}
