@@ -21,7 +21,9 @@ void	checkArguments(const int& argc, char** arguments, int& port, std::string& p
 	password = std::string(arguments[2]);
 	// Check that password is not too short
 	if (password.length() < 12)
-		throw std::invalid_argument("password too short");
+		throw std::invalid_argument("password shorter than 12 characters");
+	else if (password.length() > 30)
+		throw std::invalid_argument("password longer than 30 characters");
 	bool	containsLowercase = false;
 	bool	containsUppercase = false;
 	bool	containsDigits = false;
