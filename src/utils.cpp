@@ -39,9 +39,8 @@ void	checkArguments(const int& argc, char** arguments, int& port, std::string& p
 		else if (isSpecialCharacter(password[i]))
 			containsSpecialChar = true;
 		else
-			throw std::invalid_argument("password contains forbidden characters. Allowed: [a-z], [A-Z], [! - #]");
+			throw std::invalid_argument("password contains forbidden characters. Allowed: [a-z], [A-Z], [- _ #]");
 	}
-	// TODO error when using ! in the password
 	if (containsLowercase == false)
 		throw std::invalid_argument("password must contain at least one lowercase letter");
 	else if (containsUppercase == false)
@@ -49,7 +48,7 @@ void	checkArguments(const int& argc, char** arguments, int& port, std::string& p
 	else if (containsDigits == false)
 		throw std::invalid_argument("password must contain at least one digit");
 	else if (containsSpecialChar == false)
-		throw std::invalid_argument("password must contain at least one special character. Allowed: [_ - #] ");
+		throw std::invalid_argument("password must contain at least one special character. Allowed: [- _ #]");
 }
 
 // Not really needed in a separate function
