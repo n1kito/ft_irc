@@ -8,6 +8,7 @@
 Server::Server() {}
 Server::Server(int port, std::string password) : _port(port), _password(password)
 {
+	initCommands();
 	std::cout << RPL_WELCOME("serveur", "nickname", "network") << std::endl;
 	// 1) SERVER SOCKET
 	// create ServerSocket
@@ -21,13 +22,13 @@ Server::Server(int port, std::string password) : _port(port), _password(password
 	if (setsockopt(serverSocket, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) < 0) {
         perror("Erreur lors de la configuration de setsockopt");
         close(serverSocket);
-        throw std::runtime_error("Erreur lors de la configuration de setsockopt");
+	    throw std::runtime_error("Erreur lors de la configuration de setsockopt");
     }
 	// configure address and port for server socket
 	struct sockaddr_in addr;
-    addr.sin_family = AF_INET;
-    addr.sin_addr.s_addr = htonl(INADDR_ANY);
-    addr.sin_port = htons(port);
+	addr.sin_family = AF_INET;
+	addr.sin_addr.s_addr = htonl(INADDR_ANY);
+	addr.sin_port = htons(port);
 
 	
 	// bind server socket
@@ -71,8 +72,8 @@ Server::Server(int port, std::string password) : _port(port), _password(password
 				struct sockaddr_in clientAddress;
 				socklen_t clientaddrlen = sizeof(clientAddress);
 				// int client_socket = accept(serverSocket, NULL, 0);
-				int client_socket = accept(serverSocket, (struct sockaddr *) &clientAddress, &clientaddrlen);	
-				if (client_socket == -1)
+				int clientSocket = accept(serverSocket, (struct sockaddr *) &clientAddress, &clientaddrlen);	
+				if (clientSocket == -1)
 				{
 					if ( errno != EAGAIN && errno != EWOULDBLOCK )
 						throw std::runtime_error("Error connecting with client");
@@ -81,9 +82,13 @@ Server::Server(int port, std::string password) : _port(port), _password(password
 				// add the new client socket to the epoll instance
 				struct epoll_event event;
 				event.events = EPOLLIN | EPOLLET;
-				event.data.fd = client_socket;
-				if (epoll_ctl(epollFd, EPOLL_CTL_ADD, client_socket, &event) == -1)
+				event.data.fd = clientSocket;
+				if (epoll_ctl(epollFd, EPOLL_CTL_ADD, clientSocket, &event) == -1)
 					throw std::runtime_error("Error adding client");
+				addClient(clientSocket, Client(clientSocket));
+				// Send RPL_WELCOME
+				// TODO: change values
+				send(clientSocket, RPL_WELCOME("pouet", "pouet", "pouet").c_str(), RPL_WELCOME("pouet", "pouet", "pouet").length(), 0);
 			}
 			else
 			{
@@ -103,11 +108,9 @@ Server::Server(int port, std::string password) : _port(port), _password(password
 				else
 				{
 					// process the data
-        			std::cout << "Received from client: " << MAGENTA << buffer << RESET << std::endl;
-					
-					send(clientSocket, RPL_WELCOME("pouet", "pouet", "pouet").c_str(), RPL_WELCOME("pouet", "pouet", "pouet").length(), 0);
-					// handleRequest(_clients[clientSocket], buffer);
-        			// send(clientSocket, response.c_str(), response.length(), 0);
+        			std::cout << "Received from client: " << "\"" << MAGENTA << buffer << RESET << "\"" << std::endl;
+        			// send(clientSocket, handleRequest(_clients[clientSocket], buffer), response.length(), 0);
+					handleRequest(_clients[clientSocket], buffer);
       			}
 			}
 		}
@@ -129,6 +132,11 @@ Server::Server(const Server &copyMe)
 Server::~Server()
 {
 	// std::cout << "Destructor called" << std::endl;
+	// while(_commands.size() != 0)
+	// {
+	// 	delete _commands[0].first;
+
+	// }
 }
 
 /* OVERLOADS ******************************************************************/
@@ -145,6 +153,7 @@ Server& Server::operator = (const Server &copyMe)
 int									Server::getPort() const { return _port; }
 std::string							Server::getPassword() const { return _password; }
 std::map< int, Client >				Server::getClients() const { return _clients; }
+const std::map< int, Client >*		Server::getClientsPtr() const { return &_clients; }
 std::map< std::string, ACommand* >	Server::getCommands() const { return _commands; }
 
 void								Server::setPort( int port ) { _port = port; };
@@ -183,11 +192,14 @@ void								Server::sendNumericReplies(const Client& target, const int count, ..
 	va_end(codesToSend);
 }
 
-void								Server::handleRequest(const Client& client, const std::string& request)
+void								Server::initCommands()
 {
-	// TODO:
-	// Parse the request
+	_commands["NICK"] = new Nick(&_clients);
+	_commands["USER"] = new User(&_clients);
+}
 
+void						Server::handleRequest(Client& client, const std::string& request)
+{
 	/*
 		We handle the following commands
 		-	CAP -> should not do anything
@@ -208,26 +220,35 @@ void								Server::handleRequest(const Client& client, const std::string& reque
 		-	KICK
 		... ?
 	*/
-	std::vector<std::string>	requestsVector;
-	std::istringstream			requestStream(request);
-	std::string					tmpRequest;
-	while (requestStream >> tmpRequest)
-		requestsVector.push_back(tmpRequest);
-	for (size_t i = 0; i < requestsVector.size(); ++i)			
-		PRINT(requestsVector[i], "");
-	// Example
-	/*
-		CAP LS
-		NICK jeepark
-		USER jeepark jeepark localhost :Jee hyun PARK
-	*/
-	std::map< std::string, std::string> requests;
-	// TODO: keep implementing here
-	// send a numeric reply to confirm that request was received ?
-	// send the numeric replies
-	// send a numeric reply to confirm that request was handled ?
-	(void)client;
-	(void)request;
+	// Parse the request
+	std::istringstream	requestStream(request);
+	while(!requestStream.eof())
+	{
+		size_t		firstSpace;
+		std::string	line;
+		std::string	command;
+		std::string	request;
+
+		std::getline(requestStream, line);
+		if (line.empty())
+			break ;
+		firstSpace = line.find(' ', 0);
+		if (firstSpace == std::string::npos)
+			break ;
+		// PRINT("extracting command", "");
+		command = line.substr(0, firstSpace);
+		// PRINT("extracting request", "");
+		request = line.substr(firstSpace, std::string::npos);
+		// PRINT("line", line);
+		PRINT("command", command);
+		// PRINT("request", request);
+		if (_commands.count(command) != 0)
+		{
+			std::cout << "Calling handleRequest() for " << command << std::endl;
+			const std::string reply = _commands[command]->handleRequest(client, request); 
+			send(client.getClientSocket(), reply.c_str(), reply.length(), 0);
+		}
+	}
 }
 
 

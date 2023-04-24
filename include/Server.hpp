@@ -9,6 +9,9 @@
 #include <cstdarg> // for va_arg
 // #include <cerrno>
 #include <vector>
+#include <limits>
+#include "Nick.hpp"
+#include "User.hpp"
 
 #define MAX_EVENTS 10
 
@@ -21,6 +24,7 @@ class Server
 		int									getPort() const;
 		std::string							getPassword() const;
 		std::map< int, Client >				getClients() const;
+		const std::map< int, Client >*		getClientsPtr() const;
 		std::map< std::string, ACommand* >	getCommands() const;
 
 		void								setPort( int port );
@@ -30,7 +34,8 @@ class Server
 
 		void								addClient( int fd, Client client );
 		void								removeClient( int fd );
-		void								handleRequest(const Client& client, const std::string& request);
+		void								initCommands();
+		void								handleRequest(Client& client, const std::string& request);
 		void								sendNumericReplies(const Client& target, const int count, ...);
 
 	protected:
@@ -49,8 +54,6 @@ class Server
 		std::map< std::string, ACommand* >	_commands;
 		// TODO: add server creation date for RPL_YOURHOST 002
 		Server();
-
-
 };
 
 #endif

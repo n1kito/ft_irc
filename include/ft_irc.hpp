@@ -26,6 +26,9 @@
 
 # define PRINT(x,y) std::cout << x << ": " << y << std::endl
 
+# define USERLEN 10
+# define NICKLEN 10
+
 #include <iostream>
 #include <sys/socket.h>
 #include <netinet/in.h>
@@ -38,7 +41,7 @@
 #include <cctype>
 
 // Prototypes
-
+#include "Nick.hpp"
 void	checkArguments(const int& argc, char** arguments, int& port, std::string& password);
 bool	isSpecialCharacter(char checkMe);
 #endif // FT_IRC_HPP
