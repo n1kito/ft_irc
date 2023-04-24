@@ -2,7 +2,7 @@
 # define ACOMMAND_HPP
 
 #include <string>
-
+#include "Client.hpp"
 class ACommand
 {
 	public:
@@ -12,10 +12,10 @@ class ACommand
 		ACommand&		operator = (const ACommand &copyMe);
 	
 
-	protected:
-		virtual char*	handleRequest() = 0;
-		virtual char*	parseArgument() = 0;
-		virtual char*	action() = 0;
+	// protected:
+		virtual const char*	handleRequest(Client & client, std::string arg) = 0;
+		virtual const char*	parseArgument(std::string arg) = 0;
+		virtual const char*	action(Client & client, std::string arg) = 0;
 		// add protected elements here
 
 	private:

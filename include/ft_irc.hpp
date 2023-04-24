@@ -37,6 +37,9 @@
 #include <sstream>
 #include <cctype>
 
+#include "ACommand.hpp"
+#include "Nick.hpp"
+
 // Prototypes
 
 void	checkArguments(const int& argc, char** arguments, int& port, std::string& password);

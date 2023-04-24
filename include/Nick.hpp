@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Nick.hpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jeepark <jeepark@student.42.fr>            +#+  +:+       +#+        */
+/*   By: jeepark <jeepark@student42.fr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/21 16:13:17 by jeepark           #+#    #+#             */
-/*   Updated: 2023/04/21 17:30:24 by jeepark          ###   ########.fr       */
+/*   Updated: 2023/04/23 12:07:00 by jeepark          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,19 +16,22 @@
 #include "ACommand.hpp"
 #include "ft_irc.hpp"
 #include "Client.hpp"
+#include "numericReplies.hpp"
 
-class Nick
+class Nick : public ACommand
 {
 	public:
 		Nick();
-		~Nick();
+		virtual ~Nick();
 
-      char* handleRequest(Client &client, std::string arg);
-      char* parseArgument(std::string arg);
-      char* action(Client &client, std::string nickname);
-      
-		
-	protected:
+      // Nick createCommandNick() {
+      //    return Nick();
+      // }
+
+	// protected:
+      virtual const char* handleRequest(Client &client, std::string arg);
+      virtual const char* parseArgument(std::string arg);
+      virtual const char* action(Client &client, std::string nickname);
 		// add protected elements here
 
 	private:
@@ -38,6 +41,10 @@ class Nick
 
 		
 };
+
+// ACommand* createCommandNick() {
+//     return new Nick();
+// }
 
 #endif
 
