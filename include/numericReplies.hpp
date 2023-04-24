@@ -17,6 +17,6 @@
 // 461
 # define ERR_NEEDMOREPARAMS(server, nickname, commandName) (std::string(":") + server + " 461 " + nickname + " " + commandName + " :Not enough parameters\r\n").c_str()
 // 462
-# define ERR_ALREADYREGISTRED(server, nickname) (std::string(":") + server + " 462 " + nickname + ":You may not reregister\r\n" ).c_str()
+# define ERR_ALREADYREGISTERED(server, nickname) (std::string(":") + server + " 462 " + nickname + ":You may not reregister\r\n" ).c_str()
 
 #endif

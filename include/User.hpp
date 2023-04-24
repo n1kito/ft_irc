@@ -17,9 +17,14 @@ class User : public ACommand
 
 		// void
 	protected:
-		char*	handleRequest( Client& client, std::string argument );
-		char*	parseArgument( std::string argument );
-		char*	action( Client& client, std::string username, std::string realname );
+		std::string	getUsername() const;
+		std::string	getRealname() const;
+		void		setUsername( std::string username );
+		void		setRealname( std::string realname );
+
+		const char*	handleRequest( Client& client, std::string argument );
+		const char*	parseArgument( std::string argument );
+		const char*	action( Client& client, std::string username, std::string realname );
 
 	private:
 		std::string	_username;
