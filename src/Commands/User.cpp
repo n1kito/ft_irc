@@ -45,8 +45,6 @@ void		User::setRealname( std::string realname ) { _realname = realname; }
 
 std::string	User::handleRequest( Client& client, std::string argument )
 {
-	// TODO: check if the client has the correct password
-	// TODO: if not, return empty string?
 	std::cout << RED << "What client is it ?? " << client.getClientSocket() << RESET << std::endl;
 	// send(client.getClientSocket(), "", reply.length(), 0);
 	std::string ret_parsing = parseArgument(client, argument);
@@ -87,6 +85,7 @@ std::string	User::parseArgument( Client& client, std::string argument )
 	_realname = tmp_name;
 	if (_realname[0] != ':')
 		_realname = client.getNickname();
+	_realname.erase(0, 1);
 	return "";
 }
 
