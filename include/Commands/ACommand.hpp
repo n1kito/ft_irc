@@ -4,13 +4,16 @@
 #include <string>
 #include "Client.hpp"
 #include <map>
+#include <sys/socket.h>
+#include <unistd.h>
 
 class ACommand
 {
 	public:
 		ACommand();
-		ACommand(const std::map<int, Client>* clients);
+		ACommand(std::map<int, Client>* clients);
 		ACommand(const ACommand &copyMe);
+		virtual void disconnectClient(const int& clientSocket);
 		virtual ~ACommand();
 		ACommand&		operator = (const ACommand &copyMe);
 	
@@ -20,7 +23,7 @@ class ACommand
 		virtual void		parseArgument() = 0;
 		virtual void		action() = 0;
 
-		const std::map<int, Client>* _clients;
+		std::map<int, Client>* _clients;
 		// add protected elements here
 
 	private:

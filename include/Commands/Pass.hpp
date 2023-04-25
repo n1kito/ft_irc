@@ -13,8 +13,8 @@ class Pass : public ACommand
 	public:
 		typedef std::map< int, Client >	clientMap;
 
-		Pass(const clientMap* clients);
-		Pass(const clientMap* clients, const std::string& serverPassword);
+		Pass(clientMap* clients);
+		Pass(clientMap* clients, const std::string& serverPassword);
 		~Pass();
 
 		void parseArgument();

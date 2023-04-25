@@ -21,7 +21,7 @@
 
 Nick::Nick() {}
 
-Nick::Nick(const std::map<int, Client>* clients) : ACommand(clients) {}
+Nick::Nick(std::map<int, Client>* clients) : ACommand(clients) {}
 
 Nick::Nick(const Nick &copyMe) : ACommand()
 {

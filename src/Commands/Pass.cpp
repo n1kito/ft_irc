@@ -4,9 +4,9 @@
 
 Pass::Pass() : ACommand() {}
 
-Pass::Pass(const clientMap* clients) : ACommand(clients) {}
+Pass::Pass(clientMap* clients) : ACommand(clients) {}
 
-Pass::Pass(const clientMap* clients, const std::string& serverPassword) :
+Pass::Pass(clientMap* clients, const std::string& serverPassword) :
 	ACommand(clients),
 	_serverPassword(serverPassword)
 {}

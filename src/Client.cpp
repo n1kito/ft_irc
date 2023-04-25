@@ -61,7 +61,6 @@ void			Client::setNickname(std::string nickname) { _nickname = nickname; }
 void			Client::setPassword(std::string password) { _password = password; }
 void			Client::setPasswordStatus(const bool& status) { _passwordStatus = status;}
 
-
 /* METHODS ********************************************************************/
 
 
