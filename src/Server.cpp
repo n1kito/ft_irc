@@ -212,7 +212,7 @@ void								Server::initCommands()
 	_commands["PASS"] = new Pass(&_clients, _password);
 }
 
-void						Server::handleRequest(Client& client, const std::string& request)
+void								Server::handleRequest(Client& client, const std::string& request)
 {
 	/*
 		We handle the following commands
@@ -265,7 +265,7 @@ void						Server::handleRequest(Client& client, const std::string& request)
 }
 
 // This function removes \r characters from the buffer.
-std::string				Server::cleanBuffer(std::string buffer) const
+std::string						Server::cleanBuffer(std::string buffer) const
 {
 	while (true)
 	{
@@ -278,7 +278,7 @@ std::string				Server::cleanBuffer(std::string buffer) const
 }
 
 // Returns a human readable string of the current date
-std::string				Server::_getCurrentDate() const
+std::string						Server::_getCurrentDate() const
 {
 	time_t		rawTime;
 	struct tm*	timeInfo;
