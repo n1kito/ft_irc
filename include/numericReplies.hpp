@@ -25,6 +25,7 @@
 // 462
 #define ERR_ALREADYREGISTERED(server, nickname) (std::string(":") + server + " 462 " + nickname + " :You may not reregister\r\n")
 
+// Custom Messages
 #define NICK_SUCCESS(server, nickname) (std::string(":") + server + " 001 " + nickname + " :Nickname created successfully\r\n")
 
 #define USER_SUCCESS(server, nickname) (std::string(":") + server + " 001 " + nickname + " :User created successfully!\r\n")

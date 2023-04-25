@@ -19,7 +19,8 @@ int	main(int argc, char* argv[])
 		// std::string	password;
 		// checkArguments(argc, argv, port, password);
 
-		(void)argc;
+		if (argc != 3)
+			throw std::invalid_argument("Wrong argument count.\nUsage: \033[3m./ircserv <port> <password>\033[0m");
 		int port = 6667;
 		Server	server(port, argv[2]);
 		return (0);	

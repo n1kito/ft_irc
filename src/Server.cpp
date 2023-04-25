@@ -6,8 +6,9 @@
 #include "numericReplies.hpp"
 
 Server::Server() {}
-Server::Server(int port, std::string password) : _port(port), _password(password)
+Server::Server(int port, std::string password) : _port(port), _password(password), _creationDate(_getCurrentDate())
 {
+	PRINT("Time is", _creationDate);
 	initCommands();
 	std::cout << RPL_WELCOME("serveur", "nickname", "network") << std::endl;
 	// 1) SERVER SOCKET
@@ -155,6 +156,7 @@ std::string							Server::getPassword() const { return _password; }
 std::map< int, Client >				Server::getClients() const { return _clients; }
 const std::map< int, Client >*		Server::getClientsPtr() const { return &_clients; }
 std::map< std::string, ACommand* >	Server::getCommands() const { return _commands; }
+std::string							Server::getCreationDate() const { return _creationDate; }
 
 void								Server::setPort( int port ) { _port = port; };
 void								Server::setPassword( std::string password ) { _password = password; };
@@ -177,21 +179,23 @@ void								Server::removeClient( int fd )
 		throw std::runtime_error("Error when closing fd");
 }
 
-void								Server::sendNumericReplies(const Client& target, const int count, ...)
-{
-	va_list	codesToSend;
-	va_start(codesToSend, count);
-	for (int i = 0; i < count; ++i)
-	{
-		std::string replyName = va_arg(codesToSend, char*);
-		// TODO:
-		// Get the correct message that corresponds to the name
-		// Send it to the client
-		(void)target;
-	}
-	va_end(codesToSend);
-}
+// This cannot work since numeric replies require specific arguments
+// void								Server::sendNumericReplies(const Client& target, const int count, ...)
+// {
+// 	va_list	codesToSend;
+// 	va_start(codesToSend, count);
+// 	for (int i = 0; i < count; ++i)
+// 	{
+// 		std::string replyName = va_arg(codesToSend, char*);
+// 		// TODO:
+// 		// Get the correct message that corresponds to the name
+// 		// Send it to the client
+// 		(void)target;
+// 	}
+// 	va_end(codesToSend);
+// }
 
+// Add all command instances to the server's _commands map
 void								Server::initCommands()
 {
 	_commands["NICK"] = new Nick(&_clients);
@@ -251,6 +255,17 @@ void						Server::handleRequest(Client& client, const std::string& request)
 	}
 }
 
+// Returns a human readable string of the current date
+std::string				Server::_getCurrentDate() const
+{
+	time_t		rawTime;
+	struct tm*	timeInfo;
+
+	time(&rawTime);
+	timeInfo = localtime(&rawTime);
+	std::string	returnValue(asctime(timeInfo));
+	return returnValue;
+}
 
 
 // ChatGPT explains epoll():
