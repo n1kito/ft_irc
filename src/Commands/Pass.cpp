@@ -21,9 +21,6 @@ void	Pass::action(){}
 
 std::string	Pass::handleRequest(Client& client, std::string argument)
 {
-	std::cout << std::endl << "password tried: <" << argument << ">" << std::endl;
-	std::cout << "server password: " << _serverPassword << std::endl;
-	std::cout << "password is correct: " << std::boolalpha << (argument == _serverPassword) << std::endl;
 	if (client.getRegisterState() == true)
 		return ERR_ALREADYREGISTERED(client.getServerName(), client.getNickname());
 	else if (argument.length() == 0)
