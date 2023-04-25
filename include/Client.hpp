@@ -7,16 +7,18 @@ class Client
 {
 	public:
 		Client();
+		Client( int clientSocket );
 		~Client();
 		Client(const Client &copyMe);
 	
-		Client&		operator = (const Client &copyMe);
+		Client&			operator = (const Client &copyMe);
 
 		bool			getRegisterState() const;
 		std::string		getUsername() const;
 		std::string		getRealname() const;
 		std::string		getNickname() const;
 		std::string		getPassword() const;
+		int				getClientSocket() const;
 
 		void			setRegisterState(bool state);
 		void			setUsername(std::string username);
@@ -33,6 +35,7 @@ class Client
 		std::string	_realname;
 		std::string	_nickname;
 		std::string	_password;
+		int	_clientSocket;
 
 };
 
