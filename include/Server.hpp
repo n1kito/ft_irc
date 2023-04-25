@@ -40,6 +40,7 @@ class Server
 		void								initCommands();
 		void								handleRequest(Client& client, const std::string& request);
 		// void								sendNumericReplies(const Client& target, const int count, ...);
+		std::string							cleanBuffer(std::string buffer) const;
 
 	protected:
 		// add protected elements here

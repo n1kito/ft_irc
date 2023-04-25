@@ -116,18 +116,8 @@ Server::Server(const int& port, const std::string& password, const std::string& 
 								<< "************ Received from client **********" << std::endl
 								<< BOLD << "[" << RESET << DIM << "Request" << RESET << BOLD << "]" << RESET << std::endl
 								<< MAGENTA << buffer << RESET << std::endl;
-								std::string newBuffer(buffer);
-								for (int i = 0; i < newBuffer.length(); i++) {
-									if (newBuffer[i] == '\t') {
-										std::cout << "<TAB>";
-									} else if (newBuffer[i] == '\r' {
-										std::cout << "<R>";
-									} else {
-										std::cout << newBuffer[i];
-									}
-								}
 								std::cout << BOLD << "[" RESET << DIM << "Handling" << RESET << BOLD << "]" << RESET << std::endl;
-					handleRequest(_clients[clientSocket], buffer);
+					handleRequest(_clients[clientSocket], cleanBuffer(buffer));
 					std::cout	<< "********************************************"
 								<< std::endl;
         			// send(clientSocket, handleRequest(_clients[clientSocket], buffer), response.length(), 0);
@@ -272,6 +262,19 @@ void						Server::handleRequest(Client& client, const std::string& request)
 			send(client.getClientSocket(), reply.c_str(), reply.length(), 0);
 		}
 	}
+}
+
+// This function removes \r characters from the buffer.
+std::string				Server::cleanBuffer(std::string buffer) const
+{
+	while (true)
+	{
+		size_t pos = buffer.find('\r', 0);
+		if (pos == std::string::npos)
+			break;
+		buffer.erase(pos, 1);
+	}
+	return buffer;
 }
 
 // Returns a human readable string of the current date
