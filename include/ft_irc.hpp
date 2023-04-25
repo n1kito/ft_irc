@@ -25,6 +25,8 @@
 # define YELLOW_BLOC "\033[30;43m"
 # define RED_BLOC "\033[30;41m"
 # define ITALIC "\033[3m"
+# define BOLD "\033[1m"
+# define DIM "\033[2m"
 # define RESET "\033[0m"
 
 # define PRINT(x,y) std::cout << x << ": " << y << std::endl
@@ -44,7 +46,7 @@
 #include <cctype>
 
 // Prototypes
-#include "Nick.hpp"
+// #include "Nick.hpp"
 void	checkArguments(const int& argc, char** arguments, int& port, std::string& password);
 bool	isSpecialCharacter(char checkMe);
 

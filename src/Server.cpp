@@ -6,9 +6,12 @@
 #include "numericReplies.hpp"
 
 Server::Server() {}
-Server::Server(int port, std::string password) : _port(port), _password(password), _creationDate(_getCurrentDate())
+Server::Server(const int& port, const std::string& password, const std::string& serverName) :
+	_port(port),
+	_password(password),
+	_creationDate(_getCurrentDate()),
+	_serverName(serverName)
 {
-	PRINT("Time is", _creationDate);
 	initCommands();
 	std::cout << RPL_WELCOME("serveur", "nickname", "network") << std::endl;
 	// 1) SERVER SOCKET
@@ -86,7 +89,7 @@ Server::Server(int port, std::string password) : _port(port), _password(password
 				event.data.fd = clientSocket;
 				if (epoll_ctl(epollFd, EPOLL_CTL_ADD, clientSocket, &event) == -1)
 					throw std::runtime_error("Error adding client");
-				addClient(clientSocket, Client(clientSocket));
+				addClient(clientSocket, Client(clientSocket, _serverName));
 				// Send RPL_WELCOME
 				// TODO: change values
 				send(clientSocket, RPL_WELCOME("pouet", "pouet", "pouet").c_str(), RPL_WELCOME("pouet", "pouet", "pouet").length(), 0);
@@ -109,9 +112,15 @@ Server::Server(int port, std::string password) : _port(port), _password(password
 				else
 				{
 					// process the data
-        			std::cout << "Received from client: " << "\"" << MAGENTA << buffer << RESET << "\"" << std::endl;
-        			// send(clientSocket, handleRequest(_clients[clientSocket], buffer), response.length(), 0);
+        			std::cout	<< std::endl
+								<< "************ Received from client **********" << std::endl
+								<< BOLD << "[" << RESET << DIM << "Request" << RESET << BOLD << "]" << RESET << std::endl
+								<< MAGENTA << buffer << RESET << std::endl
+								<< BOLD << "[" RESET << DIM << "Handling" << RESET << BOLD << "]" << RESET << std::endl;
 					handleRequest(_clients[clientSocket], buffer);
+					std::cout	<< "********************************************"
+								<< std::endl;
+        			// send(clientSocket, handleRequest(_clients[clientSocket], buffer), response.length(), 0);
       			}
 			}
 		}
@@ -200,6 +209,7 @@ void								Server::initCommands()
 {
 	_commands["NICK"] = new Nick(&_clients);
 	_commands["USER"] = new User(&_clients);
+	_commands["PASS"] = new Pass(&_clients, _password);
 }
 
 void						Server::handleRequest(Client& client, const std::string& request)
@@ -242,13 +252,12 @@ void						Server::handleRequest(Client& client, const std::string& request)
 		// PRINT("extracting command", "");
 		command = line.substr(0, firstSpace);
 		// PRINT("extracting request", "");
-		request = line.substr(firstSpace, std::string::npos);
+		request = line.substr(firstSpace + 1, std::string::npos);
 		// PRINT("line", line);
 		PRINT("command", command);
 		// PRINT("request", request);
 		if (_commands.count(command) != 0)
 		{
-			std::cout << "Calling handleRequest() for " << command << std::endl;
 			const std::string reply = _commands[command]->handleRequest(client, request); 
 			send(client.getClientSocket(), reply.c_str(), reply.length(), 0);
 		}
