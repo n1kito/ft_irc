@@ -12,6 +12,7 @@
 #include <limits>
 #include "Nick.hpp"
 #include "User.hpp"
+#include "Ping.hpp"
 #include <ctime>
 
 #define MAX_EVENTS 10

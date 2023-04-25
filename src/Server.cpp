@@ -200,6 +200,7 @@ void								Server::initCommands()
 {
 	_commands["NICK"] = new Nick(&_clients);
 	_commands["USER"] = new User(&_clients);
+	_commands["PING"] = new Ping(&_clients);
 }
 
 void						Server::handleRequest(Client& client, const std::string& request)
