@@ -3,10 +3,14 @@
 /* CONSTRUCTORS ***************************************************************/
 
 #include <cerrno>
+#include "numericReplies.hpp"
 
 Server::Server() {}
-Server::Server(int port, std::string password) : _port(port), _password(password)
+Server::Server(int port, std::string password) : _port(port), _password(password), _creationDate(_getCurrentDate())
 {
+	PRINT("Time is", _creationDate);
+	initCommands();
+	std::cout << RPL_WELCOME("serveur", "nickname", "network") << std::endl;
 	// 1) SERVER SOCKET
 	// create ServerSocket
 	int serverSocket = socket(AF_INET, SOCK_STREAM, 0);
@@ -14,23 +18,30 @@ Server::Server(int port, std::string password) : _port(port), _password(password
 		perror("Error creating socket");
         throw std::runtime_error("Error creating socket");
     }
-	// congigure setsockopt to make sure port number is reusable
+	// configure setsockopt to make sure port number is reusable
 	int opt =1;
 	if (setsockopt(serverSocket, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) < 0) {
         perror("Erreur lors de la configuration de setsockopt");
         close(serverSocket);
-        throw std::runtime_error("Erreur lors de la configuration de setsockopt");
+	    throw std::runtime_error("Erreur lors de la configuration de setsockopt");
     }
 	// configure address and port for server socket
 	struct sockaddr_in addr;
-    addr.sin_family = AF_INET;
-    addr.sin_addr.s_addr = htonl(INADDR_ANY);
-    addr.sin_port = htons(port);
+	addr.sin_family = AF_INET;
+	addr.sin_addr.s_addr = htonl(INADDR_ANY);
+	addr.sin_port = htons(port);
+
+	
 	// bind server socket
 	int result = bind(serverSocket, (struct sockaddr*)&addr, sizeof(addr));
     if (result < 0) {
         throw std::runtime_error("Error binding socket");        
     }
+
+	// set server socket to listen
+	if (listen(serverSocket, SOMAXCONN) == -1)
+		throw std::runtime_error("Could not set server socket to listening state");
+
 	// 2) EPOLL
 	// create epoll instance
 	int epollFd = epoll_create1(0);
@@ -53,20 +64,32 @@ Server::Server(int port, std::string password) : _port(port), _password(password
 		if (numEvents == -1) {
 			throw std::runtime_error("Error epoll_wait");        
 		}
+		std::cout << "numEvents: " << numEvents << "\n";
 		for (int i = 0; i < numEvents; i++)
 		{
 			if (events[i].data.fd == serverSocket)
 			{
 				// accept the connection
-				int client_socket = accept(serverSocket, static_cast<sockaddr*>(0), static_cast<socklen_t*>(0));
-				if (client_socket == -1)
-					throw std::runtime_error("Error connecting with client");        
+				struct sockaddr_in clientAddress;
+				socklen_t clientaddrlen = sizeof(clientAddress);
+				// int client_socket = accept(serverSocket, NULL, 0);
+				int clientSocket = accept(serverSocket, (struct sockaddr *) &clientAddress, &clientaddrlen);	
+				if (clientSocket == -1)
+				{
+					if ( errno != EAGAIN && errno != EWOULDBLOCK )
+						throw std::runtime_error("Error connecting with client");
+					continue ;
+				}
 				// add the new client socket to the epoll instance
 				struct epoll_event event;
 				event.events = EPOLLIN | EPOLLET;
-				event.data.fd = client_socket;
-				if (epoll_ctl(epollFd, EPOLL_CTL_ADD, client_socket, &event) == -1)
-					throw std::runtime_error("Error connecting with client");
+				event.data.fd = clientSocket;
+				if (epoll_ctl(epollFd, EPOLL_CTL_ADD, clientSocket, &event) == -1)
+					throw std::runtime_error("Error adding client");
+				addClient(clientSocket, Client(clientSocket));
+				// Send RPL_WELCOME
+				// TODO: change values
+				send(clientSocket, RPL_WELCOME("pouet", "pouet", "pouet").c_str(), RPL_WELCOME("pouet", "pouet", "pouet").length(), 0);
 			}
 			else
 			{
@@ -80,18 +103,20 @@ Server::Server(int port, std::string password) : _port(port), _password(password
       			// Si la réception est inférieure ou égale à 0, le client s'est déconnecté.
       			if (received <= 0) {
         			std::cout << "Client disconnected" << std::endl;
-        		close(clientSocket);
+        			close(clientSocket);
+					// removeClient( clientSocket ); // remove from the client map and close fd
       			}
 				else
 				{
 					// process the data
-        			std::cout << "Received from client: " << buffer << std::endl;
-
-        			// send(clientSocket, response.c_str(), response.length(), 0);
+        			std::cout << "Received from client: " << "\"" << MAGENTA << buffer << RESET << "\"" << std::endl;
+        			// send(clientSocket, handleRequest(_clients[clientSocket], buffer), response.length(), 0);
+					handleRequest(_clients[clientSocket], buffer);
       			}
 			}
 		}
 	}
+	close(epollFd);
 }
 
 
@@ -108,6 +133,11 @@ Server::Server(const Server &copyMe)
 Server::~Server()
 {
 	// std::cout << "Destructor called" << std::endl;
+	// while(_commands.size() != 0)
+	// {
+	// 	delete _commands[0].first;
+
+	// }
 }
 
 /* OVERLOADS ******************************************************************/
@@ -124,12 +154,14 @@ Server& Server::operator = (const Server &copyMe)
 int									Server::getPort() const { return _port; }
 std::string							Server::getPassword() const { return _password; }
 std::map< int, Client >				Server::getClients() const { return _clients; }
-std::map< std::string, Command >	Server::getCommands() const { return _commands; }
+const std::map< int, Client >*		Server::getClientsPtr() const { return &_clients; }
+std::map< std::string, ACommand* >	Server::getCommands() const { return _commands; }
+std::string							Server::getCreationDate() const { return _creationDate; }
 
 void								Server::setPort( int port ) { _port = port; };
 void								Server::setPassword( std::string password ) { _password = password; };
 void								Server::setClients( std::map< int, Client > clients ) { _clients = clients; };
-void								Server::setCommands( std::map< std::string, Command > commands ) { _commands = commands; }
+void								Server::setCommands( std::map< std::string, ACommand* > commands ) { _commands = commands; }
 
 /* METHODS ********************************************************************/
 
@@ -147,6 +179,93 @@ void								Server::removeClient( int fd )
 		throw std::runtime_error("Error when closing fd");
 }
 
+// This cannot work since numeric replies require specific arguments
+// void								Server::sendNumericReplies(const Client& target, const int count, ...)
+// {
+// 	va_list	codesToSend;
+// 	va_start(codesToSend, count);
+// 	for (int i = 0; i < count; ++i)
+// 	{
+// 		std::string replyName = va_arg(codesToSend, char*);
+// 		// TODO:
+// 		// Get the correct message that corresponds to the name
+// 		// Send it to the client
+// 		(void)target;
+// 	}
+// 	va_end(codesToSend);
+// }
+
+// Add all command instances to the server's _commands map
+void								Server::initCommands()
+{
+	_commands["NICK"] = new Nick(&_clients);
+	_commands["USER"] = new User(&_clients);
+}
+
+void						Server::handleRequest(Client& client, const std::string& request)
+{
+	/*
+		We handle the following commands
+		-	CAP -> should not do anything
+		- 	AUTHENTIFICATE <- not needed
+		-	PASS
+		-	NICK
+		-	USER
+		-	OPER
+		-	QUIT
+		-	ERROR
+		Channel operations
+		-	JOIN
+		-	PART
+		-	TOPIC
+		-	NAMES
+		-	LIST
+		-	INVITE
+		-	KICK
+		... ?
+	*/
+	// Parse the request
+	std::istringstream	requestStream(request);
+	while(!requestStream.eof())
+	{
+		size_t		firstSpace;
+		std::string	line;
+		std::string	command;
+		std::string	request;
+
+		std::getline(requestStream, line);
+		if (line.empty())
+			break ;
+		firstSpace = line.find(' ', 0);
+		if (firstSpace == std::string::npos)
+			break ;
+		// PRINT("extracting command", "");
+		command = line.substr(0, firstSpace);
+		// PRINT("extracting request", "");
+		request = line.substr(firstSpace, std::string::npos);
+		// PRINT("line", line);
+		PRINT("command", command);
+		// PRINT("request", request);
+		if (_commands.count(command) != 0)
+		{
+			std::cout << "Calling handleRequest() for " << command << std::endl;
+			const std::string reply = _commands[command]->handleRequest(client, request); 
+			send(client.getClientSocket(), reply.c_str(), reply.length(), 0);
+		}
+	}
+}
+
+// Returns a human readable string of the current date
+std::string				Server::_getCurrentDate() const
+{
+	time_t		rawTime;
+	struct tm*	timeInfo;
+
+	time(&rawTime);
+	timeInfo = localtime(&rawTime);
+	std::string	returnValue(asctime(timeInfo));
+	return returnValue;
+}
 
 
 // ChatGPT explains epoll():
