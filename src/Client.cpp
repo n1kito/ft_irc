@@ -7,6 +7,8 @@ Client::Client()
 	// std::cout << "Default constructor called" << std::endl;
 }
 
+Client::Client( int clientSocket ) : _isRegistered(false), _clientSocket(clientSocket) {}
+
 Client::Client(const Client &copyMe)
 {
 	// std::cout << "Copy constructor called" << std::endl;
@@ -26,6 +28,7 @@ Client& Client::operator = (const Client &copyMe)
 {
 	// (void)copyMe;
 	_isRegistered = copyMe._isRegistered;
+	_clientSocket = copyMe.getClientSocket();
 	_username = copyMe._username;
 	_nickname = copyMe._nickname;
 	_password = copyMe._password;
@@ -39,6 +42,7 @@ std::string		Client::getUsername() const { return _username; }
 std::string		Client::getRealname() const { return _realname; }
 std::string		Client::getNickname() const { return _nickname; }
 std::string		Client::getPassword() const { return _password; }
+int				Client::getClientSocket() const { return _clientSocket; }
 
 void			Client::setRegisterState(bool state) { _isRegistered = state; }
 void			Client::setUsername(std::string username) { _username = username; }

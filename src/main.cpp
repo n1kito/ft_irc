@@ -1,7 +1,7 @@
 #include "ft_irc.hpp"
 #include "Server.hpp"
 #include <cerrno>
-
+#include "ACommand.hpp"
 /*
 Classes:
 	- server
@@ -20,17 +20,10 @@ int	main(int argc, char* argv[])
 		// std::string	password;
 		// checkArguments(argc, argv, port, password);
 
-		// branch jp-server-multi-clients
-		// (void)argc;
-		// int port = 6667;
-		// Server	server(port, argv[2]);
-		
-		// branch jp-command-nick
-		(void)argc, (void)argv;
-		ACommand* nick = new Nick();
-		const char* message = nick->parseArgument(" ");
-		std::cout << message << "??";
-		// nick->action(NULL, "poet");
+		if (argc != 3)
+			throw std::invalid_argument("Wrong argument count.\nUsage: \033[3m./ircserv <port> <password>\033[0m");
+		int port = 6667;
+		Server	server(port, argv[2]);
 		return (0);	
 	}
 	catch (const std::exception& e)

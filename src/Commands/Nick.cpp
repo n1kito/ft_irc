@@ -3,22 +3,27 @@
 /*                                                        :::      ::::::::   */
 /*   Nick.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jeepark <jeepark@student42.fr>             +#+  +:+       +#+        */
+/*   By: jeepark <jeepark@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/21 16:13:17 by jeepark           #+#    #+#             */
-/*   Updated: 2023/04/24 10:35:51 by jeepark          ###   ########.fr       */
+/*   Updated: 2023/04/25 16:30:56 by jeepark          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Nick.hpp"
 #include <vector>
 #include <string>
+#include <map>
+#include "Client.hpp"
+#include "numericReplies.hpp"
 
 /* CONSTRUCTORS ***************************************************************/
 
 Nick::Nick() { std::cout << "command NICK created.\n"; }
 
-Nick::Nick(const Nick &copyMe) : ACommand(copyMe)
+Nick::Nick(const std::map<int, Client>* clients) : ACommand(clients) {}
+
+Nick::Nick(const Nick &copyMe) : ACommand()
 {
 	// std::cout << "Copy constructor called" << std::endl;
 	(void)copyMe;
@@ -43,43 +48,61 @@ Nick& Nick::operator = (const Nick &copyMe)
 
 /* METHODS ********************************************************************/
 
-const char	*Nick::parseArgument(std::string arg)
+void		Nick::parseArgument() {}
+
+bool	Nick::isValidNickname(std::string nickname)
 {
-	(void)arg;
-	std::stringstream			s(arg);
-	std::string					word;	
-	std::vector<std::string>	token;
+	// check if nickname is no longer than 10 
+	if (nickname.size() > NICKLEN)
+		return false;
+	// check if nickname contains any forbbiden character
+	if(nickname.find_first_of(".,*?!@ ") != std::string::npos)
+	{
+		std::cout << "forbidden character\n";
+		return false;
+	}
+	// check if nickname starts with any forbidden character
+	if (nickname[0] == '$' || nickname[0] == ':' || nickname[0] == '#' || nickname[0] == '&')
+		return false;
+	return true;
+}
 
-	// tokenize argument 
-	while (s >> word)
-		token.push_back(word);
 
-	std::cout << "token size: " << token.size() << "\n";
-	// if token is empty, send err_nonicknamegiven
-	const char*	message;
-	if (token.size() == 0)
-		message = ERR_NONICKNAMEGIVEN;
-	
-	std::cout << message << std::endl;
 
+std::string	Nick::parseArgument(Client &client, std::string& arg)
+{
+	// check if nickname format is valid
+	if (isValidNickname(arg) == false)
+		return(ERR_ERRONEUSNICKNAME("server", client.getUsername(), arg));
+
+	// check if nickname already exists
+	std::map<int, Client>::const_iterator it = _clients->begin();
+	while(it != _clients->end())
+	{
+		if (it->second.getNickname() == arg)
+			return(ERR_NICKNAMEINUSE("server", client.getUsername(), arg));
+		it++;
+	}
+	return ("Nickname is valid");
+}
+
+std::string	Nick::handleRequest(Client &client, std::string arg)
+{
+	std::string message;
+	message = parseArgument(client, arg);
+	if (message == "Nickname is valid")
+		message = action(client, arg);	
 	return message;
 }
 
-const char	*Nick::action(Client &client, std::string nickname)
-{
-	(void)client;
-	(void)nickname;
-	return NULL;
-}
+void		Nick::action() {}
 
-const char	*Nick::handleRequest(Client &client, std::string arg)
+std::string	Nick::action(Client &client, std::string nickname)
 {
-	(void)client;
-	(void)arg;
-	
-	parseArgument(arg);
-
-	return NULL;
+	std::string message;
+	client.setNickname(nickname);
+	message = NICK_SUCCESS("server", client.getNickname());
+	return message;
 }
 
 /*
