@@ -184,11 +184,11 @@ void								Server::addClient( int fd, Client client )
 
 void								Server::removeClient( int fd )
 {
-	std::cout << "\n[removeClient]\n _client.size:" << _clients.size() << "\n"; 
+	// std::cout << "\n[removeClient]\n _client.size:" << _clients.size() << "\n"; 
 	_clients.erase( fd );
 	if( close( fd ) == -1 )
 		throw std::runtime_error("Error when closing fd");
-	std::cout << "_client.size:" << _clients.size() << "\n";
+	// std::cout << "_client.size:" << _clients.size() << "\n";
 }
 
 // This cannot work since numeric replies require specific arguments
@@ -256,7 +256,7 @@ void						Server::handleRequest(Client& client, const std::string& request)
 		command = line.substr(0, firstSpace);
 		request = line.substr(firstSpace + 1, std::string::npos);
 		PRINT("command", command);
-		PRINT("request", request);
+		// PRINT("request", request);
 		if (_commands.count(command) != 0)
 		{
 			std::cout << "Calling handleRequest() for " << command << std::endl;

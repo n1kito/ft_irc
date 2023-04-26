@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   Nick.cpp                                           :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: jeepark <jeepark@student42.fr>             +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/04/21 16:13:17 by jeepark           #+#    #+#             */
-/*   Updated: 2023/04/26 14:03:01 by jeepark          ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "Nick.hpp"
 #include <vector>
 #include <string>
@@ -19,7 +7,7 @@
 
 /* CONSTRUCTORS ***************************************************************/
 
-Nick::Nick() { std::cout << "command NICK created.\n"; }
+Nick::Nick() {}
 
 Nick::Nick(const std::map<int, Client>* clients) : ACommand(clients) {}
 
@@ -58,7 +46,7 @@ bool	Nick::isValidNickname(std::string nickname)
 	// check if nickname contains any forbbiden character
 	if(nickname.find_first_of(".,*?!@ ") != std::string::npos)
 	{
-		std::cout << "forbidden character\n";
+		// std::cout << "forbidden character\n";
 		return false;
 	}
 	// check if nickname starts with any forbidden character
@@ -87,7 +75,6 @@ std::string	Nick::parseArgument(Client &client, std::string& arg)
 	{
 		if (it->second.getNickname() == arg)
 		{
-			std::cout << "++++++++++++++++++++" << std::endl;
 			return(ERR_NICKNAMEINUSE(arg));
 		}
 		it++;
@@ -97,7 +84,7 @@ std::string	Nick::parseArgument(Client &client, std::string& arg)
 
 std::string	Nick::handleRequest(Client &client, std::string arg)
 {
-	std::cout << "\n[NICK handle request]\n" << "argument:" << arg << "|\n"; 
+	// std::cout << "\n[NICK handle request]\n" << "argument:" << arg << "|\n"; 
 	std::string message;
 	message = parseArgument(client, arg);
 	if (message == "Nickname is valid")
@@ -112,7 +99,7 @@ std::string	Nick::action(Client &client, std::string nickname)
 	std::string message;
 	client.setNickname(nickname);
 	message = NICK_SUCCESS("server", client.getNickname());
-	std::cout << "nickname is:" << client.getNickname() << "|\n";
+	// std::cout << "nickname is:" << client.getNickname() << "|\n";
 	return message;
 }
 
