@@ -65,7 +65,6 @@ Server::Server(int port, std::string password) : _port(port), _password(password
 		if (numEvents == -1) {
 			throw std::runtime_error("Error epoll_wait");        
 		}
-		std::cout << "numEvents: " << numEvents << "\n";
 		for (int i = 0; i < numEvents; i++)
 		{
 			if (events[i].data.fd == serverSocket)
@@ -90,7 +89,8 @@ Server::Server(int port, std::string password) : _port(port), _password(password
 				addClient(clientSocket, Client(clientSocket));
 				// Send RPL_WELCOME
 				// TODO: change values
-				send(clientSocket, RPL_WELCOME("pouet", "pouet", "pouet").c_str(), RPL_WELCOME("pouet", "pouet", "pouet").length(), 0);
+				// std::string nickname = _clients[clientSocket].getNickname();
+				send(clientSocket, RPL_WELCOME("server", "nickname", "network").c_str(), RPL_WELCOME("server", "nickname", "network").length(), 0);
 			}
 			else
 			{
@@ -104,16 +104,20 @@ Server::Server(int port, std::string password) : _port(port), _password(password
       			// Si la réception est inférieure ou égale à 0, le client s'est déconnecté.
       			if (received <= 0) {
         			std::cout << "Client disconnected" << std::endl;
-					_clients.erase(clientSocket);
-        			close(clientSocket);
-					// removeClient( clientSocket ); // remove from the client map and close fd
+					removeClient( clientSocket ); // remove from the client map and close fd
       			}
 				else
 				{
 					// process the data
-        			std::cout << "Received from client: " << "\"" << MAGENTA << buffer << RESET << "\"" << std::endl;
-        			// send(clientSocket, handleRequest(_clients[clientSocket], buffer), response.length(), 0);
-					handleRequest(_clients[clientSocket], buffer);
+        			std::cout	<< std::endl
+								<< "************ Received from client **********" << std::endl
+								<< "[" << RESET << "Request" << RESET << "]" << RESET << std::endl
+								<< MAGENTA << buffer << RESET << std::endl;
+								std::cout << "[" RESET << "Handling" << RESET << "]" << RESET << std::endl;
+					handleRequest(_clients[clientSocket], cleanBuffer(buffer));
+					std::cout	<< "********************************************"
+								<< std::endl;
+					// send(clientSocket, handleRequest(_clients[clientSocket], buffer), response.length(), 0);
       			}
 			}
 		}
@@ -151,6 +155,10 @@ Server& Server::operator = (const Server &copyMe)
 	return *this;
 }
 
+Client& Server::operator[](const int fd) {
+		return _clients[fd];
+}
+
 /* ACCESSORS ******************************************************************/
 
 int									Server::getPort() const { return _port; }
@@ -176,9 +184,11 @@ void								Server::addClient( int fd, Client client )
 
 void								Server::removeClient( int fd )
 {
+	std::cout << "\n[removeClient]\n _client.size:" << _clients.size() << "\n"; 
 	_clients.erase( fd );
 	if( close( fd ) == -1 )
 		throw std::runtime_error("Error when closing fd");
+	std::cout << "_client.size:" << _clients.size() << "\n";
 }
 
 // This cannot work since numeric replies require specific arguments
@@ -244,14 +254,9 @@ void						Server::handleRequest(Client& client, const std::string& request)
 			break ;
 		// PRINT("extracting command", "");
 		command = line.substr(0, firstSpace);
-		// PRINT("extracting request", "");
-		size_t pos = line.find('\r', ++firstSpace);
-		if (pos != std::string::npos) 
-        	request = line.substr(firstSpace, pos);
-		// request = line.substr(firstSpace, std::string::npos);
-		// PRINT("line", line);
+		request = line.substr(firstSpace + 1, std::string::npos);
 		PRINT("command", command);
-		// PRINT("request", request);
+		PRINT("request", request);
 		if (_commands.count(command) != 0)
 		{
 			std::cout << "Calling handleRequest() for " << command << std::endl;
@@ -259,6 +264,19 @@ void						Server::handleRequest(Client& client, const std::string& request)
 			send(client.getClientSocket(), reply.c_str(), reply.length(), 0);
 		}
 		}
+}
+
+// This function removes \r characters from the buffer.
+std::string						Server::cleanBuffer(std::string buffer) const
+{
+	while (true)
+	{
+		size_t pos = buffer.find('\r', 0);
+		if (pos == std::string::npos)
+			break;
+		buffer.erase(pos, 1);
+	}
+	return buffer;
 }
 
 // Returns a human readable string of the current date

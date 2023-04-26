@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Nick.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jeepark <jeepark@student.42.fr>            +#+  +:+       +#+        */
+/*   By: jeepark <jeepark@student42.fr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/21 16:13:17 by jeepark           #+#    #+#             */
-/*   Updated: 2023/04/25 16:30:56 by jeepark          ###   ########.fr       */
+/*   Updated: 2023/04/26 14:03:01 by jeepark          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,16 +71,25 @@ bool	Nick::isValidNickname(std::string nickname)
 
 std::string	Nick::parseArgument(Client &client, std::string& arg)
 {
+	(void)client;
+	// check if arg is empty
+	if (arg.empty())
+		return (ERR_NONICKNAMEGIVEN("server"));
 	// check if nickname format is valid
 	if (isValidNickname(arg) == false)
-		return(ERR_ERRONEUSNICKNAME("server", client.getUsername(), arg));
+		return(ERR_ERRONEUSNICKNAME("server", "nickname", arg));
 
 	// check if nickname already exists
 	std::map<int, Client>::const_iterator it = _clients->begin();
-	while(it != _clients->end())
+	std::map<int, Client>::const_iterator ite = _clients->end();
+
+	while(it != ite)
 	{
 		if (it->second.getNickname() == arg)
-			return(ERR_NICKNAMEINUSE("server", client.getUsername(), arg));
+		{
+			std::cout << "++++++++++++++++++++" << std::endl;
+			return(ERR_NICKNAMEINUSE(arg));
+		}
 		it++;
 	}
 	return ("Nickname is valid");
@@ -88,6 +97,7 @@ std::string	Nick::parseArgument(Client &client, std::string& arg)
 
 std::string	Nick::handleRequest(Client &client, std::string arg)
 {
+	std::cout << "\n[NICK handle request]\n" << "argument:" << arg << "|\n"; 
 	std::string message;
 	message = parseArgument(client, arg);
 	if (message == "Nickname is valid")
@@ -102,6 +112,7 @@ std::string	Nick::action(Client &client, std::string nickname)
 	std::string message;
 	client.setNickname(nickname);
 	message = NICK_SUCCESS("server", client.getNickname());
+	std::cout << "nickname is:" << client.getNickname() << "|\n";
 	return message;
 }
 
