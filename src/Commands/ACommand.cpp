@@ -7,7 +7,7 @@ ACommand::ACommand()
 	// std::cout << "Default constructor called" << std::endl;
 }
 
-ACommand::ACommand(const std::map<int, Client>* clients) : _clients(clients) {}
+ACommand::ACommand(std::map<int, Client>* clients) : _clients(clients) {}
 
 ACommand::ACommand(const ACommand &copyMe)
 {

@@ -11,7 +11,7 @@ class User : public ACommand
 {
 	public:
 		User(const User &copyMe);
-		User( const std::map< int, Client >* clients );
+		User(std::map< int, Client >* clients );
 
 		~User();
 		User&		operator = (const User &copyMe);

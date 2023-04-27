@@ -7,9 +7,12 @@
 
 
 Server::Server() {}
-Server::Server(int port, std::string password) : _port(port), _password(password), _creationDate(_getCurrentDate())
+Server::Server(const int& port, const std::string& password, const std::string& serverName) :
+	_port(port),
+	_password(password),
+	_creationDate(_getCurrentDate()),
+	_serverName(serverName)
 {
-	PRINT("Time is", _creationDate);
 	initCommands();
 	std::cout << RPL_WELCOME("serveur", "nickname", "network") << std::endl;
 	// 1) SERVER SOCKET
@@ -86,7 +89,7 @@ Server::Server(int port, std::string password) : _port(port), _password(password
 				event.data.fd = clientSocket;
 				if (epoll_ctl(epollFd, EPOLL_CTL_ADD, clientSocket, &event) == -1)
 					throw std::runtime_error("Error adding client");
-				addClient(clientSocket, Client(clientSocket));
+				addClient(clientSocket, Client(clientSocket, _serverName));
 				// Send RPL_WELCOME
 				// TODO: change values
 				// std::string nickname = _clients[clientSocket].getNickname();
@@ -111,9 +114,9 @@ Server::Server(int port, std::string password) : _port(port), _password(password
 					// process the data
         			std::cout	<< std::endl
 								<< "************ Received from client **********" << std::endl
-								<< "[" << RESET << "Request" << RESET << "]" << RESET << std::endl
+								<< BOLD << "[" << RESET << DIM << "Request" << RESET << BOLD << "]" << RESET << std::endl
 								<< MAGENTA << buffer << RESET << std::endl;
-								std::cout << "[" RESET << "Handling" << RESET << "]" << RESET << std::endl;
+								std::cout << BOLD << "[" RESET << DIM << "Handling" << RESET << BOLD << "]" << RESET << std::endl;
 					handleRequest(_clients[clientSocket], cleanBuffer(buffer));
 					if (_clients[clientSocket].isAuthentificated() && _clients[clientSocket].getWelcomeState() == false)
 					{
@@ -191,16 +194,25 @@ void								Server::setCommands( std::map< std::string, ACommand* > commands ) {
 void								Server::addClient( int fd, Client client )
 {
 	// _clients[fd] = client;
+	std::cout << "ADDING CLIENT :" << fd << std::endl;
 	_clients.insert( std::make_pair( fd, client ));
+	std::cout << "TOTAL CLIENTS :" << _clients.size() << std::endl;
 }
 
 void								Server::removeClient( int fd )
 {
-	// std::cout << "\n[removeClient]\n _client.size:" << _clients.size() << "\n"; 
-	_clients.erase( fd );
+	// used to give the client enough time to print messages before closing the connection
+	// usleep(1000); //TODO: there has to be a better way to do this
+	// send a quit message to IRSSI
+	// std::string message = "QUIT :Goodbye\r\n";
+	// if (send(fd, message.c_str(), message.size(), 0) == -1) {
+        // std::cerr << "Failed to send quit message to client socket " << fd << std::endl;
+    // }
+	std::cout << "\n[removeClient]\n _client.size:" << _clients.size() << "\n"; 
 	if( close( fd ) == -1 )
 		throw std::runtime_error("Error when closing fd");
-	// std::cout << "_client.size:" << _clients.size() << "\n";
+	_clients.erase( fd );
+	std::cout << "_client.size:" << _clients.size() << "\n";
 }
 
 // This cannot work since numeric replies require specific arguments
@@ -224,10 +236,13 @@ void								Server::initCommands()
 {
 	_commands["NICK"] = new Nick(&_clients);
 	_commands["USER"] = new User(&_clients);
+	_commands["PING"] = new Ping(&_clients);
+	_commands["PASS"] = new Pass(&_clients, _password);
 }
 
-void						Server::handleRequest(Client& client, const std::string& request)
+void								Server::handleRequest(Client& client, const std::string& request)
 {
+	// static bool	firstRequest = true;
 	/*
 		We handle the following commands
 		-	CAP -> should not do anything
@@ -268,12 +283,20 @@ void						Server::handleRequest(Client& client, const std::string& request)
 		command = line.substr(0, firstSpace);
 		request = line.substr(firstSpace + 1, std::string::npos);
 		PRINT("command", command);
-		// PRINT("request", request);
+		PRINT("request", request);
 		if (_commands.count(command) != 0)
 		{
-			std::cout << "Calling handleRequest() for " << command << std::endl;
 			const std::string reply = _commands[command]->handleRequest(client, request); 
+			// TODO
 			send(client.getClientSocket(), reply.c_str(), reply.length(), 0);
+			std::cout << "actual command: <" << command << ">" << std::endl;
+			if (command == "PASS" && client.getPassword().empty())
+			{
+				std::cout << "ENTERING WRONG PASSWORD" << std::endl;
+				usleep(1000); //TODO: there has to be a better way to do this
+				removeClient(client.getClientSocket());
+				break ;
+			}
 		}
 		}
 }
@@ -292,7 +315,7 @@ std::string						Server::cleanBuffer(std::string buffer) const
 }
 
 // Returns a human readable string of the current date
-std::string				Server::_getCurrentDate() const
+std::string						Server::_getCurrentDate() const
 {
 	time_t		rawTime;
 	struct tm*	timeInfo;
