@@ -12,8 +12,8 @@ Client::Client(const int& clientSocket, const std::string& serverName ) :
 	_isRegistered(false),
 	_passwordStatus(false),
 	_clientSocket(clientSocket),
-	_serverName(serverName),
-  _welcomeState(false)
+	_welcomeState(false),
+	_serverName(serverName)
 {}
 
 // TODO: is this neede or should it be private ?
