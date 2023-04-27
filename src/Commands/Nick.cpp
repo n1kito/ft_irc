@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   Nick.cpp                                           :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: jeepark <jeepark@student.42.fr>            +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/04/21 16:13:17 by jeepark           #+#    #+#             */
-/*   Updated: 2023/04/21 17:57:53 by jeepark          ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "Nick.hpp"
 #include <vector>
 #include <string>
@@ -21,7 +9,7 @@
 
 Nick::Nick() {}
 
-Nick::Nick(const std::map<int, Client>* clients) : ACommand(clients) {}
+Nick::Nick(std::map<int, Client>* clients) : ACommand(clients) {}
 
 Nick::Nick(const Nick &copyMe) : ACommand()
 {

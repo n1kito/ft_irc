@@ -12,14 +12,16 @@
 #include <limits>
 #include "Nick.hpp"
 #include "User.hpp"
+#include "Pass.hpp"
 #include <ctime>
+#include <unistd.h>
 
 #define MAX_EVENTS 10
 
 class Server
 {
 	public:
-		Server(int port, std::string password);
+		Server(const int& port, const std::string& password, const std::string& serverName);
 		~Server();
 
 		int									getPort() const;
@@ -39,6 +41,7 @@ class Server
 		void								initCommands();
 		void								handleRequest(Client& client, const std::string& request);
 		// void								sendNumericReplies(const Client& target, const int count, ...);
+		std::string							cleanBuffer(std::string buffer) const;
 
 	protected:
 		// add protected elements here
@@ -57,6 +60,7 @@ class Server
 		std::map< int, Client >				_clients;
 		std::map< std::string, ACommand* >	_commands;
 		std::string							_creationDate;
+		std::string							_serverName;
 		Server();
 };
 

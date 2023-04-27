@@ -14,6 +14,7 @@ SRC_FILES		:=	main\
 					Client\
 					Commands/ACommand\
 					Commands/Nick\
+					Commands/Pass\
 					Commands/User\
 					utils
 OBJ_FILES		:=	$(addprefix $(BIN_DIR)/, $(addsuffix .o, $(SRC_FILES)))

@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   Nick.hpp                                           :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: jeepark <jeepark@student.42.fr>            +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/04/21 16:13:17 by jeepark           #+#    #+#             */
-/*   Updated: 2023/04/21 17:30:24 by jeepark          ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #ifndef NICK_HPP
 # define NICK_HPP
 
@@ -21,7 +9,7 @@
 class Nick : public ACommand
 {
 	public:
-		Nick(const std::map<int, Client >* clients);
+		Nick(std::map<int, Client >* clients);
 		~Nick();
 
     	std::string	handleRequest(Client &client, std::string arg);
