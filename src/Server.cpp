@@ -120,7 +120,6 @@ Server::Server(const int& port, const std::string& password, const std::string& 
 					handleRequest(_clients[clientSocket], cleanBuffer(buffer));
 					std::cout	<< "********************************************"
 								<< std::endl;
-        			// send(clientSocket, handleRequest(_clients[clientSocket], buffer), response.length(), 0);
       			}
 			}
 		}
@@ -218,6 +217,7 @@ void								Server::initCommands()
 {
 	_commands["NICK"] = new Nick(&_clients);
 	_commands["USER"] = new User(&_clients);
+	_commands["PING"] = new Ping(&_clients);
 	_commands["PASS"] = new Pass(&_clients, _password);
 }
 
@@ -265,7 +265,7 @@ void								Server::handleRequest(Client& client, const std::string& request)
 		request = line.substr(firstSpace + 1, std::string::npos);
 		// PRINT("line", line);
 		PRINT("command", command);
-		// PRINT("request", request);
+		PRINT("request", request);
 		if (_commands.count(command) != 0)
 		{
 			const std::string reply = _commands[command]->handleRequest(client, request); 
@@ -288,6 +288,19 @@ void								Server::handleRequest(Client& client, const std::string& request)
 	// 	removeClient(client.getClientSocket());
 	// }
 	// firstRequest = false;
+}
+
+// This function removes \r characters from the buffer.
+std::string						Server::cleanBuffer(std::string buffer) const
+{
+	while (true)
+	{
+		size_t pos = buffer.find('\r', 0);
+		if (pos == std::string::npos)
+			break;
+		buffer.erase(pos, 1);
+	}
+	return buffer;
 }
 
 // This function removes \r characters from the buffer.

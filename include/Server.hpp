@@ -12,6 +12,7 @@
 #include <limits>
 #include "Nick.hpp"
 #include "User.hpp"
+#include "Ping.hpp"
 #include "Pass.hpp"
 #include <ctime>
 #include <unistd.h>
@@ -40,6 +41,8 @@ class Server
 		void								removeClient( int fd );
 		void								initCommands();
 		void								handleRequest(Client& client, const std::string& request);
+		std::string							cleanBuffer(std::string buffer) const;
+		
 		// void								sendNumericReplies(const Client& target, const int count, ...);
 		std::string							cleanBuffer(std::string buffer) const;
 

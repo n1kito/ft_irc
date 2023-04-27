@@ -16,6 +16,7 @@ SRC_FILES		:=	main\
 					Commands/Nick\
 					Commands/Pass\
 					Commands/User\
+					Commands/Ping\
 					utils
 OBJ_FILES		:=	$(addprefix $(BIN_DIR)/, $(addsuffix .o, $(SRC_FILES)))
 OBJ_TEST_FILES	:=	$(addprefix $(BIN_DIR)/, $(addsuffix .o, $(SRC_TEST_FILES)))
