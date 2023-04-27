@@ -12,7 +12,8 @@ Client::Client(const int& clientSocket, const std::string& serverName ) :
 	_isRegistered(false),
 	_passwordStatus(false),
 	_clientSocket(clientSocket),
-	_serverName(serverName)
+	_serverName(serverName),
+  _welcomeState(false)
 {}
 
 // TODO: is this neede or should it be private ?
@@ -51,6 +52,7 @@ std::string		Client::getRealname() const { return _realname; }
 std::string		Client::getNickname() const { return _nickname; }
 std::string		Client::getPassword() const { return _password; }
 int				Client::getClientSocket() const { return _clientSocket; }
+bool			Client::getWelcomeState() const { return _welcomeState; }
 std::string		Client::getServerName() const { return _serverName; }
 bool			Client::getPasswordStatus() const { return _passwordStatus; }
 
@@ -59,9 +61,13 @@ void			Client::setUsername(std::string username) { _username = username; }
 void			Client::setRealname(std::string realname) { _realname = realname; }
 void			Client::setNickname(std::string nickname) { _nickname = nickname; }
 void			Client::setPassword(std::string password) { _password = password; }
+void			Client::setWelcomeState(const bool &state) { _welcomeState = state; }
 void			Client::setPasswordStatus(const bool& status) { _passwordStatus = status;}
 
 /* METHODS ********************************************************************/
 
-
+bool			Client::isAuthentificated() const
+{
+	return (!_nickname.empty() && _isRegistered);
+}
 

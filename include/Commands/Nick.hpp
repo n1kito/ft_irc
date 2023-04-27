@@ -14,7 +14,7 @@ class Nick : public ACommand
 
     	std::string	handleRequest(Client &client, std::string arg);
     	void		parseArgument();
-    	std::string	parseArgument(Client &client, std::string arg);
+    	std::string	parseArgument(Client &client, std::string& arg);
     	void		action();
     	std::string	action(Client &client, std::string nickname);
 
@@ -28,6 +28,10 @@ class Nick : public ACommand
 		Nick(const Nick &copyMe);
 		Nick&		operator = (const Nick &copyMe);
 };
+
+// ACommand* createCommandNick() {
+//     return new Nick();
+// }
 
 #endif
 

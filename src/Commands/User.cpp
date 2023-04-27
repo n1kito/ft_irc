@@ -55,7 +55,7 @@ std::string	User::handleRequest( Client& client, std::string argument )
 		return ret_action;
 	
 	client.setRegisterState(true);
-	return USER_SUCCESS("coucoucestmoi", client.getNickname());
+	return USER_SUCCESS("server", client.getNickname());
 	// return ":server: User created successfully!\r\n";
 }
 

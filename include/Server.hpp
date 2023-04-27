@@ -42,9 +42,11 @@ class Server
 		void								initCommands();
 		void								handleRequest(Client& client, const std::string& request);
 		std::string							cleanBuffer(std::string buffer) const;
-		
+
 		// void								sendNumericReplies(const Client& target, const int count, ...);
 
+
+	
 	protected:
 		// add protected elements here
 
@@ -54,6 +56,7 @@ class Server
 		// int bindSocket(serverSocket); 	
 		Server(const Server &copyMe);
 		Server&		operator = (const Server &copyMe);
+		Client&		operator [] (const int fd);
 		
 		std::string							_getCurrentDate() const;
 

@@ -1,7 +1,7 @@
 #include "ft_irc.hpp"
 #include "Server.hpp"
 #include <cerrno>
-
+#include "ACommand.hpp"
 /*
 Classes:
 	- server
@@ -15,6 +15,7 @@ int	main(int argc, char* argv[])
 	try
 	{
 		errno = 0;
+		// branch mj-fixing-password-parsing
 		// int			port = 0;
 		// std::string	password;
 		// checkArguments(argc, argv, port, password);

@@ -22,6 +22,7 @@ class Client
 		std::string		getNickname() const;
 		std::string		getPassword() const;
 		int				getClientSocket() const;
+		bool			getWelcomeState() const;
 		std::string		getServerName() const;
 		bool			getPasswordStatus() const;
 
@@ -30,6 +31,9 @@ class Client
 		void			setRealname(std::string realname);
 		void			setNickname(std::string nickname);
 		void			setPassword(std::string password);
+		void			setWelcomeState(const bool& state);
+
+		bool			isAuthentificated() const;
 		void			setPasswordStatus(const bool& status);
 
 	protected:
@@ -42,7 +46,9 @@ class Client
 		std::string	_realname;
 		std::string	_nickname;
 		std::string	_password;
-		int			_clientSocket;
+		int	_clientSocket;
+		bool		_welcomeState;
+
 		std::string	_serverName;
 		bool		_isFirstRequest;
 };
