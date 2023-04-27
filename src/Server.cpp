@@ -6,9 +6,12 @@
 #include "numericReplies.hpp"
 
 Server::Server() {}
-Server::Server(int port, std::string password) : _port(port), _password(password), _creationDate(_getCurrentDate())
+Server::Server(const int& port, const std::string& password, const std::string& serverName) :
+	_port(port),
+	_password(password),
+	_creationDate(_getCurrentDate()),
+	_serverName(serverName)
 {
-	PRINT("Time is", _creationDate);
 	initCommands();
 	std::cout << RPL_WELCOME("serveur", "nickname", "network") << std::endl;
 	// 1) SERVER SOCKET
@@ -86,7 +89,7 @@ Server::Server(int port, std::string password) : _port(port), _password(password
 				event.data.fd = clientSocket;
 				if (epoll_ctl(epollFd, EPOLL_CTL_ADD, clientSocket, &event) == -1)
 					throw std::runtime_error("Error adding client");
-				addClient(clientSocket, Client(clientSocket));
+				addClient(clientSocket, Client(clientSocket, _serverName));
 				// Send RPL_WELCOME
 				// TODO: change values
 				send(clientSocket, RPL_WELCOME("pouet", "pouet", "pouet").c_str(), RPL_WELCOME("pouet", "pouet", "pouet").length(), 0);
@@ -179,9 +182,18 @@ void								Server::addClient( int fd, Client client )
 
 void								Server::removeClient( int fd )
 {
-	_clients.erase( fd );
+	// used to give the client enough time to print messages before closing the connection
+	// usleep(1000); //TODO: there has to be a better way to do this
+	// send a quit message to IRSSI
+	// std::string message = "QUIT :Goodbye\r\n";
+	// if (send(fd, message.c_str(), message.size(), 0) == -1) {
+        // std::cerr << "Failed to send quit message to client socket " << fd << std::endl;
+    // }
+	std::cout << "\n[removeClient]\n _client.size:" << _clients.size() << "\n"; 
 	if( close( fd ) == -1 )
 		throw std::runtime_error("Error when closing fd");
+	_clients.erase( fd );
+	std::cout << "_client.size:" << _clients.size() << "\n";
 }
 
 // This cannot work since numeric replies require specific arguments
@@ -206,10 +218,12 @@ void								Server::initCommands()
 	_commands["NICK"] = new Nick(&_clients);
 	_commands["USER"] = new User(&_clients);
 	_commands["PING"] = new Ping(&_clients);
+	_commands["PASS"] = new Pass(&_clients, _password);
 }
 
-void						Server::handleRequest(Client& client, const std::string& request)
+void								Server::handleRequest(Client& client, const std::string& request)
 {
+	// static bool	firstRequest = true;
 	/*
 		We handle the following commands
 		-	CAP -> should not do anything
@@ -254,11 +268,39 @@ void						Server::handleRequest(Client& client, const std::string& request)
 		PRINT("request", request);
 		if (_commands.count(command) != 0)
 		{
-			std::cout << "Calling handleRequest() for " << command << std::endl;
 			const std::string reply = _commands[command]->handleRequest(client, request); 
+			// TODO
 			send(client.getClientSocket(), reply.c_str(), reply.length(), 0);
+			if (command == "PASS" && client.getPasswordStatus() == false)
+			{
+				usleep(1000); //TODO: there has to be a better way to do this
+				removeClient(client.getClientSocket());
+			}
 		}
 	}
+	// if (firstRequest == true && foundPwdCmd == false)
+	// {
+	// 	std::cout << "MISSING PASSWORD" << std::endl;
+	// 	const std::string reply = ERR_PASSWDMISMATCH(_serverName, client.getNickname());
+	// 	if (send(client.getClientSocket(), reply.c_str(), reply.length(), 0) == -1)
+	// 		throw std::runtime_error("failed to send message to client");
+	// 	usleep(1000); //TODO: there has to be a better way to do this
+	// 	removeClient(client.getClientSocket());
+	// }
+	// firstRequest = false;
+}
+
+// This function removes \r characters from the buffer.
+std::string						Server::cleanBuffer(std::string buffer) const
+{
+	while (true)
+	{
+		size_t pos = buffer.find('\r', 0);
+		if (pos == std::string::npos)
+			break;
+		buffer.erase(pos, 1);
+	}
+	return buffer;
 }
 
 // This function removes \r characters from the buffer.
@@ -275,7 +317,7 @@ std::string						Server::cleanBuffer(std::string buffer) const
 }
 
 // Returns a human readable string of the current date
-std::string				Server::_getCurrentDate() const
+std::string						Server::_getCurrentDate() const
 {
 	time_t		rawTime;
 	struct tm*	timeInfo;

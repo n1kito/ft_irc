@@ -7,7 +7,7 @@ User::User() : ACommand()
 	// std::cout << "Default constructor called" << std::endl;
 }
 
-User::User( const std::map< int, Client >* clients ) : ACommand(clients)
+User::User( std::map< int, Client >* clients ) : ACommand(clients)
 {
 	// std::cout << "Default constructor called" << std::endl;
 }

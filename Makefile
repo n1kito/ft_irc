@@ -14,6 +14,7 @@ SRC_FILES		:=	main\
 					Client\
 					Commands/ACommand\
 					Commands/Nick\
+					Commands/Pass\
 					Commands/User\
 					Commands/Ping\
 					utils

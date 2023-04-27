@@ -9,7 +9,7 @@
 class Nick : public ACommand
 {
 	public:
-		Nick(const std::map<int, Client >* clients);
+		Nick(std::map<int, Client >* clients);
 		~Nick();
 
     	std::string	handleRequest(Client &client, std::string arg);

@@ -46,7 +46,7 @@
 #include <cctype>
 
 // Prototypes
-#include "Nick.hpp"
+// #include "Nick.hpp"
 void	checkArguments(const int& argc, char** arguments, int& port, std::string& password);
 bool	isSpecialCharacter(char checkMe);
 
