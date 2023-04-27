@@ -9,7 +9,7 @@ class Ping : public ACommand
 {
 	public:
 		Ping(const Ping &copyMe);
-		Ping( const std::map< int, Client >* clients );
+		Ping( std::map< int, Client >* clients );
 		
 		~Ping();
 		Ping&		operator = (const Ping &copyMe);

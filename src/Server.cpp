@@ -177,7 +177,9 @@ void								Server::setCommands( std::map< std::string, ACommand* > commands ) {
 void								Server::addClient( int fd, Client client )
 {
 	// _clients[fd] = client;
+	std::cout << "ADDING CLIENT :" << fd << std::endl;
 	_clients.insert( std::make_pair( fd, client ));
+	std::cout << "TOTAL CLIENTS :" << _clients.size() << std::endl;
 }
 
 void								Server::removeClient( int fd )
@@ -271,10 +273,13 @@ void								Server::handleRequest(Client& client, const std::string& request)
 			const std::string reply = _commands[command]->handleRequest(client, request); 
 			// TODO
 			send(client.getClientSocket(), reply.c_str(), reply.length(), 0);
-			if (command == "PASS" && client.getPasswordStatus() == false)
+			std::cout << "actual command: <" << command << ">" << std::endl;
+			if (command == "PASS" && client.getPassword().empty())
 			{
+				std::cout << "ENTERING WRONG PASSWORD" << std::endl;
 				usleep(1000); //TODO: there has to be a better way to do this
 				removeClient(client.getClientSocket());
+				break ;
 			}
 		}
 	}
@@ -288,19 +293,6 @@ void								Server::handleRequest(Client& client, const std::string& request)
 	// 	removeClient(client.getClientSocket());
 	// }
 	// firstRequest = false;
-}
-
-// This function removes \r characters from the buffer.
-std::string						Server::cleanBuffer(std::string buffer) const
-{
-	while (true)
-	{
-		size_t pos = buffer.find('\r', 0);
-		if (pos == std::string::npos)
-			break;
-		buffer.erase(pos, 1);
-	}
-	return buffer;
 }
 
 // This function removes \r characters from the buffer.

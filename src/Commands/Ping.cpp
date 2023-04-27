@@ -7,7 +7,7 @@ Ping::Ping() : ACommand()
 	// std::cout << "Default constructor called" << std::endl;
 }
 
-Ping::Ping( const std::map< int, Client >* clients ) : ACommand(clients)
+Ping::Ping( std::map< int, Client >* clients ) : ACommand(clients)
 {
 	// std::cout << "Default constructor called" << std::endl;
 }

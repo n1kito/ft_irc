@@ -44,7 +44,6 @@ class Server
 		std::string							cleanBuffer(std::string buffer) const;
 		
 		// void								sendNumericReplies(const Client& target, const int count, ...);
-		std::string							cleanBuffer(std::string buffer) const;
 
 	protected:
 		// add protected elements here
