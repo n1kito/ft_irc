@@ -45,6 +45,7 @@ void		User::setRealname( std::string realname ) { _realname = realname; }
 
 std::string	User::handleRequest( Client& client, std::string argument )
 {
+	std::cout << RED << "What client is it ?? " << client.getClientSocket() << RESET << std::endl;
 	// send(client.getClientSocket(), "", reply.length(), 0);
 	std::string ret_parsing = parseArgument(client, argument);
 	if (!ret_parsing.empty())
@@ -63,6 +64,11 @@ void		User::parseArgument() {}
 
 std::string	User::parseArgument( Client& client, std::string argument )
 {
+	// first ==> username
+	// second ==> hostname
+	// third ==> servername
+	// last ==> realname
+
 	std::stringstream	iss(argument);
 	
 	iss >> _username;
@@ -70,20 +76,16 @@ std::string	User::parseArgument( Client& client, std::string argument )
 	if ( _username.size() > USERLEN )
 		_username.erase(_username.at(USERLEN));
 
-	// hostname and servername are typically ignored when user comes from a client
+	// hostname and servername are typically ignored when USER comes from a client
 	iss.ignore(std::numeric_limits< std::streamsize >::max(), ' ');
 	iss.ignore(std::numeric_limits< std::streamsize >::max(), ' ');
 
-	iss >> _realname;
+	char tmp_name[REALNAMELEN];
+	iss.getline(tmp_name, REALNAMELEN);
+	_realname = tmp_name;
 	if (_realname[0] != ':')
 		_realname = client.getNickname();
-
-	if  (!iss.good())
-		return (ERR_NEEDMOREPARAMS("server", client.getNickname(), "USER"));
-	// first ==> username
-	// second ==> hostname
-	// third ==> servername
-	// last ==> string with spaces (realname) 
+	_realname.erase(0, 1);
 	return "";
 }
 
@@ -93,7 +95,7 @@ std::string	User::action( Client& client, std::string username, std::string real
 {
 	if (client.getRegisterState())
 		return (ERR_ALREADYREGISTERED("server", client.getNickname()));
-	if (username.empty())
+	if (username.empty() || realname.empty())
 		return (ERR_NEEDMOREPARAMS("server", client.getNickname(), "USER"));
 	client.setUsername(username);
 	client.setRealname(realname);

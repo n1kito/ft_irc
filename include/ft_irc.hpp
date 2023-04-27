@@ -32,6 +32,7 @@
 # define PRINT(x,y) std::cout << x << ": " << y << std::endl
 
 # define USERLEN 10
+# define REALNAMELEN 50
 # define NICKLEN 10
 
 #include <iostream>
