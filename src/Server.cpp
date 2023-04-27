@@ -109,9 +109,14 @@ Server::Server(int port, std::string password) : _port(port), _password(password
 				else
 				{
 					// process the data
-        			std::cout << "Received from client: " << "\"" << MAGENTA << buffer << RESET << "\"" << std::endl;
-        			// send(clientSocket, handleRequest(_clients[clientSocket], buffer), response.length(), 0);
-					handleRequest(_clients[clientSocket], buffer);
+        			std::cout	<< std::endl
+								<< "************ Received from client **********" << std::endl
+								<< BOLD << "[" << RESET << DIM << "Request" << RESET << BOLD << "]" << RESET << std::endl
+								<< MAGENTA << buffer << RESET << std::endl;
+								std::cout << BOLD << "[" RESET << DIM << "Handling" << RESET << BOLD << "]" << RESET << std::endl;
+					handleRequest(_clients[clientSocket], cleanBuffer(buffer));
+					std::cout	<< "********************************************"
+								<< std::endl;
       			}
 			}
 		}
@@ -243,10 +248,10 @@ void						Server::handleRequest(Client& client, const std::string& request)
 		// PRINT("extracting command", "");
 		command = line.substr(0, firstSpace);
 		// PRINT("extracting request", "");
-		request = line.substr(firstSpace, std::string::npos);
+		request = line.substr(firstSpace + 1, std::string::npos);
 		// PRINT("line", line);
 		PRINT("command", command);
-		// PRINT("request", request);
+		PRINT("request", request);
 		if (_commands.count(command) != 0)
 		{
 			std::cout << "Calling handleRequest() for " << command << std::endl;
@@ -254,6 +259,19 @@ void						Server::handleRequest(Client& client, const std::string& request)
 			send(client.getClientSocket(), reply.c_str(), reply.length(), 0);
 		}
 	}
+}
+
+// This function removes \r characters from the buffer.
+std::string						Server::cleanBuffer(std::string buffer) const
+{
+	while (true)
+	{
+		size_t pos = buffer.find('\r', 0);
+		if (pos == std::string::npos)
+			break;
+		buffer.erase(pos, 1);
+	}
+	return buffer;
 }
 
 // Returns a human readable string of the current date

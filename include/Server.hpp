@@ -39,6 +39,8 @@ class Server
 		void								removeClient( int fd );
 		void								initCommands();
 		void								handleRequest(Client& client, const std::string& request);
+		std::string							cleanBuffer(std::string buffer) const;
+		
 		// void								sendNumericReplies(const Client& target, const int count, ...);
 
 	protected:

@@ -35,7 +35,7 @@ class Client
 		std::string	_realname;
 		std::string	_nickname;
 		std::string	_password;
-		int	_clientSocket;
+		int			_clientSocket;
 
 };
 

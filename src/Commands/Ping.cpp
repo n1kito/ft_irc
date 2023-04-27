@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Ping.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cgosseli <cgosseli@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jeepark <jeepark@student42.fr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/25 14:47:16 by cgosseli          #+#    #+#             */
-/*   Updated: 2023/04/25 15:09:55 by cgosseli         ###   ########.fr       */
+/*   Updated: 2023/04/27 15:57:02 by jeepark          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,8 +54,7 @@ std::string	Ping::handleRequest( Client& client, std::string argument )
 	std::string ret_parsing = parseArgument(client, argument);
 	if (!ret_parsing.empty())
 		return ret_parsing;
-
-	return (PONG_SUCCESS("server", client.getNickname(), argument));	
+	return (PONG_SUCCESS(argument));	
 }
 
 void		Ping::parseArgument() {}

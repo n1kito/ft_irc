@@ -30,7 +30,7 @@
 
 #define USER_SUCCESS(server, nickname) (std::string(":") + server + " 001 " + nickname + " :User created successfully!\r\n")
 
-#define PONG_SUCCESS(server, nickname, token) (std::string("PONG") + token + "\r\n")
+#define PONG_SUCCESS(token) (std::string("PONG ") + token + " \r\n")
 // #define PONG_SUCCESS(server, nickname, token) (std::string(":") + server + " 001 " + nickname + " :PONG" + token + "\r\n")
 
 #endif
