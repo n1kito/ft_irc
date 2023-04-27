@@ -7,7 +7,7 @@ Client::Client()
 	// std::cout << "Default constructor called" << std::endl;
 }
 
-Client::Client( int clientSocket ) : _isRegistered(false), _clientSocket(clientSocket) {}
+Client::Client( int clientSocket ) : _isRegistered(false), _clientSocket(clientSocket), _welcomeState(false){}
 
 Client::Client(const Client &copyMe)
 {
@@ -43,15 +43,20 @@ std::string		Client::getRealname() const { return _realname; }
 std::string		Client::getNickname() const { return _nickname; }
 std::string		Client::getPassword() const { return _password; }
 int				Client::getClientSocket() const { return _clientSocket; }
+bool			Client::getWelcomeState() const { return _welcomeState; }
 
 void			Client::setRegisterState(bool state) { _isRegistered = state; }
 void			Client::setUsername(std::string username) { _username = username; }
 void			Client::setRealname(std::string realname) { _realname = realname; }
 void			Client::setNickname(std::string nickname) { _nickname = nickname; }
 void			Client::setPassword(std::string password) { _password = password; }
+void			Client::setWelcomeState(const bool &state) { _welcomeState = state; }
 
 
 /* METHODS ********************************************************************/
 
-
+bool			Client::isAuthentificated() const
+{
+	return (!_nickname.empty() && _isRegistered);
+}
 

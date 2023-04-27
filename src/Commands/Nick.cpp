@@ -75,7 +75,8 @@ std::string	Nick::parseArgument(Client &client, std::string& arg)
 	{
 		if (it->second.getNickname() == arg)
 		{
-			return(ERR_NICKNAMEINUSE(arg));
+			std::cout << "arg: " << arg << "\n";
+			return(NICK_COLLISION(arg));
 		}
 		it++;
 	}

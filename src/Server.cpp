@@ -90,7 +90,7 @@ Server::Server(int port, std::string password) : _port(port), _password(password
 				// Send RPL_WELCOME
 				// TODO: change values
 				// std::string nickname = _clients[clientSocket].getNickname();
-				send(clientSocket, RPL_WELCOME("server", "nickname", "network").c_str(), RPL_WELCOME("server", "nickname", "network").length(), 0);
+				// send(clientSocket, RPL_WELCOME("server", "nickname", "network").c_str(), RPL_WELCOME("server", "nickname", "network").length(), 0);
 			}
 			else
 			{
@@ -115,6 +115,18 @@ Server::Server(int port, std::string password) : _port(port), _password(password
 								<< MAGENTA << buffer << RESET << std::endl;
 								std::cout << "[" RESET << "Handling" << RESET << "]" << RESET << std::endl;
 					handleRequest(_clients[clientSocket], cleanBuffer(buffer));
+					if (_clients[clientSocket].isAuthentificated() && _clients[clientSocket].getWelcomeState() == false)
+					{
+						send(clientSocket, RPL_WELCOME("server",_clients[clientSocket].getNickname(), "network").c_str(), RPL_WELCOME("server", _clients[clientSocket].getNickname(), "network").length(), 0);
+						_clients[clientSocket].setWelcomeState(true);
+					}
+					else if (!_clients[clientSocket].isAuthentificated() && _clients[clientSocket].getWelcomeState() == false )
+					{
+						std::string msg = KILL(_clients[clientSocket].getNickname(), "nickname collision");
+						send(clientSocket, msg.c_str(), msg.length(), 0);
+						// removeClient(clientSocket);
+					}
+
 					std::cout	<< "********************************************"
 								<< std::endl;
 					// send(clientSocket, handleRequest(_clients[clientSocket], buffer), response.length(), 0);

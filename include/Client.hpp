@@ -19,12 +19,16 @@ class Client
 		std::string		getNickname() const;
 		std::string		getPassword() const;
 		int				getClientSocket() const;
+		bool			getWelcomeState() const;
 
 		void			setRegisterState(bool state);
 		void			setUsername(std::string username);
 		void			setRealname(std::string realname);
 		void			setNickname(std::string nickname);
 		void			setPassword(std::string password);
+		void			setWelcomeState(const bool& state);
+
+		bool			isAuthentificated() const;
 
 	protected:
 		// add protected elements here
@@ -36,6 +40,7 @@ class Client
 		std::string	_nickname;
 		std::string	_password;
 		int	_clientSocket;
+		bool		_welcomeState;
 
 };
 
