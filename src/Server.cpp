@@ -183,9 +183,11 @@ void								Server::addClient( int fd, Client client )
 
 void								Server::removeClient( int fd )
 {
-	_clients.erase( fd );
+	std::cout << "\n[removeClient]\n _client.size:" << _clients.size() << "\n"; 
 	if( close( fd ) == -1 )
 		throw std::runtime_error("Error when closing fd");
+	_clients.erase( fd );
+	std::cout << "_client.size:" << _clients.size() << "\n";
 }
 
 // This cannot work since numeric replies require specific arguments
@@ -259,7 +261,10 @@ void								Server::handleRequest(Client& client, const std::string& request)
 		if (_commands.count(command) != 0)
 		{
 			const std::string reply = _commands[command]->handleRequest(client, request); 
+			// TODO 
 			send(client.getClientSocket(), reply.c_str(), reply.length(), 0);
+			if (command == "PASS" && client.getPasswordStatus() == false)
+				removeClient(client.getClientSocket());
 		}
 	}
 }

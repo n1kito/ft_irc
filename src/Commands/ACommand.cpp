@@ -15,11 +15,6 @@ ACommand::ACommand(const ACommand &copyMe)
 	*this = copyMe;
 }
 
-void	ACommand::disconnectClient(const int& clientSocket)
-{
-	close(clientSocket);
-	_clients->erase(clientSocket);
-}
 /* DESTRUCTORS ****************************************************************/
 
 ACommand::~ACommand()

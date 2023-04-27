@@ -29,7 +29,7 @@
 
 // Custom Messages
 #define NICK_SUCCESS(server, nickname) (std::string(":") + server + " 001 " + nickname + " :Nickname created successfully !\r\n")
-#define PASS_SUCCESS(server, nickname) (std::string(":") + server + " 001 " + nickname + " :Password set successfully !\r\n")
+#define PASS_SUCCESS(server, nickname) (std::string(":") + server + " 911 " + nickname + " :Password set successfully !\r\n")
 #define USER_SUCCESS(server, nickname) (std::string(":") + server + " 001 " + nickname + " :User created successfully !\r\n")
 
 #endif

@@ -13,7 +13,6 @@ class ACommand
 		ACommand();
 		ACommand(std::map<int, Client>* clients);
 		ACommand(const ACommand &copyMe);
-		virtual void disconnectClient(const int& clientSocket);
 		virtual ~ACommand();
 		ACommand&		operator = (const ACommand &copyMe);
 	
