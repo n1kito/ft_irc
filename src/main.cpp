@@ -15,10 +15,14 @@ int	main(int argc, char* argv[])
 	try
 	{
 		errno = 0;
-		int			port = 0;
-		std::string	password;
-		checkArguments(argc, argv, port, password);
-		Server	server(port, argv[2]);
+		// int			port = 0;
+		// std::string	password;
+		// checkArguments(argc, argv, port, password);
+
+		if (argc != 3)
+			throw std::invalid_argument("Wrong argument count.\nUsage: \033[3m./ircserv <port> <password>\033[0m");
+		int port = 6667;
+		Server	server(port, argv[2], "pouetMania");
 		return (0);	
 	}
 	catch (const std::exception& e)
