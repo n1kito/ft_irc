@@ -14,6 +14,7 @@
 #include "User.hpp"
 #include "Pass.hpp"
 #include <ctime>
+#include <unistd.h>
 
 #define MAX_EVENTS 10
 

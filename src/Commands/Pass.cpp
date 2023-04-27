@@ -27,7 +27,7 @@ std::string	Pass::handleRequest(Client& client, std::string argument)
 		return ERR_NEEDMOREPARAMS(client.getServerName(), client.getNickname(), "PASS");
 	else if (argument != _serverPassword)
 	{
-		std::cout << "PASSWORDS DO NOT MATCH" << std::endl;
+		std::cout << "PASSWORDS DO NOT MATCH" << std::endl; // TODO: remove this
 		return ERR_PASSWDMISMATCH(client.getServerName(), client.getNickname());
 	}
 	client.setPassword(argument);

@@ -183,6 +183,13 @@ void								Server::addClient( int fd, Client client )
 
 void								Server::removeClient( int fd )
 {
+	// used to give the client enough time to print messages before closing the connection
+	// usleep(1000); //TODO: there has to be a better way to do this
+	// send a quit message to IRSSI
+	// std::string message = "QUIT :Goodbye\r\n";
+	// if (send(fd, message.c_str(), message.size(), 0) == -1) {
+        // std::cerr << "Failed to send quit message to client socket " << fd << std::endl;
+    // }
 	std::cout << "\n[removeClient]\n _client.size:" << _clients.size() << "\n"; 
 	if( close( fd ) == -1 )
 		throw std::runtime_error("Error when closing fd");
@@ -216,6 +223,7 @@ void								Server::initCommands()
 
 void								Server::handleRequest(Client& client, const std::string& request)
 {
+	// static bool	firstRequest = true;
 	/*
 		We handle the following commands
 		-	CAP -> should not do anything
@@ -261,12 +269,25 @@ void								Server::handleRequest(Client& client, const std::string& request)
 		if (_commands.count(command) != 0)
 		{
 			const std::string reply = _commands[command]->handleRequest(client, request); 
-			// TODO 
+			// TODO
 			send(client.getClientSocket(), reply.c_str(), reply.length(), 0);
 			if (command == "PASS" && client.getPasswordStatus() == false)
+			{
+				usleep(1000); //TODO: there has to be a better way to do this
 				removeClient(client.getClientSocket());
+			}
 		}
 	}
+	// if (firstRequest == true && foundPwdCmd == false)
+	// {
+	// 	std::cout << "MISSING PASSWORD" << std::endl;
+	// 	const std::string reply = ERR_PASSWDMISMATCH(_serverName, client.getNickname());
+	// 	if (send(client.getClientSocket(), reply.c_str(), reply.length(), 0) == -1)
+	// 		throw std::runtime_error("failed to send message to client");
+	// 	usleep(1000); //TODO: there has to be a better way to do this
+	// 	removeClient(client.getClientSocket());
+	// }
+	// firstRequest = false;
 }
 
 // This function removes \r characters from the buffer.

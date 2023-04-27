@@ -2,6 +2,9 @@
 # define CLIENT_HPP
 
 # include <string>
+# include <unistd.h>
+# include <exception>
+# include <stdexcept>
 
 class Client
 {
@@ -41,6 +44,7 @@ class Client
 		std::string	_password;
 		int			_clientSocket;
 		std::string	_serverName;
+		bool		_isFirstRequest;
 };
 
 #endif
