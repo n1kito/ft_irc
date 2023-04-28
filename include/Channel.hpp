@@ -12,6 +12,7 @@ class Channel
 		typedef std::map< std::string, const Client* > clientNickMap;
 
 		Channel( std::string name, const Client& client );
+		Channel(const Channel &copyMe);
 		~Channel();
 
 		// getters
@@ -49,7 +50,6 @@ class Channel
 		size_t					_clientLimit;
 		bool					_topicIsProtected;
 
-		Channel(const Channel &copyMe);
 		Channel&		operator = (const Channel &copyMe);
 
 };

@@ -14,9 +14,9 @@ class ACommand
 		ACommand(std::map<int, Client>* clients);
 		ACommand(const ACommand &copyMe);
 		virtual ~ACommand();
-		ACommand&		operator = (const ACommand &copyMe);
+		ACommand&			operator = (const ACommand &copyMe);
 	
-		virtual std::string	handleRequest(Client &client, std::string arg) = 0;
+		virtual void		handleRequest(Client &client, std::string arg) = 0;
 
 	protected:
 		virtual void		parseArgument() = 0;

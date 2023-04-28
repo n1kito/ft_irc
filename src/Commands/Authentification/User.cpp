@@ -43,20 +43,27 @@ void		User::setRealname( std::string realname ) { _realname = realname; }
 
 /* METHODS ********************************************************************/
 
-std::string	User::handleRequest( Client& client, std::string argument )
+void	User::handleRequest( Client& client, std::string argument )
 {
+	 std::string message = "";
 	std::cout << RED << "What client is it ?? " << client.getClientSocket() << RESET << std::endl;
 	// send(client.getClientSocket(), "", reply.length(), 0);
 	std::string ret_parsing = parseArgument(client, argument);
 	if (!ret_parsing.empty())
-		return ret_parsing;
-
-	std::string ret_action = action(client, _username, _realname);
-	if (!ret_action.empty())
-		return ret_action;
-	
-	client.setRegisterState(true);
-	return USER_SUCCESS("server", client.getNickname());
+		message = ret_parsing;
+	else
+	{
+		std::string ret_action = action(client, _username, _realname);
+		if (!ret_action.empty())
+			message = ret_action;
+		else
+		{
+			client.setRegisterState(true);
+			message = USER_SUCCESS("server", client.getNickname());
+		}
+	}
+	if (!message.empty())
+		send(client.getClientSocket(), message.c_str(), message.length(), 0);
 	// return ":server: User created successfully!\r\n";
 }
 

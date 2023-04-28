@@ -63,7 +63,7 @@ class Server
 
 		int									_port;
 		std::string							_password;
-		std::vector< Channel >				_channels;
+		std::map< std::string, Channel >	_channels;
 		std::map< int, Client >				_clients;
 		std::map< std::string, ACommand* >	_commands;
 		std::string							_creationDate;

@@ -19,20 +19,25 @@ Pass::Pass(const Pass &copyMe) : ACommand()
 void	Pass::parseArgument(){}
 void	Pass::action(){}
 
-std::string	Pass::handleRequest(Client& client, std::string argument)
+void	Pass::handleRequest(Client& client, std::string argument)
 {
+	std::string message = "";
 	if (client.getRegisterState() == true)
-		return ERR_ALREADYREGISTERED(client.getServerName(), client.getNickname());
+		message = ERR_ALREADYREGISTERED(client.getServerName(), client.getNickname());
 	else if (argument.length() == 0)
-		return ERR_NEEDMOREPARAMS(client.getServerName(), client.getNickname(), "PASS");
+		message = ERR_NEEDMOREPARAMS(client.getServerName(), client.getNickname(), "PASS");
 	else if (argument != _serverPassword)
 	{
 		std::cout << "PASSWORDS DO NOT MATCH" << std::endl; // TODO: remove this
-		return ERR_PASSWDMISMATCH(client.getServerName(), client.getNickname());
+		message = ERR_PASSWDMISMATCH(client.getServerName(), client.getNickname());
 	}
-	client.setPassword(argument);
-	client.setPasswordStatus(true);
-	return PASS_SUCCESS(client.getServerName(), "pouet");
+	else
+	{
+		client.setPassword(argument);
+		client.setPasswordStatus(true);
+	}
+	if (!message.empty())
+		send(client.getClientSocket(), message.c_str(), message.length(), 0);
 }
 
 /* DESTRUCTORS ****************************************************************/

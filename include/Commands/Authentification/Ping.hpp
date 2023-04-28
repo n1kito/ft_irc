@@ -16,7 +16,7 @@ class Ping : public ACommand
 	
 	protected:
 
-		std::string	handleRequest( Client& client, std::string argument );
+		void	handleRequest( Client& client, std::string argument );
 		void		parseArgument();
 		std::string	parseArgument( Client& client, std::string argument );
 		void		action();

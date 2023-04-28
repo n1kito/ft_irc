@@ -283,11 +283,12 @@ void								Server::handleRequest(Client& client, const std::string& request)
 		request = line.substr(firstSpace + 1, std::string::npos);
 		PRINT("command", command);
 		PRINT("request", request);
-		if (_commands.count(command) != 0)
+		if (_commands.find(command) != _commands.end())
 		{
-			const std::string reply = _commands[command]->handleRequest(client, request); 
+			// const std::string reply = _commands[command]->handleRequest(client, request); 
 			// TODO
-			send(client.getClientSocket(), reply.c_str(), reply.length(), 0);
+			// send(client.getClientSocket(), reply.c_str(), reply.length(), 0);
+			_commands[command]->handleRequest(client, request);
 			std::cout << "actual command: <" << command << ">" << std::endl;
 			if (command == "PASS" && client.getPassword().empty())
 			{

@@ -34,7 +34,13 @@ Channel::~Channel()
 
 Channel& Channel::operator = (const Channel &copyMe)
 {
-	(void)copyMe;
+	_connectedClients = copyMe.getClientMap();;
+	_operators = copyMe.getOperators();;
+	_name = copyMe.getName();
+	_topic = copyMe.getTopic();
+	_clientLimit = copyMe.isClientLimitMode();
+	_topicIsProtected = copyMe.isTopicProtectedMode();
+
 	// std::cout << "Copy assignment operator called" << std::endl;
 	return *this;
 }
