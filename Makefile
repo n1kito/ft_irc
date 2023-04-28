@@ -12,6 +12,7 @@ BIN_DIR			:=	bin
 SRC_FILES		:=	main\
 					Server\
 					Client\
+					Channel\
 					Commands/ACommand\
 					Commands/Authentification/Nick\
 					Commands/Authentification/Pass\
@@ -61,12 +62,12 @@ fclean: clean
 
 re: fclean all
 
-run: all
-	@./${NAME} 1.1.1.1 8080
+launch: all
+	@clear -x && make && clear -x && ./${NAME} 6667 coucou
 
 -include $(OBJ_FILES:%.o=%.d)
 
-.PHONY: all clean fclean re title run
+.PHONY: all clean fclean re title launch
 
 #░░░░█░█░▀█▀░▀█▀░█░░░▀█▀░▀█▀░▀█▀░█▀▀░█▀▀░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
 #░░░░█░█░░█░░░█░░█░░░░█░░░█░░░█░░█▀▀░▀▀█░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░

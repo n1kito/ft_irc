@@ -1,5 +1,4 @@
 #include "Server.hpp"
-
 /* CONSTRUCTORS ***************************************************************/
 
 #include <cerrno>
