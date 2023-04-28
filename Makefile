@@ -13,15 +13,18 @@ SRC_FILES		:=	main\
 					Server\
 					Client\
 					Commands/ACommand\
-					Commands/Nick\
-					Commands/Pass\
-					Commands/User\
-					Commands/Ping\
+					Commands/Authentification/Nick\
+					Commands/Authentification/Pass\
+					Commands/Authentification/User\
+					Commands/Authentification/Ping\
 					utils
 OBJ_FILES		:=	$(addprefix $(BIN_DIR)/, $(addsuffix .o, $(SRC_FILES)))
 OBJ_TEST_FILES	:=	$(addprefix $(BIN_DIR)/, $(addsuffix .o, $(SRC_TEST_FILES)))
 SRC_DIR			:=	src
-INC_DIR			:=	-I include/Commands -I include
+INC_DIR			:=	-I include/Commands \
+					-I include/Commands/Authentification \
+					-I include/Commands/Channels \
+					-I include
 
 #░░░░█▀▄░█▀▀░█▀▀░▀█▀░█▀█░█▀▀░█▀▀░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
 #░░░░█▀▄░█▀▀░█░░░░█░░█▀▀░█▀▀░▀▀█░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
@@ -41,7 +44,7 @@ $(BIN_DIR)/%.o: $(SRC_DIR)/%.cpp Makefile | $(BIN_DIR)
 	@printf "\t$(BLUE)> compiling $(notdir $<)$(END_COLOR)\n"
 
 $(BIN_DIR):
-	@mkdir -p $(BIN_DIR)/Commands
+	@mkdir -p $(BIN_DIR)/Commands/Authentification $(BIN_DIR)/Commands/Channels
 	@echo "\t$(IPURPLE)Created $(BIN_DIR)/ directory.$(END_COLOR)"
 
 clean: title

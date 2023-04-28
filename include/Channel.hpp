@@ -1,19 +1,37 @@
 #ifndef CHANNEL_HPP
 # define CHANNEL_HPP
 
+# include <strings>
+# include "Client.hpp"
+
 class Channel
 {
 	public:
 		Channel();
-		Channel(const Channel &copyMe);
 		~Channel();
-		Channel&		operator = (const Channel &copyMe);
-	
+
+		// setters
+		std::string	getName() const;
+		std::string	getTopic() const;
+
+		// getters
+		void		setName(const std::string& newName);
+		void		setTopic(const std::string& newTopic);
+
 	protected:
 		// add protected elements here
 
 	private:
-		// add private elements here
+		std::map< std::string, Client* > _connectedClients;
+		std::string	_name;
+		// _mode;
+		std::string	_topic;
+		// _operators;
+
+
+		Channel(const Channel &copyMe);
+		Channel&		operator = (const Channel &copyMe);
+
 };
 
 #endif
