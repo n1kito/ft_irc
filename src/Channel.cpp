@@ -57,6 +57,12 @@ const Channel::clientNickMap&	Channel::getOperators() const { return _operators;
 bool							Channel::isClientLimitMode() const { return _clientLimit > 0; }
 bool							Channel::isTopicProtectedMode() const { return _topicIsProtected; }
 
+// checkers
+bool							Channel::clientIsOperator(const Client& clientRef)
+{
+	return _operators.find(clientRef.getNickname()) != _operators.end();
+}
+
 // setters
 void							Channel::setTopic(const std::string& newTopic)
 {
@@ -106,3 +112,4 @@ bool							Channel::checkTopic(const std::string arg)
 		return false;
 	return true;
 }
+

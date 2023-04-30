@@ -11,6 +11,12 @@
 // 004
 #define RPL_MYINFO(server, nickname, serverName, version, userModes, channelModes) (std::string(":") + server + " 004 " + nickname + " :" + serverName + " " + version + " " + userModes + " " + channelModes + "\r\n")
 
+// TOPIC
+// 331
+#define RPL_NOTOPIC(server, nickname, channel) ( std::string(":") + server + " 331 " + nickname + " " + channel + " :No topic is set\r\n")
+// 332
+#define RPL_TOPIC(server, nickname, channel, topic) (std::string(":" ) + server + " 332 " + nickname + " " + channel + " :" + topic + "\r\n")
+
 // ...
 
 // 403
@@ -41,7 +47,6 @@
 // JOIN
 
 #define JOIN_SUCCESS(nickname, channel) (std::string(":") + nickname + " JOIN " + channel + " \r\n") 
-#define RPL_TOPIC(nickname, channel, topic) (std::string(":") + nickname + " 332 " channel + " " + topic " \r\n") 
 
 // 332 <nickname> <channel> :<topic>
 

@@ -20,9 +20,13 @@ class Channel
 		std::string				getTopic() const;
 		const clientNickMap&	getClientMap() const;
 		const clientNickMap&	getOperators() const;
+		
 		// getters -> channel modes
 		bool					isClientLimitMode() const;
 		bool					isTopicProtectedMode() const;
+
+		// checkers
+		bool					clientIsOperator(const Client& clientRef);
 
 		// setters
 		void			setName(const std::string& newName);
@@ -36,6 +40,7 @@ class Channel
 
 		bool			checkTopic(const std::string argument);
 		bool			checkName(const std::string name);
+
 	protected:
 		// add protected elements here
 
