@@ -13,7 +13,7 @@ Server::Server(const int& port, const std::string& password, const std::string& 
 	_serverName(serverName)
 {
 	initCommands();
-	std::cout << RPL_WELCOME("serveur", "nickname", "network") << std::endl;
+	std::cout << RPL_WELCOME(_serverName, "nickname", "network") << std::endl;
 	// 1) SERVER SOCKET
 	// create ServerSocket
 	int serverSocket = socket(AF_INET, SOCK_STREAM, 0);
