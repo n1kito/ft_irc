@@ -45,15 +45,18 @@ void		User::setRealname( std::string realname ) { _realname = realname; }
 
 void	User::handleRequest( Client& client, std::string argument )
 {
-	if (!client.getPasswordStatus())
-		return ;
 	std::string message = "";
 	std::string ret_parsing = parseArgument(client, argument);
 	std::string ret_action = action(client, _username, _realname);
 	if (!ret_parsing.empty())
 	{
 		message = ret_parsing;
-		message += KILL(client.getNickname(), "authentification failed");                   
+		message += KILL(client.getNickname(), "user authentification failed");                   
+		send(client.getClientSocket(), message.c_str(), message.length(), 0);
+		if( close( client.getClientSocket()) == -1 )
+			throw std::runtime_error("Error when closing fd");
+		_clients->erase( client.getClientSocket() );
+		return ;
 	}
 	else if (!ret_action.empty())
 		message = ret_action;

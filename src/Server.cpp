@@ -123,14 +123,6 @@ Server::Server(const int& port, const std::string& password, const std::string& 
 						send(clientSocket, RPL_WELCOME("server",_clients[clientSocket].getNickname(), "network").c_str(), RPL_WELCOME("server", _clients[clientSocket].getNickname(), "network").length(), 0);
 						_clients[clientSocket].setWelcomeState(true);
 					}
-					// else if authentification failed and not RPL_WELCOME, kill is sent to disconnect client
-					else if (!_clients[clientSocket].isAuthentificated() && _clients[clientSocket].getWelcomeState() == 0 && !_clients[clientSocket].getPassword().empty())
-					{
-						std::cout << "NOT AUTHENTIFICATED AND NOT WELCOMED\n";
-						//std::string msg = KILL(_clients[clientSocket].getNickname(), "authentification failed");                   
-						//send(clientSocket, msg.c_str(), msg.length(), 0);
-						removeClient(clientSocket);
-					}
 
 					std::cout	<< "********************************************"
 								<< std::endl;
@@ -294,17 +286,15 @@ void								Server::handleRequest(Client& client, const std::string& request)
 			// const std::string reply = _commands[command]->handleRequest(client, request); 
 			// TODO
 			// send(client.getClientSocket(), reply.c_str(), reply.length(), 0);
-			_commands[command]->handleRequest(client, request);
+			
+			// if the password is not set, accept only pass command
+			if ( command != "PASS" && client.getPassword().empty())
+				continue ;
 			std::cout << "actual command: <" << command << ">" << std::endl;
-			if (command == "PASS" && client.getPassword().empty())
-			{
-				std::cout << "ENTERING WRONG PASSWORD" << std::endl;
-				usleep(1000); //TODO: there has to be a better way to do this
-				//removeClient(client.getClientSocket());
-				break ;
-			}
+			_commands[command]->handleRequest(client, request);
+	
 		}
-		}
+	}
 }
 
 // This function removes \r characters from the buffer.
