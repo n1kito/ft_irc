@@ -117,17 +117,22 @@ Server::Server(const int& port, const std::string& password, const std::string& 
 								<< BOLD << "[" << RESET << DIM << "Request" << RESET << BOLD << "]" << RESET << std::endl
 								<< MAGENTA << buffer << RESET << std::endl;
 								std::cout << BOLD << "[" RESET << DIM << "Handling" << RESET << BOLD << "]" << RESET << std::endl;
+					std::cout << GREEN << "welcomed ? " << RESET << _clients[clientSocket].getWelcomeState() << std::endl;
 					handleRequest(_clients[clientSocket], cleanBuffer(buffer));
-					if (_clients[clientSocket].isAuthentificated() && _clients[clientSocket].getWelcomeState() == false)
+					std::cout << GREEN << "Auth ? " << RESET << _clients[clientSocket].isAuthentificated() << std::endl;
+					std::cout << GREEN << "welcomed ? " << RESET << _clients[clientSocket].getWelcomeState() << std::endl;
+
+					if (_clients[clientSocket].isAuthentificated() && _clients[clientSocket].getWelcomeState() == 0)
 					{
 						send(clientSocket, RPL_WELCOME("server",_clients[clientSocket].getNickname(), "network").c_str(), RPL_WELCOME("server", _clients[clientSocket].getNickname(), "network").length(), 0);
 						_clients[clientSocket].setWelcomeState(true);
 					}
-					else if (!_clients[clientSocket].isAuthentificated() && _clients[clientSocket].getWelcomeState() == false )
+					else if (!_clients[clientSocket].isAuthentificated() && _clients[clientSocket].getWelcomeState() == 0 )
 					{
+						std::cout << "NOT AUTHENTIFICATED AND NOT WELCOMED\n";
 						std::string msg = KILL(_clients[clientSocket].getNickname(), "nickname collision");
 						send(clientSocket, msg.c_str(), msg.length(), 0);
-						// removeClient(clientSocket);
+						removeClient(clientSocket);
 					}
 
 					std::cout	<< "********************************************"
@@ -195,7 +200,8 @@ void								Server::addClient( int fd, Client client )
 {
 	// _clients[fd] = client;
 	std::cout << "ADDING CLIENT :" << fd << std::endl;
-	_clients.insert( std::make_pair( fd, client ));
+	_clients[fd] = client;
+	// _clients.insert( std::make_pair( fd, client ));
 	std::cout << "TOTAL CLIENTS :" << _clients.size() << std::endl;
 }
 
@@ -211,8 +217,9 @@ void								Server::removeClient( int fd )
 	std::cout << "\n[removeClient]\n _client.size:" << _clients.size() << "\n"; 
 	if( close( fd ) == -1 )
 		throw std::runtime_error("Error when closing fd");
+	std::cout << RED_BLOC << "Map size before erasing: " << RESET << _clients.size() << std::endl;
 	_clients.erase( fd );
-	std::cout << "_client.size:" << _clients.size() << "\n";
+	std::cout << RED_BLOC << "Map size after erasing: " << RESET << _clients.size() << std::endl;
 }
 
 // This cannot work since numeric replies require specific arguments
@@ -294,7 +301,7 @@ void								Server::handleRequest(Client& client, const std::string& request)
 			{
 				std::cout << "ENTERING WRONG PASSWORD" << std::endl;
 				usleep(1000); //TODO: there has to be a better way to do this
-				removeClient(client.getClientSocket());
+				//removeClient(client.getClientSocket());
 				break ;
 			}
 		}

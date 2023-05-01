@@ -12,7 +12,7 @@ Client::Client(const int& clientSocket, const std::string& serverName ) :
 	_isRegistered(false),
 	_passwordStatus(false),
 	_clientSocket(clientSocket),
-	_welcomeState(false),
+	_welcomeState(0),
 	_serverName(serverName)
 {}
 
@@ -36,11 +36,15 @@ Client::~Client()
 Client& Client::operator = (const Client &copyMe)
 {
 	// (void)copyMe;
-	_isRegistered = copyMe._isRegistered;
+	_isRegistered = copyMe.getRegisterState();
 	_clientSocket = copyMe.getClientSocket();
-	_username = copyMe._username;
-	_nickname = copyMe._nickname;
-	_password = copyMe._password;
+	_username = copyMe.getUsername();
+	_nickname = copyMe.getNickname();
+	_password = copyMe.getPassword();
+	_welcomeState = copyMe.getWelcomeState();
+	_passwordStatus = copyMe.getPasswordStatus();
+	_realname = copyMe.getRealname();
+	_serverName = copyMe.getServerName();
 	// std::cout << "Copy assignment operator called" << std::endl;
 	return *this;
 }

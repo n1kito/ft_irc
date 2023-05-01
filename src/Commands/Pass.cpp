@@ -21,6 +21,7 @@ void	Pass::action(){}
 
 std::string	Pass::handleRequest(Client& client, std::string argument)
 {
+	std::cout << YELLOW_BLOC << "Password sent" << RESET << argument << std::endl;
 	if (client.getRegisterState() == true)
 		return ERR_ALREADYREGISTERED(client.getServerName(), client.getNickname());
 	else if (argument.length() == 0)
