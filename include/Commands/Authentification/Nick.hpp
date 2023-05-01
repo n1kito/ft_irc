@@ -12,13 +12,13 @@ class Nick : public ACommand
 		Nick(std::map<int, Client >* clients);
 		~Nick();
 
-    	std::string	handleRequest(Client &client, std::string arg);
+    	void		handleRequest(Client &client, std::string arg);
     	void		parseArgument();
     	std::string	parseArgument(Client &client, std::string& arg);
     	void		action();
     	std::string	action(Client &client, std::string nickname);
-
 		bool		isValidNickname(std::string nickname);
+
 	protected:
 		// add protected elements here
 

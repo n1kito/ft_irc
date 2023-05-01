@@ -37,12 +37,15 @@ Ping& Ping::operator = (const Ping &copyMe)
 /* METHODS ********************************************************************/
 
 
-std::string	Ping::handleRequest( Client& client, std::string argument )
+void	Ping::handleRequest( Client& client, std::string argument )
 {
+	 std::string message = "";
 	std::string ret_parsing = parseArgument(client, argument);
 	if (!ret_parsing.empty())
-		return ret_parsing;
-	return (PONG_SUCCESS(argument));	
+		message = ret_parsing;
+	else
+		message = PONG_SUCCESS(argument);
+	send(client.getClientSocket(), message.c_str(), message.length(), 0);
 }
 
 void		Ping::parseArgument() {}

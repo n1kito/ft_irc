@@ -43,27 +43,27 @@ void		User::setRealname( std::string realname ) { _realname = realname; }
 
 /* METHODS ********************************************************************/
 
-std::string	User::handleRequest( Client& client, std::string argument )
+void	User::handleRequest( Client& client, std::string argument )
 {
 	if (!client.getPasswordStatus())
-		return "";
-	std::cout << RED << "What client is it ?? " << client.getClientSocket() << RESET << std::endl;
-	// send(client.getClientSocket(), "", reply.length(), 0);
+		return ;
+	std::string message = "";
 	std::string ret_parsing = parseArgument(client, argument);
+	std::string ret_action = action(client, _username, _realname);
 	if (!ret_parsing.empty())
 	{
-		std::string msg = KILL(client.getNickname(), "authentification failed");                   
-		send(client.getClientSocket(), msg.c_str(), msg.length(), 0);
-		return ret_parsing;
+		message = ret_parsing;
+		message += KILL(client.getNickname(), "authentification failed");                   
 	}
-
-	std::string ret_action = action(client, _username, _realname);
-	if (!ret_action.empty())
-		return ret_action;
-	
-	client.setRegisterState(true);
-	return USER_SUCCESS("server", client.getNickname());
-	// return ":server: User created successfully!\r\n";
+	else if (!ret_action.empty())
+		message = ret_action;
+	else
+	{
+		client.setRegisterState(true);
+		message = USER_SUCCESS("server", client.getNickname());
+	}
+	if (!message.empty())
+		send(client.getClientSocket(), message.c_str(), message.length(), 0);
 }
 
 void		User::parseArgument() {}

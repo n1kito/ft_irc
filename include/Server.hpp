@@ -14,6 +14,7 @@
 #include "User.hpp"
 #include "Ping.hpp"
 #include "Pass.hpp"
+#include "Channel.hpp"
 #include <ctime>
 #include <unistd.h>
 
@@ -62,6 +63,7 @@ class Server
 
 		int									_port;
 		std::string							_password;
+		std::map< std::string, Channel >	_channels;
 		std::map< int, Client >				_clients;
 		std::map< std::string, ACommand* >	_commands;
 		std::string							_creationDate;

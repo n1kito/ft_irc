@@ -12,16 +12,21 @@ BIN_DIR			:=	bin
 SRC_FILES		:=	main\
 					Server\
 					Client\
+					Channel\
 					Commands/ACommand\
-					Commands/Nick\
-					Commands/Pass\
-					Commands/User\
-					Commands/Ping\
+					Commands/Authentification/Nick\
+					Commands/Authentification/Pass\
+					Commands/Authentification/User\
+					Commands/Authentification/Ping\
+					Commands/Channels/Join\
 					utils
 OBJ_FILES		:=	$(addprefix $(BIN_DIR)/, $(addsuffix .o, $(SRC_FILES)))
 OBJ_TEST_FILES	:=	$(addprefix $(BIN_DIR)/, $(addsuffix .o, $(SRC_TEST_FILES)))
 SRC_DIR			:=	src
-INC_DIR			:=	-I include/Commands -I include
+INC_DIR			:=	-I include/Commands \
+					-I include/Commands/Authentification \
+					-I include/Commands/Channels \
+					-I include
 
 #░░░░█▀▄░█▀▀░█▀▀░▀█▀░█▀█░█▀▀░█▀▀░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
 #░░░░█▀▄░█▀▀░█░░░░█░░█▀▀░█▀▀░▀▀█░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
@@ -41,7 +46,7 @@ $(BIN_DIR)/%.o: $(SRC_DIR)/%.cpp Makefile | $(BIN_DIR)
 	@printf "\t$(BLUE)> compiling $(notdir $<)$(END_COLOR)\n"
 
 $(BIN_DIR):
-	@mkdir -p $(BIN_DIR)/Commands
+	@mkdir -p $(BIN_DIR)/Commands/Authentification $(BIN_DIR)/Commands/Channels
 	@echo "\t$(IPURPLE)Created $(BIN_DIR)/ directory.$(END_COLOR)"
 
 clean: title
@@ -58,12 +63,12 @@ fclean: clean
 
 re: fclean all
 
-run: all
-	@./${NAME} 1.1.1.1 8080
+launch: all
+	@clear -x && make && clear -x && ./${NAME} 6667 coucou
 
 -include $(OBJ_FILES:%.o=%.d)
 
-.PHONY: all clean fclean re title run
+.PHONY: all clean fclean re title launch
 
 #░░░░█░█░▀█▀░▀█▀░█░░░▀█▀░▀█▀░▀█▀░█▀▀░█▀▀░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
 #░░░░█░█░░█░░░█░░█░░░░█░░░█░░░█░░█▀▀░▀▀█░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░

@@ -85,21 +85,21 @@ std::string	Nick::parseArgument(Client &client, std::string& arg)
 	return ("Nickname is valid");
 }
 
-std::string	Nick::handleRequest(Client &client, std::string arg)
+void	Nick::handleRequest(Client &client, std::string arg)
 {
 	// std::cout << "\n[NICK handle request]\n" << "argument:" << arg << "|\n"; 
-	std::string message;
+	 std::string message = "";
 	message = parseArgument(client, arg);
 	if (message == "Nickname is valid")
 		message = action(client, arg);	
-	return message;
+	send(client.getClientSocket(), message.c_str(), message.length(), 0);
 }
 
 void		Nick::action() {}
 
 std::string	Nick::action(Client &client, std::string nickname)
 {
-	std::string message;
+	std::string message = "";
 	client.setNickname(nickname);
 	message = NICK_SUCCESS("server", client.getNickname());
 	// std::cout << "nickname is:" << client.getNickname() << "|\n";
