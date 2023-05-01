@@ -28,4 +28,5 @@ WORKDIR	/ft_irc
 VOLUME	[ "/ft_irc" ]
 
 # Get into the container with zsh
-CMD		[ "zsh" ]
+#CMD		[ "zsh" ]
+CMD [ "zsh", "-c", "echo 'Ça va être tout noir !'; zsh" ]
