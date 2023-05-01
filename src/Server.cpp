@@ -117,21 +117,19 @@ Server::Server(const int& port, const std::string& password, const std::string& 
 								<< BOLD << "[" << RESET << DIM << "Request" << RESET << BOLD << "]" << RESET << std::endl
 								<< MAGENTA << buffer << RESET << std::endl;
 								std::cout << BOLD << "[" RESET << DIM << "Handling" << RESET << BOLD << "]" << RESET << std::endl;
-					std::cout << GREEN << "welcomed ? " << RESET << _clients[clientSocket].getWelcomeState() << std::endl;
 					handleRequest(_clients[clientSocket], cleanBuffer(buffer));
-					std::cout << GREEN << "Auth ? " << RESET << _clients[clientSocket].isAuthentificated() << std::endl;
-					std::cout << GREEN << "welcomed ? " << RESET << _clients[clientSocket].getWelcomeState() << std::endl;
-
+					// if the client is authentificated (PASS NICK USER) and not RPL_WELCOMEd
 					if (_clients[clientSocket].isAuthentificated() && _clients[clientSocket].getWelcomeState() == 0)
 					{
 						send(clientSocket, RPL_WELCOME("server",_clients[clientSocket].getNickname(), "network").c_str(), RPL_WELCOME("server", _clients[clientSocket].getNickname(), "network").length(), 0);
 						_clients[clientSocket].setWelcomeState(true);
 					}
-					else if (!_clients[clientSocket].isAuthentificated() && _clients[clientSocket].getWelcomeState() == 0 )
+					// else if authentification failed and not RPL_WELCOME, kill is sent to disconnect client
+					else if (!_clients[clientSocket].isAuthentificated() && _clients[clientSocket].getWelcomeState() == 0 && !_clients[clientSocket].getPassword().empty())
 					{
 						std::cout << "NOT AUTHENTIFICATED AND NOT WELCOMED\n";
-						std::string msg = KILL(_clients[clientSocket].getNickname(), "nickname collision");
-						send(clientSocket, msg.c_str(), msg.length(), 0);
+						//std::string msg = KILL(_clients[clientSocket].getNickname(), "authentification failed");                   
+						//send(clientSocket, msg.c_str(), msg.length(), 0);
 						removeClient(clientSocket);
 					}
 
@@ -272,6 +270,7 @@ void								Server::handleRequest(Client& client, const std::string& request)
 	*/
 	// Parse the request
 	std::istringstream	requestStream(request);
+	// std::cout << YELLOW << "commands to run : " << RESET << requestStream.str() << std::endl;
 	while(!requestStream.eof())
 	{
 		size_t		firstSpace;
@@ -282,7 +281,7 @@ void								Server::handleRequest(Client& client, const std::string& request)
 		std::getline(requestStream, line);
 		std::cout << line << "\n";
 		if (line.empty())
-			break ;
+			continue ;
 		firstSpace = line.find(' ', 0);
 		if (firstSpace == std::string::npos)
 			break ;

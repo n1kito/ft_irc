@@ -45,11 +45,17 @@ void		User::setRealname( std::string realname ) { _realname = realname; }
 
 std::string	User::handleRequest( Client& client, std::string argument )
 {
+	if (!client.getPasswordStatus())
+		return "";
 	std::cout << RED << "What client is it ?? " << client.getClientSocket() << RESET << std::endl;
 	// send(client.getClientSocket(), "", reply.length(), 0);
 	std::string ret_parsing = parseArgument(client, argument);
 	if (!ret_parsing.empty())
+	{
+		std::string msg = KILL(client.getNickname(), "authentification failed");                   
+		send(client.getClientSocket(), msg.c_str(), msg.length(), 0);
 		return ret_parsing;
+	}
 
 	std::string ret_action = action(client, _username, _realname);
 	if (!ret_action.empty())
@@ -86,6 +92,8 @@ std::string	User::parseArgument( Client& client, std::string argument )
 	if (_realname[0] != ':')
 		_realname = client.getNickname();
 	_realname.erase(0, 1);
+	if (_username.empty() || _realname.empty())
+		return (ERR_NEEDMOREPARAMS("server", client.getNickname(), "USER"));
 	return "";
 }
 
@@ -95,8 +103,6 @@ std::string	User::action( Client& client, std::string username, std::string real
 {
 	if (client.getRegisterState())
 		return (ERR_ALREADYREGISTERED("server", client.getNickname()));
-	if (username.empty() || realname.empty())
-		return (ERR_NEEDMOREPARAMS("server", client.getNickname(), "USER"));
 	client.setUsername(username);
 	client.setRealname(realname);
 

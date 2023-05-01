@@ -36,7 +36,7 @@
 
 #define NICK_COLLISION(nickname) (std::string(":436 " + nickname + " :Nickname collision KILL from your_nick\r\n"))
 
-#define KILL(nickname, reason) (std::string("KILL " + nickname + " :" + reason + "\r\n"))
+#define KILL(nickname, reason) (std::string("KILL ") + nickname + " :" + reason + "\r\n")
 
 #endif
 

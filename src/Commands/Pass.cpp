@@ -7,7 +7,7 @@ Pass::Pass() : ACommand() {}
 Pass::Pass(clientMap* clients) : ACommand(clients) {}
 
 Pass::Pass(clientMap* clients, const std::string& serverPassword) :
-	ACommand(clients),
+	ACommand(clients), 
 	_serverPassword(serverPassword)
 {}
 
@@ -29,6 +29,8 @@ std::string	Pass::handleRequest(Client& client, std::string argument)
 	else if (argument != _serverPassword)
 	{
 		std::cout << "PASSWORDS DO NOT MATCH" << std::endl; // TODO: remove this
+		std::string msg = KILL("NICKNAME", "pass failed");                   
+		send(client.getClientSocket(), msg.c_str(), msg.length(), 0);
 		return ERR_PASSWDMISMATCH(client.getServerName(), client.getNickname());
 	}
 	client.setPassword(argument);

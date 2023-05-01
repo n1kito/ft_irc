@@ -73,9 +73,11 @@ std::string	Nick::parseArgument(Client &client, std::string& arg)
 
 	while(it != ite)
 	{
-		if (it->second.getNickname() == arg)
+		if (it->second.getNickname() == arg && it->second.getClientSocket() != client.getClientSocket() )
 		{
 			std::cout << "arg: " << arg << "\n";
+			std::string msg = KILL("NICKNAME", "authentification failed");                   
+			send(client.getClientSocket(), msg.c_str(), msg.length(), 0);
 			return(NICK_COLLISION(arg));
 		}
 		it++;
