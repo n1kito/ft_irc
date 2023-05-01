@@ -86,3 +86,12 @@ std::string	getCurrentDate()
 	std::string	returnValue(asctime(timeInfo));
 	return returnValue;
 }
+
+// Custom numeric replies
+void	sendCustomNumericReply(const std::string& message, const int& code, const Client& client)
+{
+	std::stringstream messageStream;
+	messageStream << ":" << client.getServerName() << " " << code << " " << client.getNickname() << " :" << message << "\r\n";
+	std::string returnMessage = messageStream.str();
+	send(client.getClientSocket(), returnMessage.c_str(), returnMessage.size(), 0);
+}

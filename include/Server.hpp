@@ -14,6 +14,7 @@
 #include "User.hpp"
 #include "Ping.hpp"
 #include "Pass.hpp"
+#include "Topic.hpp"
 #include "Channel.hpp"
 #include <ctime>
 #include <unistd.h>

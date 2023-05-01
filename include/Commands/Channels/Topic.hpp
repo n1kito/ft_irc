@@ -14,17 +14,17 @@ class Topic : public ACommand
 		Topic(std::map<int, Client>* clients);
 		~Topic();
 	
-		bool				parseArgument(const std::string& arg);
-		void				handleRequest(Client &client, std::string arg, Channel* channel);
+		void				parseArgument(std::string arg, std::string& channel, std::string& topic);
+		void				handleRequest(Client &client, std::string arg);
 		const Channel&		getChannel() const;
 		const Client&		getClient() const;
+		void				action();
 
 	protected:
 
 	private:
 		Topic();
 		void				parseArgument();
-		void				handleRequest(Client &client, std::string arg);
 		Topic(const Topic &copyMe);
 		Topic&				operator = (const Topic &copyMe);
 
