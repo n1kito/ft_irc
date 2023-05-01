@@ -15,7 +15,9 @@
 // 331
 #define RPL_NOTOPIC(server, nickname, channel) ( std::string(":") + server + " 331 " + nickname + " " + channel + " :No topic is set\r\n")
 // 332
-#define RPL_TOPIC(server, nickname, channel, topic) (std::string(":" ) + server + " 332 " + nickname + " " + channel + " :" + topic + "\r\n")
+#define RPL_TOPIC(server, nickname, channel, topic) (std::string(":") + server + " 332 " + nickname + " " + channel + " :" + topic + "\r\n")
+// 333
+#define RPL_TOPICWHOTIME(server, nickname, channel, nicknameOfTopicSetter, setat) (std::string(":") + server + " 333 " + nickname + " " + channel + " " + nicknameOfTopicSetter + " " + setat + "\r\n")
 
 // ...
 
