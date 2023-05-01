@@ -70,8 +70,7 @@ void	sendNumericReplies(const size_t& numberOfReplies, const size_t& clientFd, .
 	for (size_t i = 0; i < numberOfReplies; ++i)
 	{
 		std::string	message(va_arg(messages, char*));
-		std::cout << "REQUEST IS: " << message << std::endl;
-		send(clientFd, message.c_str(), message.length(), 0); // TODO: this fails
+		send(clientFd, message.c_str(), message.length(), 0);
 	}
 	va_end(messages);
 }
