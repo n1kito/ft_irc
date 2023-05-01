@@ -1,6 +1,7 @@
 #ifndef TOPIC_HPP
 # define TOPIC_HPP
 
+# include "ft_irc.hpp"
 # include "ACommand.hpp"
 # include "Client.hpp"
 # include "Channel.hpp"
@@ -10,11 +11,11 @@
 class Topic : public ACommand
 {
 	public:
-		Topic(std::map< int, Client >* clients, Channel* channel, Client* clientRequesting);
+		Topic(std::map<int, Client>* clients);
 		~Topic();
 	
-		std::string			parseArgument(const std::string& arg);
-		void				handleRequest(Client &client, std::string arg);
+		bool				parseArgument(const std::string& arg);
+		void				handleRequest(Client &client, std::string arg, Channel* channel);
 		const Channel&		getChannel() const;
 		const Client&		getClient() const;
 
@@ -22,12 +23,13 @@ class Topic : public ACommand
 
 	private:
 		Topic();
-		Topic(std::map<int, Client>* clients);
+		void				parseArgument();
+		void				handleRequest(Client &client, std::string arg);
 		Topic(const Topic &copyMe);
-		Topic&		operator = (const Topic &copyMe);
+		Topic&				operator = (const Topic &copyMe);
 
-		Channel*	_channel;
-		Client*		_client;
+		Channel*			_channel;
+		Client*				_client;
 };
 
 #endif

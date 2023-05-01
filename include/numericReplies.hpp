@@ -29,12 +29,16 @@
 #define ERR_ERRONEUSNICKNAME(server, client, nickname) (std::string(":") + server + " 432 " + client + " " + nickname + ":Erroneus nickname\r\n")
 // 433
 #define ERR_NICKNAMEINUSE(nickname) (std::string(":433 " + nickname + " :Nickname is already in use\r\n"))
+// 442
+#define ERR_NOTONCHANNEL(server, client, channel) (std::string(":") + server + " 442 " + client + " " + channel + " :You're not on that channel\r\n") 
 // 461
 #define ERR_NEEDMOREPARAMS(server, nickname, commandName) (std::string(":") + server + " 461 " + nickname + " " + commandName + " :Not enough parameters\r\n")
 // 462
 #define ERR_ALREADYREGISTERED(server, nickname) (std::string(":") + server + " 462 " + nickname + " :You may not reregister\r\n")
 // 464
 #define ERR_PASSWDMISMATCH(server, nickname) (std::string(":") + server + " 464 " + nickname + " :Password incorrect\r\n")
+// 482
+#define ERR_CHANOPRIVSNEEDED(server, client, channel) (std::string(":") + server + " 482 " + client + " " + channel + " :You're not channel operator\r\n")
 
 // Custom Messages
 #define NICK_SUCCESS(server, nickname) (std::string(":") + server + " 909 " + nickname + " :Nickname created successfully!\r\n")

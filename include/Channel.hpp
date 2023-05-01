@@ -20,26 +20,31 @@ class Channel
 		std::string				getTopic() const;
 		const clientNickMap&	getClientMap() const;
 		const clientNickMap&	getOperators() const;
+		std::string				getNicknameOfTopicSetter() const;
+		std::string				getTimeTopicWasSet() const;
 		
 		// getters -> channel modes
 		bool					isClientLimitMode() const;
 		bool					isTopicProtectedMode() const;
 
 		// checkers
-		bool					clientIsOperator(const Client& clientRef);
+		bool					isClientOperator(const Client& clientRef) const;
+		bool					isClientConnected(const Client& clientRef) const;
 
 		// setters
-		void			setName(const std::string& newName);
-		void			setTopic(const std::string& newTopic);
-		void			setClientLimit(const size_t& limit);
-		void			setTopicProtection(const bool& status);
-		void			addConnectedClient(const Client& clientRef);
-		void			removeConnectedClient(const std::string& clientNickname);
-		void			addOperator(Client& clientRef);
-		void			removeOperator(const std::string& clientNickname);
+		void					setName(const std::string& newName);
+		void					setTopic(const std::string& newTopic);
+		void					setClientLimit(const size_t& limit);
+		void					setTopicProtection(const bool& status);
+		void					addConnectedClient(const Client& clientRef);
+		void					removeConnectedClient(const std::string& clientNickname);
+		void					addOperator(Client& clientRef);
+		void					removeOperator(const std::string& clientNickname);
+		void					setNicknameOfTopicSetter(const std::string& name);
+		void					setTimeTopicWasSet(const std::string& time);
 
-		bool			checkTopic(const std::string argument);
-		bool			checkName(const std::string name);
+		bool					checkTopic(const std::string argument);
+		bool					checkName(const std::string name);
 
 	protected:
 		// add protected elements here
@@ -50,6 +55,8 @@ class Channel
 		clientNickMap			_operators;
 		std::string				_name;
 		std::string				_topic;
+		std::string				_nicknameOfTopicSetter;
+		std::string				_timeTopicWasSet;
 		
 		// Channel modes
 		size_t					_clientLimit;

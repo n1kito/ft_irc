@@ -74,3 +74,15 @@ void	sendNumericReplies(const size_t& numberOfReplies, const size_t& clientFd, .
 	}
 	va_end(messages);
 }
+
+// Returns a human readable string of the current date
+std::string	getCurrentDate()
+{
+	time_t		rawTime;
+	struct tm*	timeInfo;
+
+	time(&rawTime);
+	timeInfo = localtime(&rawTime);
+	std::string	returnValue(asctime(timeInfo));
+	return returnValue;
+}

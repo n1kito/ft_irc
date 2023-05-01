@@ -9,7 +9,7 @@ build:
 	@docker build -t ${IMAGE_NAME} .
 
 run:
-	@docker run -it --name ${CONTAINER_NAME} \
+	@docker run --rm -it --name ${CONTAINER_NAME} \
 	-p 6667:6667 \
 	--volume ${PROJECT_FOLDER}:/ft_irc \
 	${IMAGE_NAME}

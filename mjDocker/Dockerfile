@@ -16,7 +16,7 @@ RUN		apt-get update && \
 RUN		sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 
 # Change the zsh prompt so I can identify the container easily
-RUN 	echo 'export PS1="\033[1;93m🌞 [ft_irc] \033[0;39m"' > ~/.zshrc
+RUN 	echo 'export PS1="\033[1;93m🌞 🌓 🌙 [ft_irc] \033[0;39m"' > ~/.zshrc
 
 # Create the directory we will be working from
 RUN		mkdir /ft_irc
@@ -29,4 +29,4 @@ VOLUME	[ "/ft_irc" ]
 
 # Get into the container with zsh
 #CMD		[ "zsh" ]
-CMD [ "zsh", "-c", "echo 'Ça va être tout noir !'; zsh" ]
+CMD [ "zsh", "-c", "echo '📢 Ça va être tout noir !\n'; zsh" ]

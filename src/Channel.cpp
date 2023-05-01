@@ -52,16 +52,26 @@ std::string						Channel::getName() const { return _name; }
 std::string						Channel::getTopic() const { return _topic; }
 const Channel::clientNickMap&	Channel::getClientMap() const { return _connectedClients; }
 const Channel::clientNickMap&	Channel::getOperators() const { return _operators; }
+std::string						Channel::getNicknameOfTopicSetter() const { return _nicknameOfTopicSetter; }
+std::string						Channel::getTimeTopicWasSet() const { return _timeTopicWasSet; }
 
 // getters -> channel modes
 bool							Channel::isClientLimitMode() const { return _clientLimit > 0; }
 bool							Channel::isTopicProtectedMode() const { return _topicIsProtected; }
 
 // checkers
-bool							Channel::clientIsOperator(const Client& clientRef)
+// Checks if a client is an operator of the Channel
+bool							Channel::isClientOperator(const Client& clientRef) const
 {
 	return _operators.find(clientRef.getNickname()) != _operators.end();
 }
+
+// Checks if a client is connected to the Channel
+bool							Channel::isClientConnected(const Client& clientRef) const
+{
+	return _connectedClients.find(clientRef.getNickname()) != _connectedClients.end();
+}
+
 
 // setters
 void							Channel::setTopic(const std::string& newTopic)
@@ -96,6 +106,8 @@ void							Channel::removeOperator(const std::string& clientNickname)
 	// TODO: send numeric reply ?
 }
 
+void							Channel::setNicknameOfTopicSetter(const std::string& nickname) { _nicknameOfTopicSetter = nickname; }
+void							Channel::setTimeTopicWasSet(const std::string& time) { _timeTopicWasSet = time; }
 
 bool							Channel::checkName(const std::string name)
 {
