@@ -64,59 +64,65 @@ void	Topic::parseArgument(std::string arg, std::string& channel, std::string& to
 // 
 void		Topic::handleRequest(Client &client, std::string arg)
 {
-	_client = &client;
 	if (arg.empty())
-		sendNumericReplies(1, _client->getClientSocket(), ERR_NEEDMOREPARAMS(_client->getServerName(), _client->getNickname(), "TOPIC").c_str());
+		sendNumericReplies(1, client.getClientSocket(), ERR_NEEDMOREPARAMS(client.getServerName(), client.getNickname(), "TOPIC").c_str());
 	else
 	{
 		std::string channel = "";
 		std::string topic = "";
 		parseArgument(arg, channel, topic);
 		if (_channelMap->find(channel) == _channelMap->end())
-			sendNumericReplies(1, _client->getClientSocket(), \
-				ERR_NOSUCHCHANNEL(_client->getServerName(), _client->getNickname(), channel).c_str());
+			sendNumericReplies(1, client.getClientSocket(), \
+				ERR_NOSUCHCHANNEL(client.getServerName(), client.getNickname(), channel).c_str());
 		else
-			action(topic, _channelMap->at(channel));
+			action(topic, _channelMap->at(channel), client);
 	}
 }
 
 void	Topic::action() { }
-void	Topic::action(std::string& topic, const Channel& targetChannel)
+void	Topic::action(std::string& topic, Channel& targetChannel, const Client& client)
 {
-	// If the request has no topic
+	// If the request has no topic, this mean the client wants to know the channel topic
 	if (topic.empty())
 	{
-		// If the target channel has one
-		if (!targetChannel.getTopic().empty())
+		// If the client is not connected to the channel
+		if (targetChannel.isClientConnected(client) == false)
+			sendNumericReplies(1, client.getClientSocket(),
+					ERR_NOTONCHANNEL(client.getServerName(), client.getNickname(), targetChannel.getName()).c_str());
+		else 
 		{
-			// Is the client is not connected to said channel, send an error
-			if (targetChannel.isClientConnected(*_client) == false)
-				sendNumericReplies(1, _client->getClientSocket(),
-					ERR_NOTONCHANNEL(_client->getServerName(), _client->getNickname(), targetChannel.getName()).c_str());
-			// Else, send current topic (2 messages)
+			// If the channel topic is not empty, send current topic (2 messages as per documentation)
+			if (!targetChannel.getTopic().empty())
+				sendNumericReplies(2, client.getClientSocket(),
+					RPL_TOPIC(client.getServerName(), client.getNickname(), targetChannel.getName(), targetChannel.getTopic()).c_str(),
+					RPL_TOPICWHOTIME(client.getServerName(), client.getNickname(), targetChannel.getName(), targetChannel.getNicknameOfTopicSetter(), targetChannel.getTimeTopicWasSet()).c_str());
+			// else, send a message saying there is no topic
 			else
-				sendNumericReplies(2, _client->getClientSocket(),
-					RPL_TOPIC(_client->getServerName(), _client->getNickname(), targetChannel.getName(), targetChannel.getTopic()).c_str(),
-					RPL_TOPICWHOTIME(_client->getServerName(), _client->getNickname(), targetChannel.getName(), targetChannel.getNicknameOfTopicSetter(), targetChannel.getTimeTopicWasSet()).c_str());
+				sendNumericReplies(1, client.getClientSocket(), \
+				RPL_NOTOPIC(client.getServerName(), client.getNickname(), targetChannel.getName()).c_str());
 		}
-		// else, send a message saying there is no topic
-		sendNumericReplies(1, _client->getClientSocket(), \
-			RPL_NOTOPIC(_client->getServerName(), _client->getNickname(), targetChannel.getName()).c_str());
 	}
 	else
 	{
 		// If user tried to clear the topic, empty the topic variable
 		if (topic == "\"\"")
 			topic = "";
-		// Update channel properties
-		_channel->setTimeTopicWasSet(getCurrentDate());
-		_channel->setNicknameOfTopicSetter(_client->getNickname());
-		_channel->setTopic(topic);
-		// Broadcast new topic to all users in the channel
-		_channel->broadcastNumericReply(RPL_TOPIC(_client->getServerName(), _client->getNickname(), targetChannel.getName(), targetChannel.getTopic()));
+		// Can only update if channel topic is not protected or user is an Operator
+		if (targetChannel.isTopicProtectedMode() == false || targetChannel.isClientOperator(client))
+		{
+			// Update channel properties
+			targetChannel.setTimeTopicWasSet(getCurrentDate());
+			targetChannel.setNicknameOfTopicSetter(client.getNickname());
+			targetChannel.setTopic(topic);
+			// Broadcast new topic to all users in the channel, followd by a RPL_TOPICWHOTIME
+			targetChannel.broadcastNumericReply(RPL_TOPIC(client.getServerName(), client.getNickname(), targetChannel.getName(), targetChannel.getTopic()));
+			targetChannel.broadcastNumericReply(RPL_TOPICWHOTIME(client.getServerName(), client.getNickname(), targetChannel.getName(), targetChannel.getNicknameOfTopicSetter(), targetChannel.getTimeTopicWasSet()));
+		}
+		else
+		{
+			// Tell user he cannot update the channel topic. Sorry user.
+			sendNumericReplies(1, client.getClientSocket(), \
+				ERR_CHANOPRIVSNEEDED(client.getServerName(), client.getNickname(), targetChannel.getName()).c_str());
+		}
 	}
 }
-
-// Getters
-const Channel&	Topic::getChannel() const { return *_channel; }
-const Client&	Topic::getClient() const { return *_client; }

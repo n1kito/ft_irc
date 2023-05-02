@@ -21,10 +21,8 @@ class Topic : public ACommand
 	
 		void				parseArgument(std::string arg, std::string& channel, std::string& topic);
 		void				handleRequest(Client &client, std::string arg);
-		const Channel&		getChannel() const;
-		const Client&		getClient() const;
 		void				action();
-		void				action(std::string& topic, const Channel& targetChannel);
+		void				action(std::string& topic, Channel& targetChannel, const Client& client);
 
 	protected:
 
@@ -35,9 +33,6 @@ class Topic : public ACommand
 		Topic&				operator = (const Topic &copyMe);
 
 		channelMap*			_channelMap;
-		// TODO: pas sur d'en avoir besoin de ceux la
-		Channel*			_channel;
-		Client*				_client;
 };
 
 #endif
