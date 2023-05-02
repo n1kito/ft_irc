@@ -58,3 +58,19 @@ bool	isSpecialCharacter(char checkMe)
 {
 	return (checkMe == '!' || checkMe == '-' || checkMe == '#');
 }
+
+// Send several numeric replies to one client
+void	sendNumericReplies(const size_t& numberOfReplies, const size_t& clientFd, ...)
+{
+	std::va_list	messages;
+
+	va_start(messages, clientFd);
+	if (numberOfReplies == 0)
+		return;
+	for (size_t i = 0; i < numberOfReplies; ++i)
+	{
+		std::string	message(va_arg(messages, char*));
+		send(clientFd, message.c_str(), message.length(), 0);
+	}
+	va_end(messages);
+}
