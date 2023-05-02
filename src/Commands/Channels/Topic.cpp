@@ -69,8 +69,6 @@ void		Topic::handleRequest(Client &client, std::string arg)
 		sendNumericReplies(1, _client->getClientSocket(), ERR_NEEDMOREPARAMS(_client->getServerName(), _client->getNickname(), "TOPIC").c_str());
 	else
 	{
-		// TODO: if the topic was cleared, all clients receive a TOPIC command, see below. Find a way to do this in a clear way.
-		// TODO: find a way to identify between no topic and empty topic
 		std::string channel = "";
 		std::string topic = "";
 		parseArgument(arg, channel, topic);
