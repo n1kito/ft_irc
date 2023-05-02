@@ -72,8 +72,6 @@ void		Topic::handleRequest(Client &client, std::string arg)
 		std::string channel = "";
 		std::string topic = "";
 		parseArgument(arg, channel, topic);
-		std::cout	<< "Channel is: <" << channel << ">" << std::endl
-				<< "Topic is: <" << topic << ">" << std::endl;
 		if (_channelMap->find(channel) == _channelMap->end())
 			sendNumericReplies(1, _client->getClientSocket(), \
 				ERR_NOSUCHCHANNEL(_client->getServerName(), _client->getNickname(), channel).c_str());
