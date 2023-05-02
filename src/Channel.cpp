@@ -47,6 +47,14 @@ Channel& Channel::operator = (const Channel &copyMe)
 
 /* METHODS ********************************************************************/
 
+void							Channel::broadcastNumericReply(const std::string message) const
+{
+	if (_connectedClients.empty())
+		return;
+	for (Channel::clientNickMap::const_iterator it = _connectedClients.begin(); it != _connectedClients.end(); ++it)
+		send((*it).second->getClientSocket(), message.c_str(), message.size(), 0);
+}
+
 // getters
 std::string						Channel::getName() const { return _name; }
 std::string						Channel::getTopic() const { return _topic; }

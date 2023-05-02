@@ -8,7 +8,7 @@ FROM	ubuntu:latest
 # rm -rf any lists that are no longer needed after åinstalling the packages
 
 RUN		apt-get update && \
-        apt-get install -y build-essential vim git curl zsh toilet && \
+        apt-get install -y build-essential vim git curl zsh toilet valgrind && \
 		apt-get clean && \
 		rm -rf /var/lib/apt/lists/*
 

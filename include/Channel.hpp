@@ -3,6 +3,7 @@
 
 # include <string>
 # include <map>
+# include <sys/socket.h>
 # include "Client.hpp"
 # include <vector>
 
@@ -14,6 +15,10 @@ class Channel
 		Channel( std::string name, const Client& client );
 		Channel(const Channel &copyMe);
 		~Channel();
+		
+
+		// methods
+		void					broadcastNumericReply(const std::string message) const;
 
 		// getters
 		std::string				getName() const;

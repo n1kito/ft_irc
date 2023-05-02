@@ -5,6 +5,7 @@
 # include <unistd.h>
 # include <exception>
 # include <stdexcept>
+# include <iostream> // TODO: added this to debug, not necessary
 
 class Client
 {

@@ -67,9 +67,12 @@ re: fclean all
 launch: all
 	@clear -x && make && clear -x && ./${NAME} 6667 coucou
 
+valgrind: all
+	@clear -x && make && clear -x && valgrind ./${NAME} 6667 coucou
+
 -include $(OBJ_FILES:%.o=%.d)
 
-.PHONY: all clean fclean re title launch
+.PHONY: all clean fclean re title launch valgrind
 
 #░░░░█░█░▀█▀░▀█▀░█░░░▀█▀░▀█▀░▀█▀░█▀▀░█▀▀░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
 #░░░░█░█░░█░░░█░░█░░░░█░░░█░░░█░░█▀▀░▀▀█░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░

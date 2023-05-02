@@ -237,7 +237,7 @@ void								Server::initCommands()
 	_commands["USER"] = new User(&_clients);
 	_commands["PING"] = new Ping(&_clients);
 	_commands["PASS"] = new Pass(&_clients, _password);
-	_commands["TOPIC"] = new Topic(&_clients);
+	_commands["TOPIC"] = new Topic(&_clients, &_channels);
 }
 
 void								Server::handleRequest(Client& client, const std::string& request)
