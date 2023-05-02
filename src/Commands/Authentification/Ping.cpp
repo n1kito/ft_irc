@@ -44,7 +44,7 @@ void	Ping::handleRequest( Client& client, std::string argument )
 	if (!ret_parsing.empty())
 		message = ret_parsing;
 	else
-		message = PONG_SUCCESS(argument);
+		message = PONG_SUCCESS(client.getServerName(), argument);
 	send(client.getClientSocket(), message.c_str(), message.length(), 0);
 }
 
@@ -53,7 +53,7 @@ void		Ping::parseArgument() {}
 std::string	Ping::parseArgument( Client& client, std::string argument )
 {
 	if (argument.empty())
-		return (ERR_NEEDMOREPARAMS("server", client.getNickname(), "PING"));
+		return (ERR_NEEDMOREPARAMS(client.getServerName(), client.getNickname(), "PING"));
 	return "";
 }
 

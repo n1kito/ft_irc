@@ -62,10 +62,10 @@ std::string	Nick::parseArgument(Client &client, std::string& arg)
 	(void)client;
 	// check if arg is empty
 	if (arg.empty())
-		return (ERR_NONICKNAMEGIVEN("server"));
+		return (ERR_NONICKNAMEGIVEN(client.getServerName()));
 	// check if nickname format is valid
 	if (isValidNickname(arg) == false)
-		return(ERR_ERRONEUSNICKNAME("server", "nickname", arg));
+		return(ERR_ERRONEUSNICKNAME(client.getServerName(), "nickname", arg));
 
 	// check if nickname already exists
 	std::map<int, Client>::const_iterator it = _clients->begin();
@@ -76,12 +76,12 @@ std::string	Nick::parseArgument(Client &client, std::string& arg)
 		if (it->second.getNickname() == arg && it->second.getClientSocket() != client.getClientSocket() )
 		{
 			std::cout << "arg: " << arg << "\n";
-			std::string msg = NICK_COLLISION(arg);
-			msg += KILL("NICKNAME", "nickname collision authentification failed");                   
-			send(client.getClientSocket(), msg.c_str(), msg.length(), 0);
-			if( close( client.getClientSocket() ) == -1 )
-				throw std::runtime_error("Error when closing fd");
-			_clients->erase( client.getClientSocket() );
+			std::string msg = NICK_COLLISION(client.getServerName(), arg);
+			if (!client.getWelcomeState())
+			{
+				killClient(client.getClientSocket(), msg, "nickname collision failed" );
+				return(msg);
+			}
 			return(msg);
 		}
 		it++;
@@ -105,7 +105,7 @@ std::string	Nick::action(Client &client, std::string nickname)
 {
 	std::string message = "";
 	client.setNickname(nickname);
-	message = NICK_SUCCESS("server", client.getNickname());
+	message = NICK_SUCCESS(client.getServerName(), client.getNickname());
 	// std::cout << "nickname is:" << client.getNickname() << "|\n";
 	return message;
 }

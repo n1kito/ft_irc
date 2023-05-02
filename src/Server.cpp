@@ -120,7 +120,7 @@ Server::Server(const int& port, const std::string& password, const std::string& 
 					// if the client is authentificated (PASS NICK USER) and not RPL_WELCOMEd
 					if (_clients[clientSocket].isAuthentificated() && _clients[clientSocket].getWelcomeState() == 0)
 					{
-						send(clientSocket, RPL_WELCOME("server",_clients[clientSocket].getNickname(), "network").c_str(), RPL_WELCOME("server", _clients[clientSocket].getNickname(), "network").length(), 0);
+						send(clientSocket, RPL_WELCOME(_serverName,_clients[clientSocket].getNickname(), "network").c_str(), RPL_WELCOME(_serverName, _clients[clientSocket].getNickname(), "network").length(), 0);
 						_clients[clientSocket].setWelcomeState(true);
 					}
 
@@ -292,13 +292,13 @@ void								Server::handleRequest(Client& client, const std::string& request)
 				continue ;
 			std::cout << "actual command: <" << command << ">" << std::endl;
 			_commands[command]->handleRequest(client, request);
-	
+			
 		}
 	}
 }
 
 // This function removes \r characters from the buffer.
-std::string						Server::cleanBuffer(std::string buffer) const
+std::string						Server::cleanBuffer(std::string buffer) const 
 {
 	while (true)
 	{

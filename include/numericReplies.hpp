@@ -23,21 +23,22 @@
 #define ERR_NICKNAMEINUSE(nickname) (std::string(":433 " + nickname + " :Nickname is already in use\r\n"))
 // 461
 #define ERR_NEEDMOREPARAMS(server, nickname, commandName) (std::string(":") + server + " 461 " + nickname + " " + commandName + " :Not enough parameters\r\n")
+// #define ERR_NEEDMOREPARAMS(server, nickname, commandName) (std::string(":") + server + " 461 " + nickname + " " + commandName + " :Not enough parameters\r\n")
 // 462
 #define ERR_ALREADYREGISTERED(server, nickname) (std::string(":") + server + " 462 " + nickname + " :You may not reregister\r\n")
 // 464
-#define ERR_PASSWDMISMATCH(server, nickname) (std::string(":") + server + " 464 " + nickname + " :Password incorrect\r\n")
+#define ERR_PASSWDMISMATCH(server) (std::string(":") + server + " 464" + " : Password incorrect \r\n")
 
 // Custom Messages
-#define NICK_SUCCESS(server, nickname) (std::string(":") + server + " 909 " + nickname + " :Nickname created successfully!\r\n")
-#define USER_SUCCESS(server, nickname) (std::string(":") + server + " 910 " + nickname + " :User created successfully!\r\n")
+#define NICK_SUCCESS(server, nickname) (std::string(":") + server + " 001 " + nickname + " :Nickname created successfully!\r\n")
+#define USER_SUCCESS(server, nickname) (std::string(":") + server + " 001 " + nickname + " :User created successfully!\r\n")
 #define PASS_SUCCESS(server, nickname) (std::string(":") + server + " 911 " + nickname + " :Password set successfully !\r\n")
-#define PONG_SUCCESS(token) (std::string("PONG ") + token + " \r\n")
+#define PONG_SUCCESS(server, token) (std::string("PONG : ") + server + " " + token + " \r\n")
 
-#define NICK_COLLISION(nickname) (std::string(":436 " + nickname + " :Nickname collision KILL from your_nick\r\n"))
+#define NICK_COLLISION(server, nickname) (std::string(":") + server + " 436 " + nickname + " :Nickname collision KILL \r\n")
 
 #define KILL(nickname, reason) (std::string("KILL ") + nickname + " :" + reason + "\r\n")
-
+ 
 // JOIN
 
 #define JOIN_SUCCESS(nickname, channel) (std::string(":") + nickname + " JOIN " + channel + " \r\n") 

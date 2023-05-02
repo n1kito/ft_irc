@@ -6,6 +6,7 @@
 # include <map>
 # include <sys/socket.h>
 # include <unistd.h>
+# include "numericReplies.hpp"
 
 class ACommand
 {
@@ -21,7 +22,8 @@ class ACommand
 	protected:
 		virtual void		parseArgument() = 0;
 		virtual void		action() = 0;
-
+		void				killClient(int fd, std::string previousMsg, std::string errorMsg);
+		
 		std::map<int, Client>* _clients;
 		// add protected elements here
 

@@ -51,11 +51,7 @@ void	User::handleRequest( Client& client, std::string argument )
 	if (!ret_parsing.empty())
 	{
 		message = ret_parsing;
-		message += KILL(client.getNickname(), "user authentification failed");                   
-		send(client.getClientSocket(), message.c_str(), message.length(), 0);
-		if( close( client.getClientSocket()) == -1 )
-			throw std::runtime_error("Error when closing fd");
-		_clients->erase( client.getClientSocket() );
+		killClient(client.getClientSocket(), message, "user authentification failed");
 		return ;
 	}
 	else if (!ret_action.empty())
@@ -63,7 +59,7 @@ void	User::handleRequest( Client& client, std::string argument )
 	else
 	{
 		client.setRegisterState(true);
-		message = USER_SUCCESS("server", client.getNickname());
+		message = USER_SUCCESS(client.getServerName(), client.getNickname());
 	}
 	if (!message.empty())
 		send(client.getClientSocket(), message.c_str(), message.length(), 0);
@@ -96,7 +92,7 @@ std::string	User::parseArgument( Client& client, std::string argument )
 		_realname = client.getNickname();
 	_realname.erase(0, 1);
 	if (_username.empty() || _realname.empty())
-		return (ERR_NEEDMOREPARAMS("server", client.getNickname(), "USER"));
+		return (ERR_NEEDMOREPARAMS(client.getServerName(), client.getNickname(), "USER"));
 	return "";
 }
 
@@ -105,7 +101,7 @@ void		User::action() {}
 std::string	User::action( Client& client, std::string username, std::string realname )
 {
 	if (client.getRegisterState())
-		return (ERR_ALREADYREGISTERED("server", client.getNickname()));
+		return (ERR_ALREADYREGISTERED(client.getServerName(), client.getNickname()));
 	client.setUsername(username);
 	client.setRealname(realname);
 

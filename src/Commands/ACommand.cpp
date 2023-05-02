@@ -33,5 +33,14 @@ ACommand& ACommand::operator = (const ACommand &copyMe)
 
 /* METHODS ********************************************************************/
 
-
+void			ACommand::killClient(int fd, std::string prevMsg, std::string errorMsg)
+{
+	std::string msg;
+	msg = prevMsg + KILL(_clients->at(fd).getNickname(), errorMsg.c_str());
+	send(_clients->at(fd).getClientSocket(), msg.c_str(), msg.length(), 0);
+	usleep(1000);
+	if( close( fd ) == -1 )
+		throw std::runtime_error("Error when closing fd");
+	_clients->erase( fd );
+}
 
