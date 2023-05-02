@@ -65,7 +65,7 @@ void	Topic::parseArgument(std::string arg, std::string& channel, std::string& to
 void		Topic::handleRequest(Client &client, std::string arg)
 {
 	if (arg.empty())
-		sendNumericReplies(1, client.getClientSocket(), ERR_NEEDMOREPARAMS(client.getServerName(), client.getNickname(), "TOPIC").c_str());
+		sendNumericReplies(1, client.getClientSocket(), ERR_NEEDMOREPARAMS(client.getServerName(), "TOPIC").c_str());
 	else
 	{
 		std::string channel = "";

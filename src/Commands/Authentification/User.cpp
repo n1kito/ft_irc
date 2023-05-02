@@ -103,7 +103,7 @@ std::string	User::action( Client& client, std::string username, std::string real
 	if (client.getRegisterState())
 		return (ERR_ALREADYREGISTERED("server", client.getNickname()));
 	if (username.empty() || realname.empty())
-		return (ERR_NEEDMOREPARAMS("server", client.getNickname(), "USER"));
+		return (ERR_NEEDMOREPARAMS("server", "USER"));
 	client.setUsername(username);
 	client.setRealname(realname);
 
