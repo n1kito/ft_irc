@@ -26,7 +26,7 @@ void	Pass::handleRequest(Client& client, std::string argument)
 	if (client.getRegisterState() == true)
 		message = ERR_ALREADYREGISTERED(client.getServerName(), client.getNickname());
 	else if (argument.length() == 0)
-		message = ERR_NEEDMOREPARAMS(client.getServerName(), client.getNickname(), "PASS");
+		message = ERR_NEEDMOREPARAMS(client.getServerName(), "PASS");
 	else if (argument != _serverPassword)
 	{
 		std::cout << "PASSWORDS DO NOT MATCH" << std::endl; // TODO: remove this

@@ -92,7 +92,7 @@ std::string	User::parseArgument( Client& client, std::string argument )
 		_realname = client.getNickname();
 	_realname.erase(0, 1);
 	if (_username.empty() || _realname.empty())
-		return (ERR_NEEDMOREPARAMS(client.getServerName(), client.getNickname(), "USER"));
+		return (ERR_NEEDMOREPARAMS(client.getServerName(), "USER"));
 	return "";
 }
 

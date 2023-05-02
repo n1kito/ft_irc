@@ -53,7 +53,7 @@ void		Ping::parseArgument() {}
 std::string	Ping::parseArgument( Client& client, std::string argument )
 {
 	if (argument.empty())
-		return (ERR_NEEDMOREPARAMS(client.getServerName(), client.getNickname(), "PING"));
+		return (ERR_NEEDMOREPARAMS(client.getServerName(), "PING"));
 	return "";
 }
 
