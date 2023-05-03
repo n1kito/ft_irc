@@ -80,7 +80,7 @@ std::string	Nick::parseArgument(Client &client, std::string& arg)
 			if (!client.getWelcomeState())
 			{
 				killClient(client.getClientSocket(), msg, "nickname collision failed" );
-				return(msg);
+				return("Client has been killed");
 			}
 			return(msg);
 		}
@@ -94,6 +94,8 @@ void	Nick::handleRequest(Client &client, std::string arg)
 	// std::cout << "\n[NICK handle request]\n" << "argument:" << arg << "|\n"; 
 	 std::string message = "";
 	message = parseArgument(client, arg);
+	if (message == "Client has been killed")
+		return;
 	if (message == "Nickname is valid")
 		message = action(client, arg);	
 	send(client.getClientSocket(), message.c_str(), message.length(), 0);
@@ -103,10 +105,9 @@ void		Nick::action() {}
 
 std::string	Nick::action(Client &client, std::string nickname)
 {
-	std::string message = "";
 	client.setNickname(nickname);
-	message = NICK_SUCCESS(client.getServerName(), client.getNickname());
-	// std::cout << "nickname is:" << client.getNickname() << "|\n";
+	std::string message = NICK_SUCCESS(client.getServerName(), client.getNickname());
+	std::cout << "nickname is:" << client.getNickname() << "|\n";
 	return message;
 }
 

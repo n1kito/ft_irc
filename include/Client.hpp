@@ -50,7 +50,7 @@ class Client
 		bool		_welcomeState;
 
 		std::string	_serverName;
-		bool		_isFirstRequest;
+		// bool		_isFirstRequest;
 };
 
 #endif

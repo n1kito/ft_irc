@@ -2,10 +2,10 @@
 #define NUMERICREPLIES_HPP
 
 // 001
-#define RPL_WELCOME(server, nickname, network) (std::string(":") + server + " 001 " + nickname + " :Welcome to the " + network + " Network, " + nickname + "\r\n")
-// #define RPL_WELCOME(server, nickname, network) (std::string(":001 ") + server + " :Welcome to the " + network + " Network, " + nickname + "\r\n")
+// #define RPL_WELCOME(server, nickname) (std::string("001 ") + server + " :Welcome to the " + server + " Network, " + nickname + "\r\n")
+#define RPL_WELCOME(server, nickname) (std::string(":") + server + " 001 " + nickname + " :Welcome to the " + server + " Network, " + nickname + "\r\n")
 // 002
-#define RPL_YOURHOST(server, nickname, serverName, ersion) (std::string(":") + server + " 002 " + nickname + " :Your host is " + serverName + ", running version " + version + "\r\n")
+#define RPL_YOURHOST(server, nickname, serverName, version) (std::string(":") + server + " 002 " + nickname + " :Your host is " + serverName + ", running version " + version + "\r\n")
 // 003
 #define RPL_CREATED(server, nickname, datetime) (std::string(":") + server + " 003 " + nickname + " :This server was created " + datetime + "\r\n")
 // 004
@@ -25,19 +25,21 @@
 #define ERR_NEEDMOREPARAMS(server, commandName) (std::string(":") + server + " 461 " + commandName + " :Not enough parameters\r\n")
 // #define ERR_NEEDMOREPARAMS(server, nickname, commandName) (std::string(":") + server + " 461 " + nickname + " " + commandName + " :Not enough parameters\r\n")
 // 462
-#define ERR_ALREADYREGISTERED(server, nickname) (std::string(":") + server + " 462 " + nickname + " :You may not reregister\r\n")
+#define ERR_ALREADYREGISTERED(server, nickname) (std::string(":") + server + " 462 " + nickname + " :You may not reregister.\r\n")
 // 464
 #define ERR_PASSWDMISMATCH(server) (std::string(":") + server + " 464" + " : Password incorrect \r\n")
 
 // Custom Messages
-#define NICK_SUCCESS(server, nickname) (std::string(":") + server + " 001 " + nickname + " :Nickname created successfully!\r\n")
-#define USER_SUCCESS(server, nickname) (std::string(":") + server + " 001 " + nickname + " :User created successfully!\r\n")
-#define PASS_SUCCESS(server, nickname) (std::string(":") + server + " 911 " + nickname + " :Password set successfully !\r\n")
-#define PONG_SUCCESS(server, token) (std::string("PONG : ") + server + " " + token + " \r\n")
+#define NICK_SUCCESS(server, nickname) (std::string(":") + server + " NICK " + nickname + "\r\n")
+// #define NICK_SUCCESS(server, nickname) (std::string(":") + server + " 001 " + nickname + " :Nickname created successfully!\r\n")
+#define USER_SUCCESS(server, nickname) (std::string(":") + server + " USER " + nickname + " :User created successfully!\r\n")
+#define PASS_SUCCESS(server, nickname) (std::string(":") + server + " 001 " + nickname + " :Password set successfully !\r\n")
+#define PONG_SUCCESS(server, token) (std::string(":") + server + " PONG :" + token + "\r\n")
+// #define PONG_SUCCESS(server, token) (std::string("PONG : ") + server + " " + token + " \r\n")
 
 #define NICK_COLLISION(server, nickname) (std::string(":") + server + " 436 " + nickname + " :Nickname collision KILL \r\n")
 
-#define KILL(nickname, reason) (std::string("KILL ") + nickname + " :" + reason + "\r\n")
+#define KILL(server, nickname, reason) (std::string(":") + server + " " + "KILL " + nickname + " :" + reason + "\r\n")
  
 // JOIN
 

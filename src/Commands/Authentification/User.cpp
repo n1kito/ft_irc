@@ -59,6 +59,7 @@ void	User::handleRequest( Client& client, std::string argument )
 	else
 	{
 		client.setRegisterState(true);
+		// message = RPL_WELCOME(client.getServerName(), client.getNickname());
 		message = USER_SUCCESS(client.getServerName(), client.getNickname());
 	}
 	if (!message.empty())

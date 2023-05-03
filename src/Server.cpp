@@ -13,7 +13,7 @@ Server::Server(const int& port, const std::string& password, const std::string& 
 	_serverName(serverName)
 {
 	initCommands();
-	std::cout << RPL_WELCOME(_serverName, "nickname", "network") << std::endl;
+	std::cout << RPL_WELCOME(_serverName, "nickname") << std::endl;
 	// 1) SERVER SOCKET
 	// create ServerSocket
 	int serverSocket = socket(AF_INET, SOCK_STREAM, 0);
@@ -120,7 +120,7 @@ Server::Server(const int& port, const std::string& password, const std::string& 
 					// if the client is authentificated (PASS NICK USER) and not RPL_WELCOMEd
 					if (_clients[clientSocket].isAuthentificated() && _clients[clientSocket].getWelcomeState() == 0)
 					{
-						send(clientSocket, RPL_WELCOME(_serverName,_clients[clientSocket].getNickname(), "network").c_str(), RPL_WELCOME(_serverName, _clients[clientSocket].getNickname(), "network").length(), 0);
+						send(clientSocket, RPL_WELCOME(_serverName,_clients[clientSocket].getNickname()).c_str(), RPL_WELCOME(_serverName, _clients[clientSocket].getNickname()).length(), 0);
 						_clients[clientSocket].setWelcomeState(true);
 					}
 
@@ -262,7 +262,7 @@ void								Server::handleRequest(Client& client, const std::string& request)
 	// Parse the request
 	std::istringstream	requestStream(request);
 	// std::cout << YELLOW << "commands to run : " << RESET << requestStream.str() << std::endl;
-	while(!requestStream.eof())
+	while(!requestStream.eof() )
 	{
 		size_t		firstSpace;
 		std::string	line;
