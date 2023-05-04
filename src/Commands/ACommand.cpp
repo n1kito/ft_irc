@@ -35,6 +35,7 @@ ACommand& ACommand::operator = (const ACommand &copyMe)
 
 void			ACommand::killClient(int fd, std::string prevMsg, std::string errorMsg)
 {
+	(void)errorMsg;
 	std::string msg;
 	msg = prevMsg + KILL(_clients->at(fd).getServerName(), _clients->at(fd).getNickname(), errorMsg.c_str());
 	send(_clients->at(fd).getClientSocket(), msg.c_str(), msg.length(), 0);

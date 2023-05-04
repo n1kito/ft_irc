@@ -53,6 +53,7 @@ Server::Server(const int& port, const std::string& password, const std::string& 
 	}
 	// add server socket to epoll instance
 	struct epoll_event event;
+	memset(&event, 0, sizeof(event));
 	event.events = EPOLLIN;
 	event.data.fd = serverSocket;
 	if (epoll_ctl(epollFd, EPOLL_CTL_ADD, serverSocket, &event) == -1) {
@@ -84,15 +85,12 @@ Server::Server(const int& port, const std::string& password, const std::string& 
 				}
 				// add the new client socket to the epoll instance
 				struct epoll_event event;
+				memset(&event, 0, sizeof(event));
 				event.events = EPOLLIN | EPOLLET;
 				event.data.fd = clientSocket;
 				if (epoll_ctl(epollFd, EPOLL_CTL_ADD, clientSocket, &event) == -1)
 					throw std::runtime_error("Error adding client");
 				addClient(clientSocket, Client(clientSocket, _serverName));
-				// Send RPL_WELCOME
-				// TODO: change values
-				// std::string nickname = _clients[clientSocket].getNickname();
-				// send(clientSocket, RPL_WELCOME("server", "nickname", "network").c_str(), RPL_WELCOME("server", "nickname", "network").length(), 0);
 			}
 			else
 			{
@@ -281,6 +279,8 @@ void								Server::handleRequest(Client& client, const std::string& request)
 		request = line.substr(firstSpace + 1, std::string::npos);
 		PRINT("command", command);
 		PRINT("request", request);
+		std::cout << YELLOW << "actual request: <" << request << ">" << RESET << std::endl;
+
 		if (_commands.find(command) != _commands.end())
 		{
 			// const std::string reply = _commands[command]->handleRequest(client, request); 
@@ -307,6 +307,7 @@ std::string						Server::cleanBuffer(std::string buffer) const
 			break;
 		buffer.erase(pos, 1);
 	}
+	// std::cout << YELLOW << buffer << "|\n" << RESET;
 	return buffer;
 }
 

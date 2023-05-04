@@ -18,9 +18,10 @@
 // 431
 #define ERR_NONICKNAMEGIVEN(server) (std::string(":") + server + " 431 " + " :No nickname given\r\n")
 // 432
-#define ERR_ERRONEUSNICKNAME(server, client, nickname) (std::string(":") + server + " 432 " + client + " " + nickname + ":Erroneus nickname\r\n")
+#define ERR_ERRONEUSNICKNAME(server, client, nickname) (std::string(":") + server + " 432 " + client + " " + nickname + ": Erroneus nickname\r\n")
 // 433
-#define ERR_NICKNAMEINUSE(nickname) (std::string(":433 " + nickname + " :Nickname is already in use\r\n"))
+#define ERR_NICKNAMEINUSE(server, nickname) (std::string(":") + server + " 433 " + nickname + " " + nickname + " :Nickname is already in use\r\n")
+
 // 461
 #define ERR_NEEDMOREPARAMS(server, commandName) (std::string(":") + server + " 461 " + commandName + " :Not enough parameters\r\n")
 // #define ERR_NEEDMOREPARAMS(server, nickname, commandName) (std::string(":") + server + " 461 " + nickname + " " + commandName + " :Not enough parameters\r\n")
@@ -30,16 +31,14 @@
 #define ERR_PASSWDMISMATCH(server) (std::string(":") + server + " 464" + " : Password incorrect \r\n")
 
 // Custom Messages
-#define NICK_SUCCESS(server, nickname) (std::string(":") + server + " NICK " + nickname + "\r\n")
-// #define NICK_SUCCESS(server, nickname) (std::string(":") + server + " 001 " + nickname + " :Nickname created successfully!\r\n")
-#define USER_SUCCESS(server, nickname) (std::string(":") + server + " USER " + nickname + " :User created successfully!\r\n")
+#define NICK_SUCCESS(nickname1, nickname2) (std::string(":") + nickname1 + " NICK " + nickname2 + "\r\n")
+#define USER_SUCCESS(server, nickname) (std::string(":") + server + " 001 " + nickname + " :User created successfully!\r\n")
 #define PASS_SUCCESS(server, nickname) (std::string(":") + server + " 001 " + nickname + " :Password set successfully !\r\n")
 #define PONG_SUCCESS(server, token) (std::string(":") + server + " PONG :" + token + "\r\n")
-// #define PONG_SUCCESS(server, token) (std::string("PONG : ") + server + " " + token + " \r\n")
 
-#define NICK_COLLISION(server, nickname) (std::string(":") + server + " 436 " + nickname + " :Nickname collision KILL \r\n")
+#define ERR_NICKCOLLISION(server, nickname) (std::string(":") + server + " 436 " + nickname + " :Nickname collision KILL \r\n")
 
-#define KILL(server, nickname, reason) (std::string(":") + server + " " + "KILL " + nickname + " :" + reason + "\r\n")
+#define KILL(server, nickname, reason) (std::string(":") + server + " KILL " + nickname + " :" + server + "\r\n")
  
 // JOIN
 

@@ -11,6 +11,7 @@ Client::Client()
 Client::Client(const int& clientSocket, const std::string& serverName ) :
 	_isRegistered(false),
 	_passwordStatus(false),
+	_password(""),
 	_clientSocket(clientSocket),
 	_welcomeState(0),
 	_serverName(serverName)
