@@ -64,7 +64,7 @@ fclean: clean
 re: fclean all
 
 launch: all
-	@clear -x && make && clear -x && ./${NAME} 6667 coucou
+	@clear -x && make && clear -x && ./${NAME} 6667 pwd
 
 -include $(OBJ_FILES:%.o=%.d)
 

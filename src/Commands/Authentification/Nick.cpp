@@ -79,6 +79,7 @@ std::string	Nick::parseArgument(Client &client, std::string& arg)
 			std::string msg = NICK_COLLISION(client.getServerName(), arg);
 			if (!client.getWelcomeState())
 			{
+				std::cout << RED<< "\nclient has been killed\n";
 				killClient(client.getClientSocket(), msg, "nickname collision failed" );
 				return("Client has been killed");
 			}
