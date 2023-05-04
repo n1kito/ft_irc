@@ -279,8 +279,6 @@ void								Server::handleRequest(Client& client, const std::string& request)
 		request = line.substr(firstSpace + 1, std::string::npos);
 		PRINT("command", command);
 		PRINT("request", request);
-		std::cout << YELLOW << "actual request: <" << request << ">" << RESET << std::endl;
-
 		if (_commands.find(command) != _commands.end())
 		{
 			// const std::string reply = _commands[command]->handleRequest(client, request); 
@@ -290,7 +288,6 @@ void								Server::handleRequest(Client& client, const std::string& request)
 			// if the password is not set, accept only pass command
 			if ( command != "PASS" && client.getPassword().empty())
 				continue ;
-			std::cout << "actual command: <" << command << ">" << std::endl;
 			_commands[command]->handleRequest(client, request);
 			
 		}
