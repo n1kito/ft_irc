@@ -112,6 +112,7 @@ std::string	Join::parseArgument(Client &client, std::string& arg)
 	// the list of a channel list must have the same size than the list of the key associated
 	if (_channelList.size() != _keyList.size())
 		return "CODE ERROR";
+	
 	return "JOIN_SUCCESS";
 }
 
@@ -133,6 +134,8 @@ void	Join::handleRequest(Client &client, std::string arg)
 	}
 	std::cout << "final message:<" << message << ">\n";
 	// if (!message.empty())
+	// message = std::string("PRIVMSG ") + "#c1" + " :" + JOIN_SUCCESS(client.getNickname(), "#c1");
+	message = PRIVMSG(_channelList[0], JOIN_SUCCESS(client.getNickname(), _channelList[0]));
 	send(client.getClientSocket(), message.c_str(), message.length(), 0);
 	
 	// clear data 

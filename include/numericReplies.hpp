@@ -42,11 +42,12 @@
  
 // JOIN
 
-#define JOIN_SUCCESS(nickname, channel) (std::string(":") + nickname + " JOIN " + channel + " \r\n") 
+#define JOIN_SUCCESS(nickname, channel) (std::string("User ") + RED + nickname + RESET + " has joined the channel " + channel + " \r\n") 
 #define RPL_TOPIC(nickname, channel, topic) (std::string(":") + nickname + " 332 " channel + " " + topic " \r\n") 
 
 // 332 <nickname> <channel> :<topic>
 
+#define PRIVMSG(channel, message) (std::string("PRIVMSG ") + channel + " :" + message)
 
 #endif
 
