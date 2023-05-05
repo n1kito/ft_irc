@@ -11,8 +11,10 @@ Channel::Channel()
 
 Channel::Channel( std::string name, const Client& client ) :
 	_name(name),
+	_key(""),
 	_clientLimit(0),
-	_topicIsProtected(false)
+	_topicIsProtected(false),
+	_channelIsProtected(false)
 {
 	addConnectedClient(client);
 }

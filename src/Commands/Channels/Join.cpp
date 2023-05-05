@@ -2,7 +2,7 @@
 
 /* CONSTRUCTORS ***************************************************************/
 
-Join::Join() {}
+Join::Join() : ACommand() {}
 
 Join::Join(std::map< int, Client >* clients) : ACommand(clients) {}
 
@@ -13,6 +13,7 @@ Join::Join(std::map<int, Client>* clients, std::map< std::string, Channel >* cha
 {
 	
 }
+
 
 Join::Join(const Join &copyMe) : ACommand(copyMe)
 {
@@ -40,26 +41,29 @@ Join& Join::operator = (const Join &copyMe)
 void		Join::parseArgument() {}
 void		Join::action() {}
 
-void		Join::createChannel(Client& client, std::string channelName)
-{
-	Channel newChannel(channelName, client);
-	_channels->insert(std::make_pair(channelName, newChannel));
-}
-
 void		Join::action(Client &client)
 {
+	std::cout << BLUE << "[JOIN - action]\n" << RESET;
+
 	//if channel does not exist, create channel
-	for (size_t i=0; i < _channelsToJoin.size();i++)
+	for (size_t i=0; i < _channelList.size();i++)
 	{
-		std::map<std::string, Channel>::iterator it = _channels->find(_channelsToJoin[i]);
-		// add client to existing channel
-		if (it != _channels->end())
-			it->second.addConnectedClient(client);
-			// add client to existing channel
-		else
-			createChannel(client, _channelsToJoin[i]);
-			// send success (3)
+		std::cout << YELLOW << "channel<" << _channelList[i] << ">\n";
+		if (!_channels->empty())
+		{
+			std::map<std::string, Channel>::iterator it = _channels->find(_channelList[i]);
+			// if doesn't exist, create channel (its ctor adds itself client) 
+			if (it == _channels->end())
+				_channels->insert(std::make_pair(_channelList[i], Channel(_channelList[i], client)));
+			// else add client to existing channel
+			else
+				it->second.addConnectedClient(client);
+		}
+
+		// send success (3)
 	}
+
+	std::cout << RESET;
 	// maybe write method to send message and send it in the loop !! 
 	// std::string messageJoin = JOIN_SUCCESS(client.getNickname(), channelName);
 	// std::string messageTopic = RPL_TOPIC(client.getNickname(), channelName, )
@@ -69,41 +73,52 @@ void		Join::action(Client &client)
 
 std::string	Join::parseArgument(Client &client, std::string& arg)
 {
+	std::cout << BLUE << "[JOIN - parseArgument]\n" << RESET;
+
 	(void)client;
 	// if arg == "0" ==> Leave all channels (send PART command for each channel) 
-	std::map< std::string, std::string > chanKeyMap;
-	std::vector < std::string > channelList;
-	std::vector < std::string > keyList;
+	if (arg == "#0")
+		return ("PART");
 	std::string channelArg;
 	std::string keyArg;
 
 	// split the channel list and the key list with a space
-	channelArg = arg.substr(0, arg.find(" "));
-	keyArg = arg.substr(arg.find(" "));
+	std::stringstream argStream(arg);
+	std::getline(argStream, channelArg, ' ');
+	std::getline(argStream, keyArg);
+	
+	std::string buffer;
+	
+	std::stringstream channelStream(channelArg);
+	while (std::getline(channelStream, buffer, ','))
+		_channelList.push_back(buffer);
+	
+	std::stringstream keyStream(keyArg);
+	while (std::getline(keyStream, buffer, ','))
+		_keyList.push_back(buffer);
 
-	size_t pos = channelArg.find(",");
-	while ( pos != std::string::npos )
-	{
-		channelList.push_back(channelArg.substr(0, pos));
-		channelArg.erase(0, pos + 1);
-		pos = channelArg.find(",");
-	}
-	pos = keyArg.find(",");
-	while ( pos != std::string::npos )
-	{
-		keyList.push_back(keyArg.substr(0, pos));
-		keyArg.erase(0, pos + 1);
-		pos = keyArg.find(",");
-	}
+	std::cout << "channelArg:<" << channelArg << ">\n";
+	std::cout << "keyArg:<" << keyArg << ">\n";
+	std::cout << "channelListSize:<" << _channelList.size() << ">\n";
+	std::cout << "keyListSize:<" << _keyList.size() << ">\n";
+
+	for (size_t i=0; i < _channelList.size(); i++)
+		std::cout << YELLOW << _channelList[i] << " ";
+	std::cout << RESET << "\n";
+	for (size_t i=0; i < _keyList.size(); i++)
+		std::cout << GREEN << _keyList[i] << " ";
+	std::cout << RESET << "\n";
+	
 	// the list of a channel list must have the same size than the list of the key associated
-	if (channelList.size() != keyList.size())
+	if (_channelList.size() != _keyList.size())
 		return "CODE ERROR";
-	return NULL;
+	return "JOIN_SUCCESS";
 }
 
 
 void	Join::handleRequest(Client &client, std::string arg)
 {
+	std::cout << BLUE << "[JOIN - handleRequest]\n" << RESET;
 	std::string message = "";
 
 	if (arg.empty())
@@ -116,8 +131,13 @@ void	Join::handleRequest(Client &client, std::string arg)
 		else
 			action(client);
 	}
-	if (!message.empty())
-		send(client.getClientSocket(), message.c_str(), message.length(), 0);
+	std::cout << "final message:<" << message << ">\n";
+	// if (!message.empty())
+	send(client.getClientSocket(), message.c_str(), message.length(), 0);
+	
+	// clear data 
+	_channelList.clear();
+	_keyList.clear();
 	// on SUCCESS, send all the information needed to the client
 }
 

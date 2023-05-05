@@ -46,10 +46,11 @@ class Channel
 		std::string				_name;
 		std::string				_topic;
 		
+		std::string				_key;
 		// Channel modes
 		size_t					_clientLimit;
 		bool					_topicIsProtected;
-
+		bool					_channelIsProtected;
 		Channel&		operator = (const Channel &copyMe);
 
 };

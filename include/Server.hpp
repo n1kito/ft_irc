@@ -15,6 +15,7 @@
 #include "Ping.hpp"
 #include "Pass.hpp"
 #include "Channel.hpp"
+#include "Join.hpp"
 #include <ctime>
 #include <unistd.h>
 
@@ -70,5 +71,8 @@ class Server
 		std::string							_serverName;
 		Server();
 };
+
+// void	sendNumericReplies(const size_t& numberOfReplies, const size_t clientFd, ...);
+
 
 #endif

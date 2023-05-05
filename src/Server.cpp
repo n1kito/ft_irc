@@ -3,7 +3,7 @@
 
 #include <cerrno>
 #include "numericReplies.hpp"
-
+#include "ft_irc.hpp"
 
 Server::Server() {}
 Server::Server(const int& port, const std::string& password, const std::string& serverName) :
@@ -118,6 +118,7 @@ Server::Server(const int& port, const std::string& password, const std::string& 
 					// if the client is authentificated (PASS NICK USER) and not RPL_WELCOMEd
 					if (_clients[clientSocket].isAuthentificated() && _clients[clientSocket].getWelcomeState() == 0)
 					{
+						// sendNumericReplies(1,clientSocket, RPL_WELCOME(_serverName,_clients[clientSocket].getNickname()).c_str());
 						send(clientSocket, RPL_WELCOME(_serverName,_clients[clientSocket].getNickname()).c_str(), RPL_WELCOME(_serverName, _clients[clientSocket].getNickname()).length(), 0);
 						_clients[clientSocket].setWelcomeState(true);
 					}
@@ -232,6 +233,7 @@ void								Server::initCommands()
 	_commands["USER"] = new User(&_clients);
 	_commands["PING"] = new Ping(&_clients);
 	_commands["PASS"] = new Pass(&_clients, _password);
+	_commands["JOIN"] = new Join(&_clients, &_channels);
 }
 
 void								Server::handleRequest(Client& client, const std::string& request)
@@ -319,82 +321,3 @@ std::string						Server::_getCurrentDate() const
 	std::string	returnValue(asctime(timeInfo));
 	return returnValue;
 }
-
-
-// ChatGPT explains epoll():
-
-/*
-	Sure, I can give you a brief rundown on how to use `epoll()` to monitor sockets in the context of a C++ program that acts as an IRC server.
-
-	1. Create the epoll instance
-	You can create an epoll instance using the `epoll_create()` function. This function returns an epoll file descriptor that you will use in subsequent calls to `epoll_ctl()` and `epoll_wait()`.
-
-	```c++
-	int epoll_fd = epoll_create1(0);
-	if (epoll_fd == -1) {
-		// handle error
-	}
-	```
-
-	2. Add the server socket to the epoll instance
-	You should add the server socket to the epoll instance using the `epoll_ctl()` function with `EPOLL_CTL_ADD` as the operation. 
-
-	```c++
-	struct epoll_event event;
-	event.events = EPOLLIN;
-	event.data.fd = server_socket;
-	if (epoll_ctl(epoll_fd, EPOLL_CTL_ADD, server_socket, &event) == -1) {
-		// handle error
-	}
-	```
-
-	3. Wait for events
-	You can wait for events using the `epoll_wait()` function. This function blocks until there are events to process, or until a timeout occurs. When there are events to process, `epoll_wait()` returns an array of `struct epoll_event` that describes the events.
-
-	```c++
-	const int MAX_EVENTS = 10;
-	struct epoll_event events[MAX_EVENTS];
-
-	int num_events = epoll_wait(epoll_fd, events, MAX_EVENTS, -1);
-	if (num_events == -1) {
-		// handle error
-	}
-	```
-
-	4. Process events
-	You should loop through the array of `struct epoll_event` and handle each event. If the event is for the server socket, you should accept the connection and add the new client socket to the epoll instance.
-
-	```c++
-	for (int i = 0; i < num_events; i++) {
-		if (events[i].data.fd == server_socket) {
-			// accept the connection
-			int client_socket = accept(server_socket, nullptr, nullptr);
-			if (client_socket == -1) {
-				// handle error
-			}
-
-			// add the new client socket to the epoll instance
-			struct epoll_event event;
-			event.events = EPOLLIN | EPOLLET;
-			event.data.fd = client_socket;
-			if (epoll_ctl(epoll_fd, EPOLL_CTL_ADD, client_socket, &event) == -1) {
-				// handle error
-			}
-		} else {
-			// handle data from the client socket
-			int client_socket = events[i].data.fd;
-			// read data from the client socket
-			// process the data
-		}
-	}
-	```
-
-	5. Close the epoll instance
-	Finally, when you are finished using the epoll instance, you should close it using the `close()` function.
-
-	```c++
-	close(epoll_fd);
-	```
-
-	Note that this is just a brief overview of how to use `epoll()` to monitor sockets in a C++ program that acts as an IRC server. There are many details that you will need to consider when implementing a production-quality IRC server.
-*/
