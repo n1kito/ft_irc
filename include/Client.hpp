@@ -6,6 +6,10 @@
 # include <exception>
 # include <stdexcept>
 # include <iostream> // TODO: added this to debug, not necessary
+# include "Channel.hpp"
+
+
+class Channel;
 
 class Client
 {
@@ -26,6 +30,7 @@ class Client
 		bool			getWelcomeState() const;
 		std::string		getServerName() const;
 		bool			getPasswordStatus() const;
+		Channel*		getCurrentChannel() const;
 
 		void			setRegisterState(bool state);
 		void			setUsername(std::string username);
@@ -49,6 +54,8 @@ class Client
 		std::string		_password;
 		int				_clientSocket;
 		bool			_welcomeState;
+
+		Channel*		_currentChannel;
 
 		std::string		_serverName;
 		bool			_isFirstRequest;

@@ -66,6 +66,7 @@ std::string						Channel::getTimeTopicWasSet() const { return _timeTopicWasSet; 
 // getters -> channel modes
 bool							Channel::isClientLimitMode() const { return _clientLimit > 0; }
 bool							Channel::isTopicProtectedMode() const { return _topicIsProtected; }
+bool							Channel::isInviteOnly() const { return _inviteOnly; }
 
 // checkers
 // Checks if a client is an operator of the Channel
@@ -85,12 +86,12 @@ bool							Channel::isClientConnected(const Client& clientRef) const
 void							Channel::setTopic(const std::string& newTopic)
 {
 	_topic = newTopic; 
-
 }
 
 void							Channel::setName(const std::string& newName) { _name = newName; }
 void							Channel::setClientLimit(const size_t& limit) { _clientLimit = limit; }
 void							Channel::setTopicProtection(const bool& status) { _topicIsProtected = status; }
+void							Channel::setInviteOnly(const bool& status) { _inviteOnly = status; }
 void							Channel::addConnectedClient(const Client& clientRef)
 { 
 	if (_connectedClients.find(clientRef.getNickname()) == _connectedClients.end())
@@ -116,6 +117,20 @@ void							Channel::removeOperator(const std::string& clientNickname)
 
 void							Channel::setNicknameOfTopicSetter(const std::string& nickname) { _nicknameOfTopicSetter = nickname; }
 void							Channel::setTimeTopicWasSet(const std::string& time) { _timeTopicWasSet = time; }
+
+// setters -> channel modes
+void							Channel::addInvitedClient(const std::string& clientNick)
+{
+	_invitedClients.push_back(clientNick);
+}
+
+void							Channel::removeInvitedClient(const std::string& clientNick)
+{
+	Channel::nickVector::iterator clientNickIt = _invitedClients.begin();
+	for (; clientNickIt != _invitedClients.end(); ++clientNickIt)
+		if (*clientNickIt == clientNick)
+			_invitedClients.erase(clientNickIt);
+}
 
 bool							Channel::checkName(const std::string name)
 {

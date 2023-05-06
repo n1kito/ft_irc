@@ -238,6 +238,7 @@ void								Server::initCommands()
 	_commands["PING"] = new Ping(&_clients);
 	_commands["PASS"] = new Pass(&_clients, _password);
 	_commands["TOPIC"] = new Topic(&_clients, &_channels);
+	_commands["INVITE"] = new Invite(&_clients, &_channels);
 }
 
 void								Server::handleRequest(Client& client, const std::string& request)
@@ -290,7 +291,7 @@ void								Server::handleRequest(Client& client, const std::string& request)
 			// TODO
 			// send(client.getClientSocket(), reply.c_str(), reply.length(), 0);
 			_commands[command]->handleRequest(client, request);
-			std::cout << "actual command: <" << command << ">" << std::endl;
+			// std::cout << "actual command: <" << command << ">" << std::endl;
 			if (command == "PASS" && client.getPassword().empty())
 			{
 				std::cout << "ENTERING WRONG PASSWORD" << std::endl;

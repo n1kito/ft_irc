@@ -8,25 +8,36 @@
 # include "numericReplies.hpp"
 # include <string>
 
+/*
+The INVITE command is used to invite a user to a channel.
+Parameters: <nickname> <channel>
+Requests:
+	/invite nickname channel			=>	INVITE nickname channel
+	/invite nickname channel channel	=>	INVITE nickname channel
+	/invite								=>	Error from irssi: Not enough parameters given
+	/invite nickname					=>	Error from irssi: Not joined to any channel
+	/invite nickname (when joined)		=>	? What happens here ? TBD
+*/
+
 class Invite : public ACommand
 {
 	public:
-		typedef std::map< int, Client >				clientMap;
 		typedef std::map< std::string, Channel >	channelMap;
 
-		Invite(clientMap* clients);
-		Invite(clientMap* clients, channelMap* channels);
+		Invite(ACommand::clientMap* clients);
+		Invite(ACommand::clientMap* clients, channelMap* channels);
 		~Invite();
 	
 		void				parseArgument(std::string arg, std::string& channel, std::string& request);
 		void				handleRequest(Client &client, std::string arg);
-		void				action();
-
+		void				action(const Client& client, const std::string& channel, const std::string& invitedUserNick, Client& invitedClient);
+	
 	protected:
 
 	private:
 		Invite();
 		void				parseArgument();
+		void				action();
 		Invite(const Invite &copyMe);
 		Invite&				operator = (const Invite &copyMe);
 
