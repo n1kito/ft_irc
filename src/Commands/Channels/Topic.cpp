@@ -22,6 +22,7 @@ Topic& Topic::operator = (const Topic &copyMe)
 
 /* METHODS ********************************************************************/
 
+// Checks format the request
 void	Topic::parseArgument() {}
 void	Topic::parseArgument(std::string arg, std::string& channel, std::string& topic)
 {	
@@ -61,7 +62,7 @@ void	Topic::parseArgument(std::string arg, std::string& channel, std::string& to
 	}
 }
 
-// 
+// Parses the request and handles it accordingly
 void		Topic::handleRequest(Client &client, std::string arg)
 {
 	if (arg.empty())
@@ -79,6 +80,7 @@ void		Topic::handleRequest(Client &client, std::string arg)
 	}
 }
 
+// Handles the request and sends necessary numeric replies
 void	Topic::action() { }
 void	Topic::action(std::string& topic, Channel& targetChannel, const Client& client)
 {

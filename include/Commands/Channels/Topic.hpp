@@ -9,6 +9,8 @@
 # include "numericReplies.hpp"
 # include <string>
 
+// The TOPIC command is used to change or view the topic of the given channel.
+
 class Topic : public ACommand
 {
 	public:
