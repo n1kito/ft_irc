@@ -12,6 +12,7 @@ Server::Server(const int& port, const std::string& password, const std::string& 
 	_creationDate(_getCurrentDate()),
 	_serverName(serverName)
 {
+	int requestIndex = 0; // TODO: remove this, only for development purposes
 	initCommands();
 	std::cout << RPL_WELCOME(_serverName, "nickname") << std::endl;
 	// 1) SERVER SOCKET
@@ -86,7 +87,7 @@ Server::Server(const int& port, const std::string& password, const std::string& 
 				// add the new client socket to the epoll instance
 				struct epoll_event event;
 				memset(&event, 0, sizeof(event));
-				event.events = EPOLLIN | EPOLLET;
+				event.events = EPOLLIN;
 				event.data.fd = clientSocket;
 				if (epoll_ctl(epollFd, EPOLL_CTL_ADD, clientSocket, &event) == -1)
 					throw std::runtime_error("Error adding client");
@@ -98,7 +99,7 @@ Server::Server(const int& port, const std::string& password, const std::string& 
 				int clientSocket = events[i].data.fd;
 				// read data from the client socket
 				// process the data
-				char buffer[1024];
+				char buffer[1024] = {};
       			int received = recv(clientSocket, buffer, sizeof(buffer), 0);
 
       			// Si la réception est inférieure ou égale à 0, le client s'est déconnecté.
@@ -110,23 +111,37 @@ Server::Server(const int& port, const std::string& password, const std::string& 
 				{
 					// process the data
         			std::cout	<< std::endl
-								<< "************ Received from client **********" << std::endl
+								<< "             " << DIM << "#" << requestIndex++ << RESET << std::endl
+								<< "************ Received from client **********" << std::endl << std::endl
 								<< BOLD << "[" << RESET << DIM << "Request" << RESET << BOLD << "]" << RESET << std::endl
 								<< MAGENTA << buffer << RESET << std::endl;
 								std::cout << BOLD << "[" RESET << DIM << "Handling" << RESET << BOLD << "]" << RESET << std::endl;
-					handleRequest(_clients[clientSocket], cleanBuffer(buffer));
+					handleRequest(_clients.at(clientSocket), cleanBuffer(buffer));
 					// if the client is authentificated (PASS NICK USER) and not RPL_WELCOMEd
-					if (_clients[clientSocket].isAuthentificated() && _clients[clientSocket].getWelcomeState() == 0)
+					try
 					{
-						// sendNumericReplies(1,clientSocket, RPL_WELCOME(_serverName,_clients[clientSocket].getNickname()).c_str());
 						send(clientSocket, RPL_WELCOME(_serverName,_clients[clientSocket].getNickname()).c_str(), RPL_WELCOME(_serverName, _clients[clientSocket].getNickname()).length(), 0);
 						_clients[clientSocket].setWelcomeState(true);
+						if (_clients.at(clientSocket).isAuthentificated() && _clients.at(clientSocket).getWelcomeState() == 0)
+						{
+							send(clientSocket, RPL_WELCOME(_serverName,_clients.at(clientSocket).getNickname()).c_str(), RPL_WELCOME(_serverName, _clients.at(clientSocket).getNickname()).length(), 0);
+							_clients.at(clientSocket).setWelcomeState(true);
+						}
 					}
-
+					catch(const std::exception& e)
+					{
+						std::cerr << e.what() << '\n';
+					}
+					int i = 0;
+					for (std::map<int, Client>::iterator it = _clients.begin(); it != _clients.end(); ++it)
+					{
+						std::cout	<< "client no." << i++ << ": " << it->second.getNickname() << DIM << "\t[" << it->first << "]" << RESET << std::endl;
+					}
 					std::cout	<< "********************************************"
 								<< std::endl;
 					// send(clientSocket, handleRequest(_clients[clientSocket], buffer), response.length(), 0);
       			}
+				
 			}
 		}
 	}
@@ -299,6 +314,7 @@ void								Server::handleRequest(Client& client, const std::string& request)
 // This function removes \r characters from the buffer.
 std::string						Server::cleanBuffer(std::string buffer) const 
 {
+	// std::cout << "[before cleanBuffer()]\n" << BLUE << buffer << RESET << std::endl;
 	while (true)
 	{
 		size_t pos = buffer.find('\r', 0);
@@ -306,7 +322,7 @@ std::string						Server::cleanBuffer(std::string buffer) const
 			break;
 		buffer.erase(pos, 1);
 	}
-	// std::cout << YELLOW << buffer << "|\n" << RESET;
+	// std::cout << "[after cleanBuffer()]\n" << YELLOW << buffer << RESET << std::endl;
 	return buffer;
 }
 
