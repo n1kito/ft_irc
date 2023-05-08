@@ -111,7 +111,7 @@ Server::Server(const int& port, const std::string& password, const std::string& 
 				{
 					// process the data
         			std::cout	<< std::endl
-								<< "             " << DIM << requestIndex++ << "." << RESET << std::endl 
+								<< "             " << DIM << "#" << requestIndex++ << RESET << std::endl
 								<< "************ Received from client **********" << std::endl << std::endl
 								<< BOLD << "[" << RESET << DIM << "Request" << RESET << BOLD << "]" << RESET << std::endl
 								<< MAGENTA << buffer << RESET << std::endl;
@@ -133,8 +133,7 @@ Server::Server(const int& port, const std::string& password, const std::string& 
 					int i = 0;
 					for (std::map<int, Client>::iterator it = _clients.begin(); it != _clients.end(); ++it)
 					{
-						std::cout	<< "client no." << i << ": " << it->second.getNickname() << std::endl;
-						i++;
+						std::cout	<< "client no." << i++ << ": " << it->second.getNickname() << DIM << "\t[" << it->first << "]" << RESET << std::endl;
 					}
 					std::cout	<< "********************************************"
 								<< std::endl;
