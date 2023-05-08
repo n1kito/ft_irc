@@ -3,10 +3,7 @@
 /* CONSTRUCTORS ***************************************************************/
 
 // TODO: is this neede or should it be private ?
-Client::Client()
-{
-	// std::cout << "Default constructor called" << std::endl;
-}
+Client::Client() {}
 
 Client::Client(const int& clientSocket, const std::string& serverName ) :
 	_isRegistered(false),

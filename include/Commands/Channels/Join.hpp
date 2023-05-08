@@ -5,6 +5,7 @@
 # include "Client.hpp"
 # include "ACommand.hpp"
 # include "numericReplies.hpp"
+# include "ft_irc.hpp"
 
 class Join : public ACommand
 {
@@ -14,16 +15,17 @@ class Join : public ACommand
 
     	void		handleRequest(Client &client, std::string arg);
     	std::string	parseArgument(Client &client, std::string& arg);
-    	void		action(Client &client);
-		void		createChannel(Client& client, std::string channelName);
+    	std::string action(Client &client);
 
 	protected:
 		// add protected elements here
 
 	private:
-		// add private elements here
+		// existing channels from Server
 		std::map< std::string, Channel >*		_channels;
-		std::vector< std::string >				_channelsToJoin;
+		// channels to create or join with keys
+		std::vector< std::string >				_channelList;
+		std::vector< std::string >				_keyList;
 		
     	void		parseArgument();
     	void		action();

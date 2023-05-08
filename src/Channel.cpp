@@ -11,8 +11,10 @@ Channel::Channel()
 
 Channel::Channel( std::string name, const Client& client ) :
 	_name(name),
+	_key("oui"),
 	_clientLimit(0),
-	_topicIsProtected(false)
+	_topicIsProtected(false),
+	_channelIsProtected(false)
 {
 	addConnectedClient(client);
 }
@@ -37,9 +39,11 @@ Channel& Channel::operator = (const Channel &copyMe)
 	_connectedClients = copyMe.getClientMap();;
 	_operators = copyMe.getOperators();;
 	_name = copyMe.getName();
+	_key = copyMe.getKey();
 	_topic = copyMe.getTopic();
 	_clientLimit = copyMe.isClientLimitMode();
 	_topicIsProtected = copyMe.isTopicProtectedMode();
+	_channelIsProtected = copyMe.isChannelProtectedMode();
 
 	// std::cout << "Copy assignment operator called" << std::endl;
 	return *this;
@@ -49,6 +53,8 @@ Channel& Channel::operator = (const Channel &copyMe)
 
 // getters
 std::string						Channel::getName() const { return _name; }
+std::string						Channel::getKey() const { return _key; }
+
 std::string						Channel::getTopic() const { return _topic; }
 const Channel::clientNickMap&	Channel::getClientMap() const { return _connectedClients; }
 const Channel::clientNickMap&	Channel::getOperators() const { return _operators; }
@@ -56,17 +62,18 @@ const Channel::clientNickMap&	Channel::getOperators() const { return _operators;
 // getters -> channel modes
 bool							Channel::isClientLimitMode() const { return _clientLimit > 0; }
 bool							Channel::isTopicProtectedMode() const { return _topicIsProtected; }
+bool							Channel::isChannelProtectedMode() const { return _channelIsProtected; }
 
 // setters
-void							Channel::setTopic(const std::string& newTopic)
-{
-	_topic = newTopic; 
+void							Channel::setTopic(const std::string& newTopic) { _topic = newTopic;}
+void							Channel::setKey(const std::string& newKey) { _key = newKey;}
 
-}
 
 void							Channel::setName(const std::string& newName) { _name = newName; }
 void							Channel::setClientLimit(const size_t& limit) { _clientLimit = limit; }
 void							Channel::setTopicProtection(const bool& status) { _topicIsProtected = status; }
+void							Channel::setChannelProtection(const bool& status) { _channelIsProtected = status; }
+
 void							Channel::addConnectedClient(const Client& clientRef)
 { 
 	if (_connectedClients.find(clientRef.getNickname()) == _connectedClients.end())
