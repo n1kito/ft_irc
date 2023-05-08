@@ -13,6 +13,9 @@
 
 // ...
 
+// 333
+#define RPL_TOPICWHOTIME(server, nickname, channel, nicknameOfTopicSetter, setat) (std::string(":") + server + " 333 " + nickname + " " + channel + " " + nicknameOfTopicSetter + " " + setat + "\r\n")
+
 // 403
 #define ERR_NOSUCHCHANNEL(server, nickname, channel) (std::string(":") + server + " 403 " + nickname + " " + channel + " :No such channel\r\n")
 // 431
@@ -38,20 +41,24 @@
 
 #define ERR_NICKCOLLISION(server, nickname) (std::string(":") + server + " 436 " + nickname + " :Nickname collision KILL \r\n")
 
-#define KILL(server, nickname, reason) (std::string(":") + server + " KILL " + nickname + " :" + server + "\r\n")
+#define KILL(server, nickname, reason ) (std::string(":") + server + " KILL " + nickname + " :" + server + "\r\n")
  
 // JOIN
+#define JOIN_MSG(server, channel, nickname) (std::string(":") + nickname + "!" + server + " JOIN " + channel + " " +  nickname + "\r\n")
 
-#define JOIN_SUCCESS(nickname, channel) (std::string("User ") + RED + nickname + RESET + " has joined the channel " + channel + " \r\n") 
-#define RPL_TOPIC(nickname, channel, topic) (std::string(":") + nickname + " 332 " channel + " " + topic " \r\n") 
+
+#define JOIN_SUCCESS(server, nickname, channel) (std::string("User ") + RED + nickname + RESET + " has joined the channel " + channel + "\r\n") 
+#define RPL_TOPIC(server, nickname, channel, topic) (std::string(":") + server + " 332 " + nickname + " " + channel + " :" + topic + "\r\n")
 #define ERR_BADCHANMASK(channel) (std::string(":") + channel + " 476 " + ":Bad Channel Mask\r\n")
-#define ERR_BADCHANNELKEY(nickname, channel) (std::string(":") + nickname + " 475 " + channel + " :Cannot join channel (+k)\r\n")
-// ERR_BADCHANNELKEY (475) 
-//   "<client> <channel> :Cannot join channel (+k)"
-// "<channel> :Bad Channel Mask"
-// 332 <nickname> <channel> :<topic>
+#define ERR_BADCHANNELKEY(server, nickname, channel) (std::string(":") + server +  " 475 " + nickname + " " + channel + " :Cannot join channel (+k)\r\n")
+#define ERR_TOOMANYCHANNELS(server, nickname, channel) (std::string(":") + server +  " 405 " + nickname + " " + channel + " :You have joined too many channels\r\n") 
 
-#define PRIVMSG(channel, message) (std::string("PRIVMSG ") + channel + " :" + message)
+
+// RPL_NAMREPLY (353) 
+//  "<client> <symbol> <channel> :[prefix]<nick>{ [prefix]<nick>}"
+
+
+#define PRIVMSG(server, channel, message) (std::string(":") + server + " PRIVMSG " + channel + " :" + message)
 
 #endif
 

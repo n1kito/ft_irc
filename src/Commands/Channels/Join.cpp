@@ -46,24 +46,30 @@ std::string		Join::action(Client &client)
 	std::cout << BLUE << "[JOIN - action]\n" << RESET;
 
 	//if channel does not exist, create channel
-	for (size_t i=0; i < _channelList.size();i++)
+	for (size_t i = 0; i < _channelList.size(); i++)
 	{
 		std::cout << YELLOW << "channel<" << _channelList[i] << ">\n";
-		if (!_channels->empty())
-		{
+		//
+			std::cout << "Available channels: ";
+			for(std::map<std::string, Channel>::iterator it = _channels->begin(); it != _channels->end(); ++it)
+				std::cout << it->second.getName() << " ";
+			std::cout << std::endl;
+		//
+		// if (!_channels->empty())
+		// {
 			std::map<std::string, Channel>::iterator it = _channels->find(_channelList[i]);
 			// std::cout << "Found channel: " << it->second.getName() << "with key:" << it->second.getKey() << "\n";
 			// if doesn't exist, create channel (its ctor adds itself client) 
 			if (it == _channels->end())
 			{
 				Channel newChannel(_channelList[i], client);
-				_channels->insert(std::make_pair(_channelList[i], newChannel));
+				(*_channels)[_channelList[i]] = newChannel;
 				// if a key is associated to channel, set Protection mode to channel and add key
-				if (_keyList[i] != "x")
+				if (i < _keyList.size() && _keyList[i] != "x")
 				{
-					it->second.setChannelProtection(true);
+					(*_channels)[_channelList[i]].setChannelProtection(true);
 					if (!_keyList[i].empty())
-						it->second.setKey(_keyList[i]);
+						(*_channels)[_channelList[i]].setKey(_keyList[i]);
 				}
 			}
 			// else add client to existing channel
@@ -74,12 +80,13 @@ std::string		Join::action(Client &client)
 				{
 					// if key is incorrect, cannot join channel and send error
 					std::cout << "key:<" << it->second.getKey() << "> trying with:<" << _keyList[i] << ">\n";
-					if (it->second.getKey() != _keyList[i])
-						return (ERR_BADCHANNELKEY(client.getNickname(), it->second.getName()));
+                    
+					if (_keyList.empty() || (i < _keyList.size() && it->second.getKey() != _keyList[i]))
+						return (ERR_BADCHANNELKEY(client.getServerName(), client.getNickname(), it->second.getName()));
 				}
 				it->second.addConnectedClient(client);
 			}
-		}
+		// }
 		// send success (3)
 	}
 
@@ -133,7 +140,7 @@ std::string	Join::parseArgument(Client &client, std::string& arg)
 	std::cout << "channelListSize:<" << _channelList.size() << ">\n";
 	std::cout << "keyListSize:<" << _keyList.size() << ">\n";
 
-	for (size_t i=0; i < _channelList.size(); i++)
+	for (size_t i = 0; i < _channelList.size(); i++)
 		std::cout << YELLOW << _channelList[i] << " ";
 	std::cout << RESET << "\n";
 	for (size_t i=0; i < _keyList.size(); i++)
@@ -142,8 +149,8 @@ std::string	Join::parseArgument(Client &client, std::string& arg)
 	
 	// pas utile si irssi parse lui meme <#chan1, #chan2> <key1, x> 
 	// the list of a channel list must have the same size than the list of the key associated
-	if (_channelList.size() != _keyList.size())
-		return "CODE ERROR";
+	// if (_channelList.size() != _keyList.size())
+	// 	return "CODE ERROR";
 	return "";
 }
 
@@ -165,12 +172,22 @@ void	Join::handleRequest(Client &client, std::string arg)
 	}
 	std::cout << "final message:<" << message << ">\n";
 	if (message.empty())
-		message = JOIN_SUCCESS(client.getNickname(), _channelList[_channelList.size() -1]);
-	std::string finalmessage = PRIVMSG(_channelList[_channelList.size() -1], message);
-	send(client.getClientSocket(), finalmessage.c_str(), finalmessage.length(), 0);
+	{
+		// message = JOIN_SUCCESS(client.getNickname(), _channelList[_channelList.size() -1]);
+		// std::string finalmessage = PRIVMSG(client.getServerName(), _channelList[_channelList.size() -1], message);
+		// send(client.getClientSocket(), finalmessage.c_str(), finalmessage.length(), 0);
+		// _channels.broadcastNumericReplies()
+	}
+	else
+		send(client.getClientSocket(), message.c_str(), message.length(), 0);
 
-	// clear data for next JOIN command  
+	// clear data for next JOIN command 
+	std::cout << "before clear: size " << YELLOW << _keyList.size() << RESET << std::endl;
+
+	std::fill(_channelList.begin(), _channelList.end(), "");
 	_channelList.clear();
+	std::fill(_keyList.begin(), _keyList.end(), "");
 	_keyList.clear();
+	std::cout << "after clear: size " << YELLOW << _keyList.size() << RESET << std::endl;
 }
 

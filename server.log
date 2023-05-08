@@ -1,0 +1,1190 @@
+:pouetMania 001 nickname :Welcome to the pouetMania Network, nickname
+
+[35m127.0.0.1
+[0m
+ADDING CLIENT :6
+TOTAL CLIENTS :1
+
+             [2m#0[0m
+************ Received from client **********
+
+[1m[[0m[2mRequest[0m[1m][0m
+[35mCAP LS
+PASS pwd
+NICK chacha
+USER nikito nikito localhost :nikito
+[0m
+[1m[[0m[2mHandling[0m[1m][0m
+CAP LS
+command: CAP
+request: LS
+PASS pwd
+command: PASS
+request: pwd
+[30;43mPassword sent[0mpwd
+NICK chacha
+command: NICK
+request: chacha
+USER nikito nikito localhost :nikito
+command: USER
+request: nikito nikito localhost :nikito
+[31mUsername : [0mnikito | Realname : nikito
+
+client no.0: chacha[2m	[6][0m
+********************************************
+
+             [2m#1[0m
+************ Received from client **********
+
+[1m[[0m[2mRequest[0m[1m][0m
+[35mMODE chacha +i
+MODE chacha +i
+[0m
+[1m[[0m[2mHandling[0m[1m][0m
+MODE chacha +i
+command: MODE
+request: chacha +i
+MODE chacha +i
+command: MODE
+request: chacha +i
+
+client no.0: chacha[2m	[6][0m
+********************************************
+
+             [2m#2[0m
+************ Received from client **********
+
+[1m[[0m[2mRequest[0m[1m][0m
+[35mJOIN #c1
+[0m
+[1m[[0m[2mHandling[0m[1m][0m
+JOIN #c1
+command: JOIN
+request: #c1
+[34m[JOIN - handleRequest]
+[0m[34m[JOIN - parseArgument]
+[0mchannelArg:<#c1>
+keyArg:<>
+channelListSize:<1>
+keyListSize:<0>
+[33m#c1 [0m
+[0m
+[34m[JOIN - action]
+[0m[33mchannel<#c1>
+Available channels: 
+[0mfinal message:<>
+before clear: size [33m0[0m
+after clear: size [33m0[0m
+
+client no.0: chacha[2m	[6][0m
+********************************************
+
+             [2m#3[0m
+************ Received from client **********
+
+[1m[[0m[2mRequest[0m[1m][0m
+[35mPING pouetMania
+[0m
+[1m[[0m[2mHandling[0m[1m][0m
+PING pouetMania
+command: PING
+request: pouetMania
+
+client no.0: chacha[2m	[6][0m
+********************************************
+
+             [2m#4[0m
+************ Received from client **********
+
+[1m[[0m[2mRequest[0m[1m][0m
+[35mPING pouetMania
+[0m
+[1m[[0m[2mHandling[0m[1m][0m
+PING pouetMania
+command: PING
+request: pouetMania
+
+client no.0: chacha[2m	[6][0m
+********************************************
+[35m127.0.0.1
+[0m
+ADDING CLIENT :7
+TOTAL CLIENTS :2
+
+             [2m#5[0m
+************ Received from client **********
+
+[1m[[0m[2mRequest[0m[1m][0m
+[35mCAP LS
+PASS pwd
+NICK jeeeee
+USER nikito nikito localhost :nikito
+[0m
+[1m[[0m[2mHandling[0m[1m][0m
+CAP LS
+command: CAP
+request: LS
+PASS pwd
+command: PASS
+request: pwd
+[30;43mPassword sent[0mpwd
+NICK jeeeee
+command: NICK
+request: jeeeee
+USER nikito nikito localhost :nikito
+command: USER
+request: nikito nikito localhost :nikito
+[31mUsername : [0mnikito | Realname : nikito
+
+client no.0: chacha[2m	[6][0m
+client no.1: jeeeee[2m	[7][0m
+********************************************
+
+             [2m#6[0m
+************ Received from client **********
+
+[1m[[0m[2mRequest[0m[1m][0m
+[35mMODE jeeeee +i
+MODE jeeeee +i
+[0m
+[1m[[0m[2mHandling[0m[1m][0m
+MODE jeeeee +i
+command: MODE
+request: jeeeee +i
+MODE jeeeee +i
+command: MODE
+request: jeeeee +i
+
+client no.0: chacha[2m	[6][0m
+client no.1: jeeeee[2m	[7][0m
+********************************************
+
+             [2m#7[0m
+************ Received from client **********
+
+[1m[[0m[2mRequest[0m[1m][0m
+[35mPING pouetMania
+[0m
+[1m[[0m[2mHandling[0m[1m][0m
+PING pouetMania
+command: PING
+request: pouetMania
+
+client no.0: chacha[2m	[6][0m
+client no.1: jeeeee[2m	[7][0m
+********************************************
+
+             [2m#8[0m
+************ Received from client **********
+
+[1m[[0m[2mRequest[0m[1m][0m
+[35mJOIN #c1
+[0m
+[1m[[0m[2mHandling[0m[1m][0m
+JOIN #c1
+command: JOIN
+request: #c1
+[34m[JOIN - handleRequest]
+[0m[34m[JOIN - parseArgument]
+[0mchannelArg:<#c1>
+keyArg:<>
+channelListSize:<1>
+keyListSize:<0>
+[33m#c1 [0m
+[0m
+[34m[JOIN - action]
+[0m[33mchannel<#c1>
+Available channels: #c1 
+trying to login with key
+[0mfinal message:<>
+before clear: size [33m0[0m
+after clear: size [33m0[0m
+
+client no.0: chacha[2m	[6][0m
+client no.1: jeeeee[2m	[7][0m
+********************************************
+
+             [2m#9[0m
+************ Received from client **********
+
+[1m[[0m[2mRequest[0m[1m][0m
+[35mPING pouetMania
+[0m
+[1m[[0m[2mHandling[0m[1m][0m
+PING pouetMania
+command: PING
+request: pouetMania
+
+client no.0: chacha[2m	[6][0m
+client no.1: jeeeee[2m	[7][0m
+********************************************
+
+             [2m#10[0m
+************ Received from client **********
+
+[1m[[0m[2mRequest[0m[1m][0m
+[35mPING pouetMania
+[0m
+[1m[[0m[2mHandling[0m[1m][0m
+PING pouetMania
+command: PING
+request: pouetMania
+
+client no.0: chacha[2m	[6][0m
+client no.1: jeeeee[2m	[7][0m
+********************************************
+
+             [2m#11[0m
+************ Received from client **********
+
+[1m[[0m[2mRequest[0m[1m][0m
+[35mPING pouetMania
+[0m
+[1m[[0m[2mHandling[0m[1m][0m
+PING pouetMania
+command: PING
+request: pouetMania
+
+client no.0: chacha[2m	[6][0m
+client no.1: jeeeee[2m	[7][0m
+********************************************
+
+             [2m#12[0m
+************ Received from client **********
+
+[1m[[0m[2mRequest[0m[1m][0m
+[35mPING pouetMania
+[0m
+[1m[[0m[2mHandling[0m[1m][0m
+PING pouetMania
+command: PING
+request: pouetMania
+
+client no.0: chacha[2m	[6][0m
+client no.1: jeeeee[2m	[7][0m
+********************************************
+
+             [2m#13[0m
+************ Received from client **********
+
+[1m[[0m[2mRequest[0m[1m][0m
+[35mPING pouetMania
+[0m
+[1m[[0m[2mHandling[0m[1m][0m
+PING pouetMania
+command: PING
+request: pouetMania
+
+client no.0: chacha[2m	[6][0m
+client no.1: jeeeee[2m	[7][0m
+********************************************
+
+             [2m#14[0m
+************ Received from client **********
+
+[1m[[0m[2mRequest[0m[1m][0m
+[35mPING pouetMania
+[0m
+[1m[[0m[2mHandling[0m[1m][0m
+PING pouetMania
+command: PING
+request: pouetMania
+
+client no.0: chacha[2m	[6][0m
+client no.1: jeeeee[2m	[7][0m
+********************************************
+[35m127.0.0.1
+[0m
+ADDING CLIENT :8
+TOTAL CLIENTS :3
+
+             [2m#15[0m
+************ Received from client **********
+
+[1m[[0m[2mRequest[0m[1m][0m
+[35mCAP LS
+PASS pwd
+NICK chacha
+USER nikito nikito localhost :nikito
+[0m
+[1m[[0m[2mHandling[0m[1m][0m
+CAP LS
+command: CAP
+request: LS
+PASS pwd
+command: PASS
+request: pwd
+[30;43mPassword sent[0mpwd
+NICK chacha
+command: NICK
+request: chacha
+USER nikito nikito localhost :nikito
+command: USER
+request: nikito nikito localhost :nikito
+client no.0: chacha[2m	[6][0m
+client no.1: jeeeee[2m	[7][0m
+********************************************
+[35m127.0.0.1
+[0m
+ADDING CLIENT :8
+TOTAL CLIENTS :3
+
+             [2m#16[0m
+************ Received from client **********
+
+[1m[[0m[2mRequest[0m[1m][0m
+[35mCAP LS
+PASS pwd
+NICK chacha
+USER nikito nikito localhost :nikito
+[0m
+[1m[[0m[2mHandling[0m[1m][0m
+CAP LS
+command: CAP
+request: LS
+PASS pwd
+command: PASS
+request: pwd
+[30;43mPassword sent[0mpwd
+NICK chacha
+command: NICK
+request: chacha
+USER nikito nikito localhost :nikito
+command: USER
+request: nikito nikito localhost :nikito
+client no.0: chacha[2m	[6][0m
+client no.1: jeeeee[2m	[7][0m
+********************************************
+[35m127.0.0.1
+[0m
+ADDING CLIENT :8
+TOTAL CLIENTS :3
+
+             [2m#17[0m
+************ Received from client **********
+
+[1m[[0m[2mRequest[0m[1m][0m
+[35mCAP LS
+PASS pwd
+NICK chacha
+USER nikito nikito localhost :nikito
+[0m
+[1m[[0m[2mHandling[0m[1m][0m
+CAP LS
+command: CAP
+request: LS
+PASS pwd
+command: PASS
+request: pwd
+[30;43mPassword sent[0mpwd
+NICK chacha
+command: NICK
+request: chacha
+USER nikito nikito localhost :nikito
+command: USER
+request: nikito nikito localhost :nikito
+client no.0: chacha[2m	[6][0m
+client no.1: jeeeee[2m	[7][0m
+********************************************
+[35m127.0.0.1
+[0m
+ADDING CLIENT :8
+TOTAL CLIENTS :3
+
+             [2m#18[0m
+************ Received from client **********
+
+[1m[[0m[2mRequest[0m[1m][0m
+[35mCAP LS
+PASS pwd
+NICK chacha
+USER nikito nikito localhost :nikito
+[0m
+[1m[[0m[2mHandling[0m[1m][0m
+CAP LS
+command: CAP
+request: LS
+PASS pwd
+command: PASS
+request: pwd
+[30;43mPassword sent[0mpwd
+NICK chacha
+command: NICK
+request: chacha
+USER nikito nikito localhost :nikito
+command: USER
+request: nikito nikito localhost :nikito
+client no.0: chacha[2m	[6][0m
+client no.1: jeeeee[2m	[7][0m
+********************************************
+
+             [2m#19[0m
+************ Received from client **********
+
+[1m[[0m[2mRequest[0m[1m][0m
+[35mPING pouetMania
+[0m
+[1m[[0m[2mHandling[0m[1m][0m
+PING pouetMania
+command: PING
+request: pouetMania
+
+client no.0: chacha[2m	[6][0m
+client no.1: jeeeee[2m	[7][0m
+********************************************
+[35m127.0.0.1
+[0m
+ADDING CLIENT :8
+TOTAL CLIENTS :3
+
+             [2m#20[0m
+************ Received from client **********
+
+[1m[[0m[2mRequest[0m[1m][0m
+[35mCAP LS
+PASS pwd
+NICK chacha
+USER nikito nikito localhost :nikito
+[0m
+[1m[[0m[2mHandling[0m[1m][0m
+CAP LS
+command: CAP
+request: LS
+PASS pwd
+command: PASS
+request: pwd
+[30;43mPassword sent[0mpwd
+NICK chacha
+command: NICK
+request: chacha
+USER nikito nikito localhost :nikito
+command: USER
+request: nikito nikito localhost :nikito
+client no.0: chacha[2m	[6][0m
+client no.1: jeeeee[2m	[7][0m
+********************************************
+
+             [2m#21[0m
+************ Received from client **********
+
+[1m[[0m[2mRequest[0m[1m][0m
+[35mPING pouetMania
+[0m
+[1m[[0m[2mHandling[0m[1m][0m
+PING pouetMania
+command: PING
+request: pouetMania
+
+client no.0: chacha[2m	[6][0m
+client no.1: jeeeee[2m	[7][0m
+********************************************
+[35m127.0.0.1
+[0m
+ADDING CLIENT :8
+TOTAL CLIENTS :3
+
+             [2m#22[0m
+************ Received from client **********
+
+[1m[[0m[2mRequest[0m[1m][0m
+[35mCAP LS
+PASS pwd
+NICK chacha
+USER nikito nikito localhost :nikito
+[0m
+[1m[[0m[2mHandling[0m[1m][0m
+CAP LS
+command: CAP
+request: LS
+PASS pwd
+command: PASS
+request: pwd
+[30;43mPassword sent[0mpwd
+NICK chacha
+command: NICK
+request: chacha
+USER nikito nikito localhost :nikito
+command: USER
+request: nikito nikito localhost :nikito
+client no.0: chacha[2m	[6][0m
+client no.1: jeeeee[2m	[7][0m
+********************************************
+[35m127.0.0.1
+[0m
+ADDING CLIENT :8
+TOTAL CLIENTS :3
+
+             [2m#23[0m
+************ Received from client **********
+
+[1m[[0m[2mRequest[0m[1m][0m
+[35mCAP LS
+PASS pwd
+NICK chacha
+USER nikito nikito localhost :nikito
+[0m
+[1m[[0m[2mHandling[0m[1m][0m
+CAP LS
+command: CAP
+request: LS
+PASS pwd
+command: PASS
+request: pwd
+[30;43mPassword sent[0mpwd
+NICK chacha
+command: NICK
+request: chacha
+USER nikito nikito localhost :nikito
+command: USER
+request: nikito nikito localhost :nikito
+client no.0: chacha[2m	[6][0m
+client no.1: jeeeee[2m	[7][0m
+********************************************
+[35m127.0.0.1
+[0m
+ADDING CLIENT :8
+TOTAL CLIENTS :3
+
+             [2m#24[0m
+************ Received from client **********
+
+[1m[[0m[2mRequest[0m[1m][0m
+[35mCAP LS
+PASS pwd
+NICK chacha
+USER nikito nikito localhost :nikito
+[0m
+[1m[[0m[2mHandling[0m[1m][0m
+CAP LS
+command: CAP
+request: LS
+PASS pwd
+command: PASS
+request: pwd
+[30;43mPassword sent[0mpwd
+NICK chacha
+command: NICK
+request: chacha
+USER nikito nikito localhost :nikito
+command: USER
+request: nikito nikito localhost :nikito
+client no.0: chacha[2m	[6][0m
+client no.1: jeeeee[2m	[7][0m
+********************************************
+[35m127.0.0.1
+[0m
+ADDING CLIENT :8
+TOTAL CLIENTS :3
+
+             [2m#25[0m
+************ Received from client **********
+
+[1m[[0m[2mRequest[0m[1m][0m
+[35mCAP LS
+PASS pwd
+NICK chacha
+USER nikito nikito localhost :nikito
+[0m
+[1m[[0m[2mHandling[0m[1m][0m
+CAP LS
+command: CAP
+request: LS
+PASS pwd
+command: PASS
+request: pwd
+[30;43mPassword sent[0mpwd
+NICK chacha
+command: NICK
+request: chacha
+USER nikito nikito localhost :nikito
+command: USER
+request: nikito nikito localhost :nikito
+client no.0: chacha[2m	[6][0m
+client no.1: jeeeee[2m	[7][0m
+********************************************
+[35m127.0.0.1
+[0m
+ADDING CLIENT :8
+TOTAL CLIENTS :3
+
+             [2m#26[0m
+************ Received from client **********
+
+[1m[[0m[2mRequest[0m[1m][0m
+[35mCAP LS
+PASS pwd
+NICK chacha
+USER nikito nikito localhost :nikito
+[0m
+[1m[[0m[2mHandling[0m[1m][0m
+CAP LS
+command: CAP
+request: LS
+PASS pwd
+command: PASS
+request: pwd
+[30;43mPassword sent[0mpwd
+NICK chacha
+command: NICK
+request: chacha
+USER nikito nikito localhost :nikito
+command: USER
+request: nikito nikito localhost :nikito
+client no.0: chacha[2m	[6][0m
+client no.1: jeeeee[2m	[7][0m
+********************************************
+
+             [2m#27[0m
+************ Received from client **********
+
+[1m[[0m[2mRequest[0m[1m][0m
+[35mPING pouetMania
+[0m
+[1m[[0m[2mHandling[0m[1m][0m
+PING pouetMania
+command: PING
+request: pouetMania
+
+client no.0: chacha[2m	[6][0m
+client no.1: jeeeee[2m	[7][0m
+********************************************
+[35m127.0.0.1
+[0m
+ADDING CLIENT :8
+TOTAL CLIENTS :3
+
+             [2m#28[0m
+************ Received from client **********
+
+[1m[[0m[2mRequest[0m[1m][0m
+[35mCAP LS
+PASS pwd
+NICK chacha
+USER nikito nikito localhost :nikito
+[0m
+[1m[[0m[2mHandling[0m[1m][0m
+CAP LS
+command: CAP
+request: LS
+PASS pwd
+command: PASS
+request: pwd
+[30;43mPassword sent[0mpwd
+NICK chacha
+command: NICK
+request: chacha
+USER nikito nikito localhost :nikito
+command: USER
+request: nikito nikito localhost :nikito
+client no.0: chacha[2m	[6][0m
+client no.1: jeeeee[2m	[7][0m
+********************************************
+
+             [2m#29[0m
+************ Received from client **********
+
+[1m[[0m[2mRequest[0m[1m][0m
+[35mPING pouetMania
+[0m
+[1m[[0m[2mHandling[0m[1m][0m
+PING pouetMania
+command: PING
+request: pouetMania
+
+client no.0: chacha[2m	[6][0m
+client no.1: jeeeee[2m	[7][0m
+********************************************
+[35m127.0.0.1
+[0m
+ADDING CLIENT :8
+TOTAL CLIENTS :3
+
+             [2m#30[0m
+************ Received from client **********
+
+[1m[[0m[2mRequest[0m[1m][0m
+[35mCAP LS
+PASS pwd
+NICK chacha
+USER nikito nikito localhost :nikito
+[0m
+[1m[[0m[2mHandling[0m[1m][0m
+CAP LS
+command: CAP
+request: LS
+PASS pwd
+command: PASS
+request: pwd
+[30;43mPassword sent[0mpwd
+NICK chacha
+command: NICK
+request: chacha
+USER nikito nikito localhost :nikito
+command: USER
+request: nikito nikito localhost :nikito
+client no.0: chacha[2m	[6][0m
+client no.1: jeeeee[2m	[7][0m
+********************************************
+[35m127.0.0.1
+[0m
+ADDING CLIENT :8
+TOTAL CLIENTS :3
+
+             [2m#31[0m
+************ Received from client **********
+
+[1m[[0m[2mRequest[0m[1m][0m
+[35mCAP LS
+PASS pwd
+NICK chacha
+USER nikito nikito localhost :nikito
+[0m
+[1m[[0m[2mHandling[0m[1m][0m
+CAP LS
+command: CAP
+request: LS
+PASS pwd
+command: PASS
+request: pwd
+[30;43mPassword sent[0mpwd
+NICK chacha
+command: NICK
+request: chacha
+USER nikito nikito localhost :nikito
+command: USER
+request: nikito nikito localhost :nikito
+client no.0: chacha[2m	[6][0m
+client no.1: jeeeee[2m	[7][0m
+********************************************
+[35m127.0.0.1
+[0m
+ADDING CLIENT :8
+TOTAL CLIENTS :3
+
+             [2m#32[0m
+************ Received from client **********
+
+[1m[[0m[2mRequest[0m[1m][0m
+[35mCAP LS
+PASS pwd
+NICK chacha
+USER nikito nikito localhost :nikito
+[0m
+[1m[[0m[2mHandling[0m[1m][0m
+CAP LS
+command: CAP
+request: LS
+PASS pwd
+command: PASS
+request: pwd
+[30;43mPassword sent[0mpwd
+NICK chacha
+command: NICK
+request: chacha
+USER nikito nikito localhost :nikito
+command: USER
+request: nikito nikito localhost :nikito
+client no.0: chacha[2m	[6][0m
+client no.1: jeeeee[2m	[7][0m
+********************************************
+[35m127.0.0.1
+[0m
+ADDING CLIENT :8
+TOTAL CLIENTS :3
+
+             [2m#33[0m
+************ Received from client **********
+
+[1m[[0m[2mRequest[0m[1m][0m
+[35mCAP LS
+PASS pwd
+NICK chacha
+USER nikito nikito localhost :nikito
+[0m
+[1m[[0m[2mHandling[0m[1m][0m
+CAP LS
+command: CAP
+request: LS
+PASS pwd
+command: PASS
+request: pwd
+[30;43mPassword sent[0mpwd
+NICK chacha
+command: NICK
+request: chacha
+USER nikito nikito localhost :nikito
+command: USER
+request: nikito nikito localhost :nikito
+client no.0: chacha[2m	[6][0m
+client no.1: jeeeee[2m	[7][0m
+********************************************
+[35m127.0.0.1
+[0m
+ADDING CLIENT :8
+TOTAL CLIENTS :3
+
+             [2m#34[0m
+************ Received from client **********
+
+[1m[[0m[2mRequest[0m[1m][0m
+[35mCAP LS
+PASS pwd
+NICK chacha
+USER nikito nikito localhost :nikito
+[0m
+[1m[[0m[2mHandling[0m[1m][0m
+CAP LS
+command: CAP
+request: LS
+PASS pwd
+command: PASS
+request: pwd
+[30;43mPassword sent[0mpwd
+NICK chacha
+command: NICK
+request: chacha
+USER nikito nikito localhost :nikito
+command: USER
+request: nikito nikito localhost :nikito
+client no.0: chacha[2m	[6][0m
+client no.1: jeeeee[2m	[7][0m
+********************************************
+
+             [2m#35[0m
+************ Received from client **********
+
+[1m[[0m[2mRequest[0m[1m][0m
+[35mPING pouetMania
+[0m
+[1m[[0m[2mHandling[0m[1m][0m
+PING pouetMania
+command: PING
+request: pouetMania
+
+client no.0: chacha[2m	[6][0m
+client no.1: jeeeee[2m	[7][0m
+********************************************
+[35m127.0.0.1
+[0m
+ADDING CLIENT :8
+TOTAL CLIENTS :3
+
+             [2m#36[0m
+************ Received from client **********
+
+[1m[[0m[2mRequest[0m[1m][0m
+[35mCAP LS
+PASS pwd
+NICK chacha
+USER nikito nikito localhost :nikito
+[0m
+[1m[[0m[2mHandling[0m[1m][0m
+CAP LS
+command: CAP
+request: LS
+PASS pwd
+command: PASS
+request: pwd
+[30;43mPassword sent[0mpwd
+NICK chacha
+command: NICK
+request: chacha
+USER nikito nikito localhost :nikito
+command: USER
+request: nikito nikito localhost :nikito
+client no.0: chacha[2m	[6][0m
+client no.1: jeeeee[2m	[7][0m
+********************************************
+[35m127.0.0.1
+[0m
+ADDING CLIENT :8
+TOTAL CLIENTS :3
+
+             [2m#37[0m
+************ Received from client **********
+
+[1m[[0m[2mRequest[0m[1m][0m
+[35mCAP LS
+PASS pwd
+NICK chacha
+USER nikito nikito localhost :nikito
+[0m
+[1m[[0m[2mHandling[0m[1m][0m
+CAP LS
+command: CAP
+request: LS
+PASS pwd
+command: PASS
+request: pwd
+[30;43mPassword sent[0mpwd
+NICK chacha
+command: NICK
+request: chacha
+USER nikito nikito localhost :nikito
+command: USER
+request: nikito nikito localhost :nikito
+client no.0: chacha[2m	[6][0m
+client no.1: jeeeee[2m	[7][0m
+********************************************
+
+             [2m#38[0m
+************ Received from client **********
+
+[1m[[0m[2mRequest[0m[1m][0m
+[35mPING pouetMania
+[0m
+[1m[[0m[2mHandling[0m[1m][0m
+PING pouetMania
+command: PING
+request: pouetMania
+
+client no.0: chacha[2m	[6][0m
+client no.1: jeeeee[2m	[7][0m
+********************************************
+[35m127.0.0.1
+[0m
+ADDING CLIENT :8
+TOTAL CLIENTS :3
+
+             [2m#39[0m
+************ Received from client **********
+
+[1m[[0m[2mRequest[0m[1m][0m
+[35mCAP LS
+PASS pwd
+NICK chacha
+USER nikito nikito localhost :nikito
+[0m
+[1m[[0m[2mHandling[0m[1m][0m
+CAP LS
+command: CAP
+request: LS
+PASS pwd
+command: PASS
+request: pwd
+[30;43mPassword sent[0mpwd
+NICK chacha
+command: NICK
+request: chacha
+USER nikito nikito localhost :nikito
+command: USER
+request: nikito nikito localhost :nikito
+client no.0: chacha[2m	[6][0m
+client no.1: jeeeee[2m	[7][0m
+********************************************
+[35m127.0.0.1
+[0m
+ADDING CLIENT :8
+TOTAL CLIENTS :3
+
+             [2m#40[0m
+************ Received from client **********
+
+[1m[[0m[2mRequest[0m[1m][0m
+[35mCAP LS
+PASS pwd
+NICK chacha
+USER nikito nikito localhost :nikito
+[0m
+[1m[[0m[2mHandling[0m[1m][0m
+CAP LS
+command: CAP
+request: LS
+PASS pwd
+command: PASS
+request: pwd
+[30;43mPassword sent[0mpwd
+NICK chacha
+command: NICK
+request: chacha
+USER nikito nikito localhost :nikito
+command: USER
+request: nikito nikito localhost :nikito
+client no.0: chacha[2m	[6][0m
+client no.1: jeeeee[2m	[7][0m
+********************************************
+[35m127.0.0.1
+[0m
+ADDING CLIENT :8
+TOTAL CLIENTS :3
+
+             [2m#41[0m
+************ Received from client **********
+
+[1m[[0m[2mRequest[0m[1m][0m
+[35mCAP LS
+PASS pwd
+NICK chacha
+USER nikito nikito localhost :nikito
+[0m
+[1m[[0m[2mHandling[0m[1m][0m
+CAP LS
+command: CAP
+request: LS
+PASS pwd
+command: PASS
+request: pwd
+[30;43mPassword sent[0mpwd
+NICK chacha
+command: NICK
+request: chacha
+USER nikito nikito localhost :nikito
+command: USER
+request: nikito nikito localhost :nikito
+client no.0: chacha[2m	[6][0m
+client no.1: jeeeee[2m	[7][0m
+********************************************
+[35m127.0.0.1
+[0m
+ADDING CLIENT :8
+TOTAL CLIENTS :3
+
+             [2m#42[0m
+************ Received from client **********
+
+[1m[[0m[2mRequest[0m[1m][0m
+[35mCAP LS
+PASS pwd
+NICK chacha
+USER nikito nikito localhost :nikito
+[0m
+[1m[[0m[2mHandling[0m[1m][0m
+CAP LS
+command: CAP
+request: LS
+PASS pwd
+command: PASS
+request: pwd
+[30;43mPassword sent[0mpwd
+NICK chacha
+command: NICK
+request: chacha
+USER nikito nikito localhost :nikito
+command: USER
+request: nikito nikito localhost :nikito
+client no.0: chacha[2m	[6][0m
+client no.1: jeeeee[2m	[7][0m
+********************************************
+
+             [2m#43[0m
+************ Received from client **********
+
+[1m[[0m[2mRequest[0m[1m][0m
+[35mPING pouetMania
+[0m
+[1m[[0m[2mHandling[0m[1m][0m
+PING pouetMania
+command: PING
+request: pouetMania
+
+client no.0: chacha[2m	[6][0m
+client no.1: jeeeee[2m	[7][0m
+********************************************
+[35m127.0.0.1
+[0m
+ADDING CLIENT :8
+TOTAL CLIENTS :3
+
+             [2m#44[0m
+************ Received from client **********
+
+[1m[[0m[2mRequest[0m[1m][0m
+[35mCAP LS
+PASS pwd
+NICK chacha
+USER nikito nikito localhost :nikito
+[0m
+[1m[[0m[2mHandling[0m[1m][0m
+CAP LS
+command: CAP
+request: LS
+PASS pwd
+command: PASS
+request: pwd
+[30;43mPassword sent[0mpwd
+NICK chacha
+command: NICK
+request: chacha
+USER nikito nikito localhost :nikito
+command: USER
+request: nikito nikito localhost :nikito
+client no.0: chacha[2m	[6][0m
+client no.1: jeeeee[2m	[7][0m
+********************************************
+[35m127.0.0.1
+[0m
+ADDING CLIENT :8
+TOTAL CLIENTS :3
+
+             [2m#45[0m
+************ Received from client **********
+
+[1m[[0m[2mRequest[0m[1m][0m
+[35mCAP LS
+PASS pwd
+NICK chacha
+USER nikito nikito localhost :nikito
+[0m
+[1m[[0m[2mHandling[0m[1m][0m
+CAP LS
+command: CAP
+request: LS
+PASS pwd
+command: PASS
+request: pwd
+[30;43mPassword sent[0mpwd
+NICK chacha
+command: NICK
+request: chacha
+USER nikito nikito localhost :nikito
+command: USER
+request: nikito nikito localhost :nikito
+client no.0: chacha[2m	[6][0m
+client no.1: jeeeee[2m	[7][0m
+********************************************
+
+             [2m#46[0m
+************ Received from client **********
+
+[1m[[0m[2mRequest[0m[1m][0m
+[35mPING pouetMania
+[0m
+[1m[[0m[2mHandling[0m[1m][0m
+PING pouetMania
+command: PING
+request: pouetMania
+
+client no.0: chacha[2m	[6][0m
+client no.1: jeeeee[2m	[7][0m
+********************************************
+[35m127.0.0.1
+[0m
+ADDING CLIENT :8
+TOTAL CLIENTS :3
+
+             [2m#47[0m
+************ Received from client **********
+
+[1m[[0m[2mRequest[0m[1m][0m
+[35mCAP LS
+PASS pwd
+NICK chacha
+USER nikito nikito localhost :nikito
+[0m
+[1m[[0m[2mHandling[0m[1m][0m
+CAP LS
+command: CAP
+request: LS
+PASS pwd
+command: PASS
+request: pwd
+[30;43mPassword sent[0mpwd
+NICK chacha
+command: NICK
+request: chacha
+USER nikito nikito localhost :nikito
+command: USER
+request: nikito nikito localhost :nikito
+client no.0: chacha[2m	[6][0m
+client no.1: jeeeee[2m	[7][0m
+********************************************

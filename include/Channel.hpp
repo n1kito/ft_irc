@@ -5,6 +5,11 @@
 # include <map>
 # include "Client.hpp"
 # include <vector>
+# include <cstdarg>
+# include <sys/types.h>
+# include <sys/socket.h>
+# include "numericReplies.hpp"
+# include "ft_irc.hpp"
 
 class Channel
 {
@@ -13,6 +18,8 @@ class Channel
 
 		Channel( std::string name, const Client& client );
 		Channel(const Channel &copyMe);
+		Channel&		operator = (const Channel &copyMe);
+		Channel();
 		~Channel();
 
 		// getters
@@ -40,22 +47,24 @@ class Channel
 
 		bool			checkTopic(const std::string argument);
 		bool			checkName(const std::string name);
+		void			broadcastNumericReplies(const size_t& numberofReplies, ...);
+
 	protected:
 		// add protected elements here
 
 	private:
-		Channel();
 		clientNickMap			_connectedClients;
 		clientNickMap			_operators;
 		std::string				_name;
 		std::string				_topic;
+		std::string				_nicknameOfTopicSetter;
 		
 		std::string				_key;
 		// Channel modes
 		size_t					_clientLimit;
 		bool					_topicIsProtected;
 		bool					_channelIsProtected;
-		Channel&		operator = (const Channel &copyMe);
+		// Channel&		operator = (const Channel &copyMe);
 
 };
 

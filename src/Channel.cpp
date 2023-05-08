@@ -4,14 +4,21 @@
 
 /* CONSTRUCTORS ***************************************************************/
 
-Channel::Channel()
+Channel::Channel() :
+	_name(""),
+	_topic(""),
+	_key(""),
+	_clientLimit(0),
+	_topicIsProtected(false),
+	_channelIsProtected(false)
 {
 	// std::cout << "Default constructor called" << std::endl;
 }
 
 Channel::Channel( std::string name, const Client& client ) :
 	_name(name),
-	_key("oui"),
+	_topic(""),
+	_key(""),
 	_clientLimit(0),
 	_topicIsProtected(false),
 	_channelIsProtected(false)
@@ -78,6 +85,36 @@ void							Channel::addConnectedClient(const Client& clientRef)
 { 
 	if (_connectedClients.find(clientRef.getNickname()) == _connectedClients.end())
 		_connectedClients[clientRef.getNickname()] = &clientRef;
+	
+	// message = JOIN_SUCCESS(client.getNickname(), _channelList[_channelList.size() -1]);
+	// std::string finalmessage = PRIVMSG(client.getServerName(), _channelList[_channelList.size() -1], message);
+	// int numberOfReplies = _topic.empty() ? 3 : 4;
+	std::string nickname = clientRef.getNickname();
+	std::string server = clientRef.getServerName();
+
+	// if (numberOfReplies == 4)
+	broadcastNumericReplies(1, JOIN_MSG(server, _name, nickname).c_str());
+	int numberOfReplies = _topic.empty() ? 2 : 4;
+	if (numberOfReplies == 2)
+		sendNumericReplies(numberOfReplies, clientRef.getClientSocket(), \
+							RPL_NAMREPLY,
+							RPL_ENDOFNAMES)
+	else
+		sendNumericReplies(numberOfReplies, clientRef.getClientSocket(), \
+							RPL_TOPIC(server, nickname, _name).c_str(), \
+							RPL_TOPICWHOTIME(server, nickname, _name, _topic, _nicknameOfTopicSetter).c_str(),
+							RPL_NAMREPLY,
+							RPL_ENDOFNAMES);
+	// else
+	// {
+
+	// }
+
+    // 1.  A JOIN message with the client as the message <source> and the channel they have joined as the first parameter of the message.
+    // 2. The channel’s topic (with RPL_TOPIC (332)
+	// 3. Optionally RPL_TOPICWHOTIME (333)), and no message if the channel does not have a topic.
+    // 4. /A list of users currently joined to the channel (with one or more RPL_NAMREPLY (353) numerics followed by a single RPL_ENDOFNAMES (366) numeric). These RPL_NAMREPLY messages sent by the server MUST include the requesting client that has just joined the channel.
+
 }
 void							Channel::removeConnectedClient(const std::string& clientNickname)
 {
@@ -112,4 +149,20 @@ bool							Channel::checkTopic(const std::string arg)
 	if (arg.size() > TOPICLEN)
 		return false;
 	return true;
+}
+
+void							Channel::broadcastNumericReplies(const size_t& numberOfReplies, ...)
+{
+	std::va_list	messages;
+
+	va_start(messages, numberOfReplies);
+	if (numberOfReplies == 0)
+		return;
+	for (size_t i = 0; i < numberOfReplies; ++i)
+	{
+		std::string	message(va_arg(messages, char*));
+		for (Channel::clientNickMap::iterator it = _connectedClients.begin(); it != _connectedClients.end(); ++it)
+			send(it->second->getClientSocket(), message.c_str(), message.length(), 0);
+	}
+	va_end(messages);
 }

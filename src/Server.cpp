@@ -84,6 +84,8 @@ Server::Server(const int& port, const std::string& password, const std::string& 
 						throw std::runtime_error("Error connecting with client");
 					continue ;
 				}
+				char* clientIp = inet_ntoa(clientAddress.sin_addr);
+				std::cout << MAGENTA <<  clientIp << "\n" <<  RESET << std::endl;
 				// add the new client socket to the epoll instance
 				struct epoll_event event;
 				memset(&event, 0, sizeof(event));
@@ -120,8 +122,6 @@ Server::Server(const int& port, const std::string& password, const std::string& 
 					// if the client is authentificated (PASS NICK USER) and not RPL_WELCOMEd
 					try
 					{
-						send(clientSocket, RPL_WELCOME(_serverName,_clients[clientSocket].getNickname()).c_str(), RPL_WELCOME(_serverName, _clients[clientSocket].getNickname()).length(), 0);
-						_clients[clientSocket].setWelcomeState(true);
 						if (_clients.at(clientSocket).isAuthentificated() && _clients.at(clientSocket).getWelcomeState() == 0)
 						{
 							send(clientSocket, RPL_WELCOME(_serverName,_clients.at(clientSocket).getNickname()).c_str(), RPL_WELCOME(_serverName, _clients.at(clientSocket).getNickname()).length(), 0);
@@ -275,6 +275,7 @@ void								Server::handleRequest(Client& client, const std::string& request)
 		... ?
 	*/
 	// Parse the request
+	int	clientSocket = client.getClientSocket();
 	std::istringstream	requestStream(request);
 	// std::cout << YELLOW << "commands to run : " << RESET << requestStream.str() << std::endl;
 	while(!requestStream.eof() )
@@ -296,6 +297,10 @@ void								Server::handleRequest(Client& client, const std::string& request)
 		request = line.substr(firstSpace + 1, std::string::npos);
 		PRINT("command", command);
 		PRINT("request", request);
+		// if client has been disconnected
+		if (_clients.find(clientSocket) == _clients.end())
+			break ;
+		// else, if command is found
 		if (_commands.find(command) != _commands.end())
 		{
 			// const std::string reply = _commands[command]->handleRequest(client, request); 

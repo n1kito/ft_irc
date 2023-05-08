@@ -64,7 +64,7 @@ fclean: clean
 re: fclean all
 
 launch: all
-	@clear -x && make && clear -x && ./${NAME} 6667 pwd
+	@clear -x && make && clear -x && valgrind --log-file="logfile" ./${NAME} 6667 pwd | tee server.log
 
 -include $(OBJ_FILES:%.o=%.d)
 
