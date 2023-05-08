@@ -45,26 +45,25 @@ void		User::setRealname( std::string realname ) { _realname = realname; }
 
 void	User::handleRequest( Client& client, std::string argument )
 {
-	 std::string message = "";
-	std::cout << RED << "What client is it ?? " << client.getClientSocket() << RESET << std::endl;
-	// send(client.getClientSocket(), "", reply.length(), 0);
+	std::string message = "";
 	std::string ret_parsing = parseArgument(client, argument);
+	std::string ret_action = action(client, _username, _realname);
 	if (!ret_parsing.empty())
+	{
 		message = ret_parsing;
+		killClient(client.getClientSocket(), message, "user authentification failed");
+		return ;
+	}
+	else if (!ret_action.empty())
+		message = ret_action;
 	else
 	{
-		std::string ret_action = action(client, _username, _realname);
-		if (!ret_action.empty())
-			message = ret_action;
-		else
-		{
-			client.setRegisterState(true);
-			message = USER_SUCCESS("server", client.getNickname());
-		}
+		client.setRegisterState(true);
+		// message = RPL_WELCOME(client.getServerName(), client.getNickname());
+		message = USER_SUCCESS(client.getServerName(), client.getNickname());
 	}
 	if (!message.empty())
 		send(client.getClientSocket(), message.c_str(), message.length(), 0);
-	// return ":server: User created successfully!\r\n";
 }
 
 void		User::parseArgument() {}
@@ -93,6 +92,8 @@ std::string	User::parseArgument( Client& client, std::string argument )
 	if (_realname[0] != ':')
 		_realname = client.getNickname();
 	_realname.erase(0, 1);
+	if (_username.empty() || _realname.empty())
+		return (ERR_NEEDMOREPARAMS(client.getServerName(), "USER"));
 	return "";
 }
 
@@ -101,9 +102,7 @@ void		User::action() {}
 std::string	User::action( Client& client, std::string username, std::string realname )
 {
 	if (client.getRegisterState())
-		return (ERR_ALREADYREGISTERED("server", client.getNickname()));
-	if (username.empty() || realname.empty())
-		return (ERR_NEEDMOREPARAMS("server", client.getNickname(), "USER"));
+		return (ERR_ALREADYREGISTERED(client.getServerName(), client.getNickname()));
 	client.setUsername(username);
 	client.setRealname(realname);
 

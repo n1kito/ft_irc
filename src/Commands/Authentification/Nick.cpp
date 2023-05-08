@@ -36,8 +36,6 @@ Nick& Nick::operator = (const Nick &copyMe)
 
 /* METHODS ********************************************************************/
 
-void		Nick::parseArgument() {}
-
 bool	Nick::isValidNickname(std::string nickname)
 {
 	// check if nickname is no longer than 10 
@@ -55,17 +53,17 @@ bool	Nick::isValidNickname(std::string nickname)
 	return true;
 }
 
+void		Nick::parseArgument() {}
 
 
 std::string	Nick::parseArgument(Client &client, std::string& arg)
 {
-	(void)client;
 	// check if arg is empty
 	if (arg.empty())
-		return (ERR_NONICKNAMEGIVEN("server"));
+		return (ERR_NONICKNAMEGIVEN(client.getServerName()));
 	// check if nickname format is valid
-	if (isValidNickname(arg) == false)
-		return(ERR_ERRONEUSNICKNAME("server", "nickname", arg));
+	if (!isValidNickname(arg))
+		return(ERR_ERRONEUSNICKNAME(client.getServerName(), "nickname", arg));
 
 	// check if nickname already exists
 	std::map<int, Client>::const_iterator it = _clients->begin();
@@ -73,35 +71,50 @@ std::string	Nick::parseArgument(Client &client, std::string& arg)
 
 	while(it != ite)
 	{
-		if (it->second.getNickname() == arg)
+		if (it->second.getNickname() == arg && it->second.getClientSocket() != client.getClientSocket() )
 		{
-			std::cout << "arg: " << arg << "\n";
-			return(NICK_COLLISION(arg));
+			std::string msg; 
+			if (!client.getWelcomeState())
+			{
+				msg = ERR_NICKCOLLISION(client.getServerName(), arg);
+				killClient(client.getClientSocket(), msg, "nickname collision failed" );
+				return("Client has been killed");
+			}
+			msg = ERR_NICKNAMEINUSE(client.getServerName(), arg);
+			return(msg);
 		}
 		it++;
 	}
 	return ("Nickname is valid");
 }
+void		Nick::action() {}
+std::string	Nick::action(Client &client, std::string nickname)
+{
+	std::string message;
+	message = NICK_SUCCESS(client.getNickname(), nickname);
+	client.setNickname(nickname);
+	return message;
+}
 
 void	Nick::handleRequest(Client &client, std::string arg)
 {
-	// std::cout << "\n[NICK handle request]\n" << "argument:" << arg << "|\n"; 
-	 std::string message = "";
-	message = parseArgument(client, arg);
-	if (message == "Nickname is valid")
-		message = action(client, arg);	
-	send(client.getClientSocket(), message.c_str(), message.length(), 0);
-}
+	std::string message = parseArgument(client, arg);
+	if (message == "Client has been killed")
+		return;
+	else if (message == "Nickname is valid")
+	{
+		message = action(client, arg);
+		// std::cout << BLUE << "\n\nHANDLE REQUEST\n" << message << "\n" ;
+		send(client.getClientSocket(), message.c_str(), message.length(), 0);
+		// std::cout << "nickname is:" << client.getNickname() << "message:" << message << "|\n" << RESET;
+		return;
 
-void		Nick::action() {}
+	}
+	else
+	{
+		send(client.getClientSocket(), message.c_str(), message.length(), 0);
+	}
 
-std::string	Nick::action(Client &client, std::string nickname)
-{
-	std::string message = "";
-	client.setNickname(nickname);
-	message = NICK_SUCCESS("server", client.getNickname());
-	// std::cout << "nickname is:" << client.getNickname() << "|\n";
-	return message;
 }
 
 /*

@@ -12,8 +12,9 @@ Server::Server(const int& port, const std::string& password, const std::string& 
 	_creationDate(_getCurrentDate()),
 	_serverName(serverName)
 {
+	int requestIndex = 0; // TODO: remove this, only for development purposes
 	initCommands();
-	std::cout << RPL_WELCOME(_serverName, "nickname", "network") << std::endl;
+	std::cout << RPL_WELCOME(_serverName, "nickname") << std::endl;
 	// 1) SERVER SOCKET
 	// create ServerSocket
 	int serverSocket = socket(AF_INET, SOCK_STREAM, 0);
@@ -53,6 +54,7 @@ Server::Server(const int& port, const std::string& password, const std::string& 
 	}
 	// add server socket to epoll instance
 	struct epoll_event event;
+	memset(&event, 0, sizeof(event));
 	event.events = EPOLLIN;
 	event.data.fd = serverSocket;
 	if (epoll_ctl(epollFd, EPOLL_CTL_ADD, serverSocket, &event) == -1) {
@@ -84,15 +86,12 @@ Server::Server(const int& port, const std::string& password, const std::string& 
 				}
 				// add the new client socket to the epoll instance
 				struct epoll_event event;
-				event.events = EPOLLIN | EPOLLET;
+				memset(&event, 0, sizeof(event));
+				event.events = EPOLLIN;
 				event.data.fd = clientSocket;
 				if (epoll_ctl(epollFd, EPOLL_CTL_ADD, clientSocket, &event) == -1)
 					throw std::runtime_error("Error adding client");
 				addClient(clientSocket, Client(clientSocket, _serverName));
-				// Send RPL_WELCOME
-				// TODO: change values
-				// std::string nickname = _clients[clientSocket].getNickname();
-				// send(clientSocket, RPL_WELCOME("server", "nickname", "network").c_str(), RPL_WELCOME("server", "nickname", "network").length(), 0);
 			}
 			else
 			{
@@ -100,7 +99,7 @@ Server::Server(const int& port, const std::string& password, const std::string& 
 				int clientSocket = events[i].data.fd;
 				// read data from the client socket
 				// process the data
-				char buffer[1024];
+				char buffer[1024] = {};
       			int received = recv(clientSocket, buffer, sizeof(buffer), 0);
 
       			// Si la réception est inférieure ou égale à 0, le client s'est déconnecté.
@@ -112,27 +111,36 @@ Server::Server(const int& port, const std::string& password, const std::string& 
 				{
 					// process the data
         			std::cout	<< std::endl
-								<< "************ Received from client **********" << std::endl
+								<< "             " << DIM << requestIndex++ << "." << RESET << std::endl 
+								<< "************ Received from client **********" << std::endl << std::endl
 								<< BOLD << "[" << RESET << DIM << "Request" << RESET << BOLD << "]" << RESET << std::endl
 								<< MAGENTA << buffer << RESET << std::endl;
 								std::cout << BOLD << "[" RESET << DIM << "Handling" << RESET << BOLD << "]" << RESET << std::endl;
-					handleRequest(_clients[clientSocket], cleanBuffer(buffer));
-					if (_clients[clientSocket].isAuthentificated() && _clients[clientSocket].getWelcomeState() == false)
+					handleRequest(_clients.at(clientSocket), cleanBuffer(buffer));
+					// if the client is authentificated (PASS NICK USER) and not RPL_WELCOMEd
+					try
 					{
-						send(clientSocket, RPL_WELCOME("server",_clients[clientSocket].getNickname(), "network").c_str(), RPL_WELCOME("server", _clients[clientSocket].getNickname(), "network").length(), 0);
-						_clients[clientSocket].setWelcomeState(true);
+						if (_clients.at(clientSocket).isAuthentificated() && _clients.at(clientSocket).getWelcomeState() == 0)
+						{
+							send(clientSocket, RPL_WELCOME(_serverName,_clients.at(clientSocket).getNickname()).c_str(), RPL_WELCOME(_serverName, _clients.at(clientSocket).getNickname()).length(), 0);
+							_clients.at(clientSocket).setWelcomeState(true);
+						}
 					}
-					else if (!_clients[clientSocket].isAuthentificated() && _clients[clientSocket].getWelcomeState() == false )
+					catch(const std::exception& e)
 					{
-						std::string msg = KILL(_clients[clientSocket].getNickname(), "nickname collision");
-						send(clientSocket, msg.c_str(), msg.length(), 0);
-						// removeClient(clientSocket);
+						std::cerr << e.what() << '\n';
 					}
-
+					int i = 0;
+					for (std::map<int, Client>::iterator it = _clients.begin(); it != _clients.end(); ++it)
+					{
+						std::cout	<< "client no." << i << ": " << it->second.getNickname() << std::endl;
+						i++;
+					}
 					std::cout	<< "********************************************"
 								<< std::endl;
 					// send(clientSocket, handleRequest(_clients[clientSocket], buffer), response.length(), 0);
       			}
+				
 			}
 		}
 	}
@@ -194,7 +202,8 @@ void								Server::addClient( int fd, Client client )
 {
 	// _clients[fd] = client;
 	std::cout << "ADDING CLIENT :" << fd << std::endl;
-	_clients.insert( std::make_pair( fd, client ));
+	_clients[fd] = client;
+	// _clients.insert( std::make_pair( fd, client ));
 	std::cout << "TOTAL CLIENTS :" << _clients.size() << std::endl;
 }
 
@@ -210,8 +219,9 @@ void								Server::removeClient( int fd )
 	std::cout << "\n[removeClient]\n _client.size:" << _clients.size() << "\n"; 
 	if( close( fd ) == -1 )
 		throw std::runtime_error("Error when closing fd");
+	std::cout << RED_BLOC << "Map size before erasing: " << RESET << _clients.size() << std::endl;
 	_clients.erase( fd );
-	std::cout << "_client.size:" << _clients.size() << "\n";
+	std::cout << RED_BLOC << "Map size after erasing: " << RESET << _clients.size() << std::endl;
 }
 
 // This cannot work since numeric replies require specific arguments
@@ -264,7 +274,8 @@ void								Server::handleRequest(Client& client, const std::string& request)
 	*/
 	// Parse the request
 	std::istringstream	requestStream(request);
-	while(!requestStream.eof())
+	// std::cout << YELLOW << "commands to run : " << RESET << requestStream.str() << std::endl;
+	while(!requestStream.eof() )
 	{
 		size_t		firstSpace;
 		std::string	line;
@@ -274,7 +285,7 @@ void								Server::handleRequest(Client& client, const std::string& request)
 		std::getline(requestStream, line);
 		std::cout << line << "\n";
 		if (line.empty())
-			break ;
+			continue ;
 		firstSpace = line.find(' ', 0);
 		if (firstSpace == std::string::npos)
 			break ;
@@ -288,22 +299,20 @@ void								Server::handleRequest(Client& client, const std::string& request)
 			// const std::string reply = _commands[command]->handleRequest(client, request); 
 			// TODO
 			// send(client.getClientSocket(), reply.c_str(), reply.length(), 0);
+			
+			// if the password is not set, accept only pass command
+			if ( command != "PASS" && client.getPassword().empty())
+				continue ;
 			_commands[command]->handleRequest(client, request);
-			std::cout << "actual command: <" << command << ">" << std::endl;
-			if (command == "PASS" && client.getPassword().empty())
-			{
-				std::cout << "ENTERING WRONG PASSWORD" << std::endl;
-				usleep(1000); //TODO: there has to be a better way to do this
-				removeClient(client.getClientSocket());
-				break ;
-			}
+			
 		}
-		}
+	}
 }
 
 // This function removes \r characters from the buffer.
-std::string						Server::cleanBuffer(std::string buffer) const
+std::string						Server::cleanBuffer(std::string buffer) const 
 {
+	// std::cout << "[before cleanBuffer()]\n" << BLUE << buffer << RESET << std::endl;
 	while (true)
 	{
 		size_t pos = buffer.find('\r', 0);
@@ -311,6 +320,7 @@ std::string						Server::cleanBuffer(std::string buffer) const
 			break;
 		buffer.erase(pos, 1);
 	}
+	// std::cout << "[after cleanBuffer()]\n" << YELLOW << buffer << RESET << std::endl;
 	return buffer;
 }
 
