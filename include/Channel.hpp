@@ -17,18 +17,22 @@ class Channel
 
 		// getters
 		std::string				getName() const;
+		std::string				getKey() const;
 		std::string				getTopic() const;
 		const clientNickMap&	getClientMap() const;
 		const clientNickMap&	getOperators() const;
 		// getters -> channel modes
 		bool					isClientLimitMode() const;
 		bool					isTopicProtectedMode() const;
+		bool					isChannelProtectedMode() const;
 
 		// setters
 		void			setName(const std::string& newName);
+		void			setKey(const std::string& newKey);
 		void			setTopic(const std::string& newTopic);
 		void			setClientLimit(const size_t& limit);
 		void			setTopicProtection(const bool& status);
+		void			setChannelProtection(const bool& status);
 		void			addConnectedClient(const Client& clientRef);
 		void			removeConnectedClient(const std::string& clientNickname);
 		void			addOperator(Client& clientRef);

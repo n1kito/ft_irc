@@ -15,7 +15,7 @@ class Join : public ACommand
 
     	void		handleRequest(Client &client, std::string arg);
     	std::string	parseArgument(Client &client, std::string& arg);
-    	void		action(Client &client);
+    	std::string action(Client &client);
 
 	protected:
 		// add protected elements here

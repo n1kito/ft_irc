@@ -44,7 +44,11 @@
 
 #define JOIN_SUCCESS(nickname, channel) (std::string("User ") + RED + nickname + RESET + " has joined the channel " + channel + " \r\n") 
 #define RPL_TOPIC(nickname, channel, topic) (std::string(":") + nickname + " 332 " channel + " " + topic " \r\n") 
-
+#define ERR_BADCHANMASK(channel) (std::string(":") + channel + " 476 " + ":Bad Channel Mask\r\n")
+#define ERR_BADCHANNELKEY(nickname, channel) (std::string(":") + nickname + " 475 " + channel + " :Cannot join channel (+k)\r\n")
+// ERR_BADCHANNELKEY (475) 
+//   "<client> <channel> :Cannot join channel (+k)"
+// "<channel> :Bad Channel Mask"
 // 332 <nickname> <channel> :<topic>
 
 #define PRIVMSG(channel, message) (std::string("PRIVMSG ") + channel + " :" + message)

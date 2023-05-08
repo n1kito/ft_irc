@@ -41,7 +41,7 @@ Join& Join::operator = (const Join &copyMe)
 void		Join::parseArgument() {}
 void		Join::action() {}
 
-void		Join::action(Client &client)
+std::string		Join::action(Client &client)
 {
 	std::cout << BLUE << "[JOIN - action]\n" << RESET;
 
@@ -52,14 +52,34 @@ void		Join::action(Client &client)
 		if (!_channels->empty())
 		{
 			std::map<std::string, Channel>::iterator it = _channels->find(_channelList[i]);
+			// std::cout << "Found channel: " << it->second.getName() << "with key:" << it->second.getKey() << "\n";
 			// if doesn't exist, create channel (its ctor adds itself client) 
 			if (it == _channels->end())
-				_channels->insert(std::make_pair(_channelList[i], Channel(_channelList[i], client)));
+			{
+				Channel newChannel(_channelList[i], client);
+				_channels->insert(std::make_pair(_channelList[i], newChannel));
+				// if a key is associated to channel, set Protection mode to channel and add key
+				if (_keyList[i] != "x")
+				{
+					it->second.setChannelProtection(true);
+					if (!_keyList[i].empty())
+						it->second.setKey(_keyList[i]);
+				}
+			}
 			// else add client to existing channel
 			else
+			{
+				std::cout << "trying to login with key\n";
+				if (!it->second.getKey().empty())
+				{
+					// if key is incorrect, cannot join channel and send error
+					std::cout << "key:<" << it->second.getKey() << "> trying with:<" << _keyList[i] << ">\n";
+					if (it->second.getKey() != _keyList[i])
+						return (ERR_BADCHANNELKEY(client.getNickname(), it->second.getName()));
+				}
 				it->second.addConnectedClient(client);
+			}
 		}
-
 		// send success (3)
 	}
 
@@ -68,35 +88,46 @@ void		Join::action(Client &client)
 	// std::string messageJoin = JOIN_SUCCESS(client.getNickname(), channelName);
 	// std::string messageTopic = RPL_TOPIC(client.getNickname(), channelName, )
 	// send(client.getClientSocket(), messageJoin.c_str(), messageJoin.length(), 0);
+	return "";
 }
 
 
 std::string	Join::parseArgument(Client &client, std::string& arg)
 {
-	std::cout << BLUE << "[JOIN - parseArgument]\n" << RESET;
-
 	(void)client;
+	std::cout << BLUE << "[JOIN - parseArgument]\n" << RESET;
+	// irssi client pre-parses arguments: will count only one space to split <#chan, #chan,> <key,key>
+	// adds automatically prefix '#' to channels' name.
+	// if key is missing, irssi defines key as 'x'
+	
 	// if arg == "0" ==> Leave all channels (send PART command for each channel) 
 	if (arg == "#0")
 		return ("PART");
-	std::string channelArg;
-	std::string keyArg;
-
+	
 	// split the channel list and the key list with a space
 	std::stringstream argStream(arg);
+	std::string channelArg;
+	std::string keyArg;
 	std::getline(argStream, channelArg, ' ');
 	std::getline(argStream, keyArg);
 	
+	// split channelArg with ',' and check if valid 
 	std::string buffer;
-	
 	std::stringstream channelStream(channelArg);
 	while (std::getline(channelStream, buffer, ','))
+	{
+		// check if channel channel name's length is at least 1
+		if (buffer.size() <= 1)
+			return (ERR_BADCHANMASK(buffer));
 		_channelList.push_back(buffer);
-	
+	}
+
+	// split keyArg with ',' 
 	std::stringstream keyStream(keyArg);
 	while (std::getline(keyStream, buffer, ','))
 		_keyList.push_back(buffer);
 
+	/* DEBUG */
 	std::cout << "channelArg:<" << channelArg << ">\n";
 	std::cout << "keyArg:<" << keyArg << ">\n";
 	std::cout << "channelListSize:<" << _channelList.size() << ">\n";
@@ -109,11 +140,11 @@ std::string	Join::parseArgument(Client &client, std::string& arg)
 		std::cout << GREEN << _keyList[i] << " ";
 	std::cout << RESET << "\n";
 	
+	// pas utile si irssi parse lui meme <#chan1, #chan2> <key1, x> 
 	// the list of a channel list must have the same size than the list of the key associated
 	if (_channelList.size() != _keyList.size())
 		return "CODE ERROR";
-	
-	return "JOIN_SUCCESS";
+	return "";
 }
 
 
@@ -130,17 +161,16 @@ void	Join::handleRequest(Client &client, std::string arg)
 		if (!parseResults.empty())
 			message = parseResults;
 		else
-			action(client);
+			message = action(client);
 	}
 	std::cout << "final message:<" << message << ">\n";
-	// if (!message.empty())
-	// message = std::string("PRIVMSG ") + "#c1" + " :" + JOIN_SUCCESS(client.getNickname(), "#c1");
-	message = PRIVMSG(_channelList[0], JOIN_SUCCESS(client.getNickname(), _channelList[0]));
-	send(client.getClientSocket(), message.c_str(), message.length(), 0);
-	
-	// clear data 
+	if (message.empty())
+		message = JOIN_SUCCESS(client.getNickname(), _channelList[_channelList.size() -1]);
+	std::string finalmessage = PRIVMSG(_channelList[_channelList.size() -1], message);
+	send(client.getClientSocket(), finalmessage.c_str(), finalmessage.length(), 0);
+
+	// clear data for next JOIN command  
 	_channelList.clear();
 	_keyList.clear();
-	// on SUCCESS, send all the information needed to the client
 }
 
