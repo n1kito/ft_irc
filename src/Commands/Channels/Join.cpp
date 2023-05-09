@@ -50,51 +50,42 @@ std::string		Join::action(Client &client)
 	{
 		std::cout << YELLOW << "channel<" << _channelList[i] << ">\n";
 		//
-			std::cout << "Available channels: ";
-			for(std::map<std::string, Channel>::iterator it = _channels->begin(); it != _channels->end(); ++it)
-				std::cout << it->second.getName() << " ";
-			std::cout << std::endl;
-		//
-		// if (!_channels->empty())
-		// {
-			std::map<std::string, Channel>::iterator it = _channels->find(_channelList[i]);
-			// std::cout << "Found channel: " << it->second.getName() << "with key:" << it->second.getKey() << "\n";
-			// if doesn't exist, create channel (its ctor adds itself client) 
-			if (it == _channels->end())
-			{
-				Channel newChannel(_channelList[i], client);
-				(*_channels)[_channelList[i]] = newChannel;
-				// if a key is associated to channel, set Protection mode to channel and add key
-				if (i < _keyList.size() && _keyList[i] != "x")
-				{
-					(*_channels)[_channelList[i]].setChannelProtection(true);
-					if (!_keyList[i].empty())
-						(*_channels)[_channelList[i]].setKey(_keyList[i]);
-				}
-			}
-			// else add client to existing channel
-			else
-			{
-				std::cout << "trying to login with key\n";
-				if (!it->second.getKey().empty())
-				{
-					// if key is incorrect, cannot join channel and send error
-					std::cout << "key:<" << it->second.getKey() << "> trying with:<" << _keyList[i] << ">\n";
-                    
-					if (_keyList.empty() || (i < _keyList.size() && it->second.getKey() != _keyList[i]))
-						return (ERR_BADCHANNELKEY(client.getServerName(), client.getNickname(), it->second.getName()));
-				}
-				it->second.addConnectedClient(client);
-			}
-		// }
-		// send success (3)
-	}
+		std::cout << "Available channels: ";
+		for(std::map<std::string, Channel>::iterator it = _channels->begin(); it != _channels->end(); ++it)
+			std::cout << it->second.getName() << " ";
+		std::cout << std::endl;
 
-	std::cout << RESET;
-	// maybe write method to send message and send it in the loop !! 
-	// std::string messageJoin = JOIN_SUCCESS(client.getNickname(), channelName);
-	// std::string messageTopic = RPL_TOPIC(client.getNickname(), channelName, )
-	// send(client.getClientSocket(), messageJoin.c_str(), messageJoin.length(), 0);
+		std::map<std::string, Channel>::iterator it = _channels->find(_channelList[i]);
+		// std::cout << "Found channel: " << it->second.getName() << "with key:" << it->second.getKey() << "\n";
+		// if doesn't exist, create channel (its ctor adds itself client) 
+		if (it == _channels->end())
+		{
+			Channel newChannel(_channelList[i], client);
+			(*_channels)[_channelList[i]] = newChannel;
+			client.addChannel(newChannel);
+			// if a key is associated to channel, set Protection mode to channel and add key
+			if (i < _keyList.size() && _keyList[i] != "x")
+			{
+				(*_channels)[_channelList[i]].setChannelProtection(true);
+				if (!_keyList[i].empty())
+					(*_channels)[_channelList[i]].setKey(_keyList[i]);
+			}
+		}
+		// else add client to existing channel
+		else
+		{
+			std::cout << "trying to login with key\n";
+			if (!it->second.getKey().empty())
+			{
+				// if key is incorrect, cannot join channel and send error
+				std::cout << "key:<" << it->second.getKey() << "> trying with:<" << _keyList[i] << ">\n";
+                if (_keyList.empty() || (i < _keyList.size() && it->second.getKey() != _keyList[i]))
+					return (ERR_BADCHANNELKEY(client.getServerName(), client.getNickname(), it->second.getName()));
+			}
+			it->second.addConnectedClient(client);
+			client.addChannel(it->second);
+		}
+	}
 	return "";
 }
 
@@ -167,15 +158,7 @@ void	Join::handleRequest(Client &client, std::string arg)
 			message = action(client);
 	}
 	std::cout << "final message:<" << message << ">\n";
-	if (message.empty())
-	{
-		// message = JOIN_SUCCESS(client.getNickname(), _channelList[_channelList.size() -1]);
-		// std::string finalmessage = PRIVMSG(client.getServerName(), _channelList[_channelList.size() -1], message);
-		// send(client.getClientSocket(), finalmessage.c_str(), finalmessage.length(), 0);
-		// _channels.broadcastNumericReplies()
-	}
-	else
-		send(client.getClientSocket(), message.c_str(), message.length(), 0);
+	send(client.getClientSocket(), message.c_str(), message.length(), 0);
 
 	// clear data for next JOIN command 
 	std::cout << "before clear: size " << YELLOW << _keyList.size() << RESET << std::endl;

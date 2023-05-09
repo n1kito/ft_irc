@@ -76,3 +76,18 @@ bool			Client::isAuthentificated() const
 	return (!_nickname.empty() && _isRegistered);
 }
 
+void			Client::addChannel(const Channel& channelRef)
+{
+	std::cout << "\n[Add Channel]\n";
+	_connectedToChannels[channelRef.getName()] = &channelRef;
+	
+	channelsMap::iterator it = _connectedToChannels.begin();
+	while (it != _connectedToChannels.end())
+	{
+		std::cout << YELLOW << it->second->getName() << "\n";
+		it++;
+	}
+	std::cout << RESET << "\n";
+
+}
+

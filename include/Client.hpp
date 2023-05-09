@@ -13,6 +13,7 @@ class Channel;
 class Client
 {
 	public:
+		typedef std::map< std::string, const Channel* > channelsMap;
 		Client();
 		Client(const int& clientSocket, const std::string& serverName);
 		~Client();
@@ -40,11 +41,14 @@ class Client
 
 		bool			isAuthentificated() const;
 		void			setPasswordStatus(const bool& status);
+	
+		void			addChannel(const Channel& channelRef);
 
 	protected:
 		// add protected elements here
 
 	private:
+		channelsMap		_connectedToChannels;
 		bool			_isRegistered;
 		bool			_passwordStatus;
 		std::string		_username;
