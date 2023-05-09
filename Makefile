@@ -22,6 +22,7 @@ SRC_FILES		:=	main\
 					Commands/Channels/Invite\
 					Commands/Channels/Join\
 					Commands/Channels/Topic\
+					Commands/Channels/Kick\
 					utils
 OBJ_FILES		:=	$(addprefix $(BIN_DIR)/, $(addsuffix .o, $(SRC_FILES)))
 OBJ_TEST_FILES	:=	$(addprefix $(BIN_DIR)/, $(addsuffix .o, $(SRC_TEST_FILES)))
