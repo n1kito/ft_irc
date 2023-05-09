@@ -53,7 +53,8 @@ clean: title
 	@echo "\t🧹 clean"
 	@[ -d $(BIN_DIR) ] && rm -rf $(BIN_DIR) && echo "\t[✔] $(YELLOW).o files cleaned$(END_COLOR) "\
 	|| echo "\t[✔] $(DIM).o files were already cleaned$(END_COLOR)"
-	@rm server.log leaks.log
+	@[ -f server.log ] && rm server.log leaks.log && echo "\t[✔] $(YELLOW)log files cleaned$(END_COLOR)"\
+	|| echo "\t[✔] $(DIM)could no find any log files$(END_COLOR)"
 	@echo
 
 fclean: clean
