@@ -3,6 +3,7 @@
 
 # include <string>
 # include <map>
+# include <sys/socket.h>
 # include "Client.hpp"
 # include <vector>
 # include <cstdarg>
@@ -21,6 +22,10 @@ class Channel
 		Channel&				operator = (const Channel &copyMe);
 		Channel();
 		~Channel();
+		
+
+		// methods
+		void					broadcastNumericReply(const std::string message) const;
 
 		// getters
 		std::string				getName() const;
@@ -28,18 +33,26 @@ class Channel
 		std::string				getTopic() const;
 		const clientNickMap&	getClientMap() const;
 		const clientNickMap&	getOperators() const;
+		std::string				getNicknameOfTopicSetter() const;
+		std::string				getTimeTopicWasSet() const;
+		
 		// getters -> channel modes
 		bool					isClientLimitMode() const;
 		bool					isTopicProtectedMode() const;
 		bool					isChannelProtectedMode() const;
 
+		// checkers
+		bool					isClientOperator(const Client& clientRef) const;
+		bool					isClientConnected(const Client& clientRef) const;
+
 		// setters
-		void					setName(const std::string& newName);
 		void					setKey(const std::string& newKey);
+		void					setChannelProtection(const bool& status);
+		void					setName(const std::string& newName);
 		void					setTopic(const std::string& newTopic);
 		void					setClientLimit(const size_t& limit);
 		void					setTopicProtection(const bool& status);
-		void					setChannelProtection(const bool& status);
+
 		void					addConnectedClient(const Client& clientRef);
 		void					removeConnectedClient(const std::string& clientNickname);
 		void					addOperator(Client& clientRef);
@@ -50,6 +63,9 @@ class Channel
 		void					broadcastNumericReplies(const size_t& numberofReplies, ...);
 		std::string				getUsersList();
 	
+		void					setNicknameOfTopicSetter(const std::string& name);
+		void					setTimeTopicWasSet(const std::string& time);
+
 	protected:
 		// add protected elements here
 

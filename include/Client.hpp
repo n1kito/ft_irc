@@ -5,6 +5,7 @@
 # include <unistd.h>
 # include <exception>
 # include <stdexcept>
+# include <iostream> // TODO: added this to debug, not necessary
 
 class Client
 {
@@ -40,17 +41,16 @@ class Client
 		// add protected elements here
 
 	private:
-		bool		_isRegistered;
-		bool		_passwordStatus;
-		std::string	_username;
-		std::string	_realname;
-		std::string	_nickname;
-		std::string	_password;
-		int			_clientSocket;
-		bool		_welcomeState;
+		bool			_isRegistered;
+		bool			_passwordStatus;
+		std::string		_username;
+		std::string		_realname;
+		std::string		_nickname;
+		std::string		_password;
+		int				_clientSocket;
+		bool			_welcomeState;
 
-		std::string	_serverName;
-		// bool		_isFirstRequest;
+		std::string		_serverName;
 };
 
 #endif

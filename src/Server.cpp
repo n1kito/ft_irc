@@ -249,6 +249,7 @@ void								Server::initCommands()
 	_commands["PING"] = new Ping(&_clients);
 	_commands["PASS"] = new Pass(&_clients, _password);
 	_commands["JOIN"] = new Join(&_clients, &_channels);
+	_commands["TOPIC"] = new Topic(&_clients, &_channels);
 }
 
 void								Server::handleRequest(Client& client, const std::string& request)

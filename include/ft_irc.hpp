@@ -53,8 +53,10 @@
 #include "Nick.hpp"
 
 // Prototypes
-void	checkArguments(const int& argc, char** arguments, int& port, std::string& password);
-bool	isSpecialCharacter(char checkMe);
-void	sendNumericReplies(const size_t& numberOfReplies, const size_t& clientFd, ...);
+void		checkArguments(const int& argc, char** arguments, int& port, std::string& password);
+bool		isSpecialCharacter(char checkMe);
+void		sendNumericReplies(const size_t& numberOfReplies, const size_t& clientFd, ...);
+void		sendCustomNumericReply(const std::string& message, const int& code, const Client& client);
+std::string	getCurrentDate();
 
 #endif // FT_IRC_HPP

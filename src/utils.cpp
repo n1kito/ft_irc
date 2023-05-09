@@ -74,3 +74,24 @@ void	sendNumericReplies(const size_t& numberOfReplies, const size_t& clientFd, .
 	}
 	va_end(messages);
 }
+
+// Returns a human readable string of the current date
+std::string	getCurrentDate()
+{
+	time_t		rawTime;
+	struct tm*	timeInfo;
+
+	time(&rawTime);
+	timeInfo = localtime(&rawTime);
+	std::string	returnValue(asctime(timeInfo));
+	return returnValue;
+}
+
+// Custom numeric replies
+void	sendCustomNumericReply(const std::string& message, const int& code, const Client& client)
+{
+	std::stringstream messageStream;
+	messageStream << ":" << client.getServerName() << " " << code << " " << client.getNickname() << " :" << message << "\r\n";
+	std::string returnMessage = messageStream.str();
+	send(client.getClientSocket(), returnMessage.c_str(), returnMessage.size(), 0);
+}

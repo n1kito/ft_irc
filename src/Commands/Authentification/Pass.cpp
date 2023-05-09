@@ -30,7 +30,7 @@ void	Pass::handleRequest(Client& client, std::string argument)
 	else if (argument != _serverPassword)
 	{
 		std::cout << "PASSWORDS DO NOT MATCH" << std::endl; // TODO: remove this
-		message = ERR_PASSWDMISMATCH(client.getServerName());
+		message = ERR_PASSWDMISMATCH(client.getServerName(), client.getNickname());
 		// message = ERR_PASSWDMISMATCH(client.getServerName(), client.getNickname());
 		killClient(client.getClientSocket(), message, "pass failed");
 		return ;

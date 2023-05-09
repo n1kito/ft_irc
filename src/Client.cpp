@@ -12,7 +12,9 @@ Client::Client(const int& clientSocket, const std::string& serverName ) :
 	_clientSocket(clientSocket),
 	_welcomeState(0),
 	_serverName(serverName)
-{}
+{
+	std::cout << "Constructing client with socket " << _clientSocket << std::endl;
+}
 
 // TODO: is this neede or should it be private ?
 Client::Client(const Client &copyMe)
