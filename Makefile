@@ -53,6 +53,7 @@ clean: title
 	@echo "\t🧹 clean"
 	@[ -d $(BIN_DIR) ] && rm -rf $(BIN_DIR) && echo "\t[✔] $(YELLOW).o files cleaned$(END_COLOR) "\
 	|| echo "\t[✔] $(DIM).o files were already cleaned$(END_COLOR)"
+	@rm server.log leaks.log
 	@echo
 
 fclean: clean
@@ -64,7 +65,7 @@ fclean: clean
 re: fclean all
 
 launch: all
-	@clear -x && make && clear -x && valgrind --log-file="logfile" ./${NAME} 6667 pwd | tee server.log
+	@clear -x && make && clear -x && valgrind --log-file="leaks.log" ./${NAME} 6667 pwd | tee server.log
 
 -include $(OBJ_FILES:%.o=%.d)
 
