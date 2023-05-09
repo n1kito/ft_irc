@@ -8,6 +8,7 @@ CXX 			:=	c++
 CXX_FLAGS		:=	-g -Wall -Wextra -Werror -std=c++98
 
 BIN_DIR			:=	bin
+LOG_DIR			:=	logs
 
 SRC_FILES		:=	main\
 					Server\
@@ -49,12 +50,16 @@ $(BIN_DIR):
 	@mkdir -p $(BIN_DIR)/Commands/Authentification $(BIN_DIR)/Commands/Channels
 	@echo "\t$(IPURPLE)Created $(BIN_DIR)/ directory.$(END_COLOR)"
 
+$(LOG_DIR):
+	@mkdir $(LOG_DIR)
+	@echo "\t$(IPURPLE)Created $(LOG_DIR)/ directory.$(END_COLOR)"
+
 clean: title
 	@echo "\t🧹 clean"
 	@[ -d $(BIN_DIR) ] && rm -rf $(BIN_DIR) && echo "\t[✔] $(YELLOW).o files cleaned$(END_COLOR) "\
 	|| echo "\t[✔] $(DIM).o files were already cleaned$(END_COLOR)"
-	@[ -f server.log ] && rm server.log leaks.log && echo "\t[✔] $(YELLOW)log files cleaned$(END_COLOR)"\
-	|| echo "\t[✔] $(DIM)could no find any log files$(END_COLOR)"
+	@[ -d $(LOG_DIR) ] && rm -rf $(LOG_DIR) && echo "\t[✔] $(YELLOW).log files cleaned$(END_COLOR)"\
+	|| echo "\t[✔] $(DIM)no log files to clean$(END_COLOR)"
 	@echo
 
 fclean: clean
@@ -65,8 +70,8 @@ fclean: clean
 
 re: fclean all
 
-launch: all
-	@clear -x && make && clear -x && valgrind --log-file="leaks.log" ./${NAME} 6667 pwd | tee server.log
+launch: all $(LOG_DIR)
+	@clear -x && make && clear -x && valgrind --log-file="$(LOG_DIR)/leaks.log" ./${NAME} 6667 pwd | tee $(LOG_DIR)/serverOutput.log
 
 -include $(OBJ_FILES:%.o=%.d)
 
