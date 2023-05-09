@@ -18,7 +18,7 @@ class Channel
 
 		Channel( std::string name, const Client& client );
 		Channel(const Channel &copyMe);
-		Channel&		operator = (const Channel &copyMe);
+		Channel&				operator = (const Channel &copyMe);
 		Channel();
 		~Channel();
 
@@ -34,21 +34,21 @@ class Channel
 		bool					isChannelProtectedMode() const;
 
 		// setters
-		void			setName(const std::string& newName);
-		void			setKey(const std::string& newKey);
-		void			setTopic(const std::string& newTopic);
-		void			setClientLimit(const size_t& limit);
-		void			setTopicProtection(const bool& status);
-		void			setChannelProtection(const bool& status);
-		void			addConnectedClient(const Client& clientRef);
-		void			removeConnectedClient(const std::string& clientNickname);
-		void			addOperator(Client& clientRef);
-		void			removeOperator(const std::string& clientNickname);
+		void					setName(const std::string& newName);
+		void					setKey(const std::string& newKey);
+		void					setTopic(const std::string& newTopic);
+		void					setClientLimit(const size_t& limit);
+		void					setTopicProtection(const bool& status);
+		void					setChannelProtection(const bool& status);
+		void					addConnectedClient(const Client& clientRef);
+		void					removeConnectedClient(const std::string& clientNickname);
+		void					addOperator(Client& clientRef);
+		void					removeOperator(const std::string& clientNickname);
 
-		bool			checkTopic(const std::string argument);
-		bool			checkName(const std::string name);
-		void			broadcastNumericReplies(const size_t& numberofReplies, ...);
-		std::string		getUsersList();
+		bool					checkTopic(const std::string argument);
+		bool					checkName(const std::string name);
+		void					broadcastNumericReplies(const size_t& numberofReplies, ...);
+		std::string				getUsersList();
 	
 	protected:
 		// add protected elements here

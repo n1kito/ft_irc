@@ -221,6 +221,8 @@ void								Server::removeClient( int fd )
 	std::cout << RED_BLOC << "Map size before erasing: " << RESET << _clients.size() << std::endl;
 	_clients.erase( fd );
 	std::cout << RED_BLOC << "Map size after erasing: " << RESET << _clients.size() << std::endl;
+	// erase client in _channels
+
 }
 
 // This cannot work since numeric replies require specific arguments

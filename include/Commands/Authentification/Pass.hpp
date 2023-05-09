@@ -17,9 +17,9 @@ class Pass : public ACommand
 		Pass(clientMap* clients, const std::string& serverPassword);
 		~Pass();
 
-		void 	parseArgument();
-		void 	action();
-		void	handleRequest(Client& client, std::string argument);
+		void 		parseArgument();
+		void 		action();
+		void		handleRequest(Client& client, std::string argument);
 	
 	protected:
 		// add protected elements here
