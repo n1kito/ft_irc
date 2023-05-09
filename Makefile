@@ -19,6 +19,7 @@ SRC_FILES		:=	main\
 					Commands/Authentification/Pass\
 					Commands/Authentification/User\
 					Commands/Authentification/Ping\
+					Commands/Channels/Invite\
 					Commands/Channels/Join\
 					Commands/Channels/Topic\
 					utils

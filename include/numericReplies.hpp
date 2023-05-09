@@ -25,6 +25,15 @@
 // 366 
 #define RPL_ENDOFNAMES(server, nickname, channel) (std::string(":") + server + " 366 " + nickname + " " + channel + " :End of /NAMES list\r\n")
 
+// INVITE
+
+// 341
+# define RPL_INVITING(server, client, nickname, channel) (std::string(":") + server + " 341 " + client + " " + nickname + " " + channel + "\r\n")
+
+// ...
+
+// 401
+#define ERR_NOSUCHNICK(server, client, nickname) (std::string(":") + server + " 401 " + client + " " + nickname + " :No such nick/channel\r\n")
 // 403
 #define ERR_NOSUCHCHANNEL(server, nickname, channel) (std::string(":") + server + " 403 " + nickname + " " + channel + " :No such channel\r\n")
 // 431
@@ -37,6 +46,8 @@
 #define ERR_NICKCOLLISION(server, nickname) (std::string(":") + server + " 436 " + nickname + " :Nickname collision KILL \r\n")
 // 442
 #define ERR_NOTONCHANNEL(server, client, channel) (std::string(":") + server + " 442 " + client + " " + channel + " :You're not on that channel\r\n") 
+// 443
+#define ERR_USERONCHANNEL(server, client, nickname, channel) (std::string(":") + server + " 443 " + client + " " + nickname + " " + channel + " :is already on channel\r\n") 
 // 461
 #define ERR_NEEDMOREPARAMS(server, commandName) (std::string(":") + server + " 461 " + commandName + " :Not enough parameters\r\n")
 // 462

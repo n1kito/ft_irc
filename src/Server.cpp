@@ -250,6 +250,7 @@ void								Server::initCommands()
 	_commands["PASS"] = new Pass(&_clients, _password);
 	_commands["JOIN"] = new Join(&_clients, &_channels);
 	_commands["TOPIC"] = new Topic(&_clients, &_channels);
+	_commands["INVITE"] = new Invite(&_clients, &_channels);
 }
 
 void								Server::handleRequest(Client& client, const std::string& request)
@@ -312,7 +313,6 @@ void								Server::handleRequest(Client& client, const std::string& request)
 			if ( command != "PASS" && client.getPassword().empty())
 				continue ;
 			_commands[command]->handleRequest(client, request);
-			
 		}
 	}
 }

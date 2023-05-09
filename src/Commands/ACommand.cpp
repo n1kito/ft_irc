@@ -45,3 +45,10 @@ void			ACommand::killClient(int fd, std::string prevMsg, std::string errorMsg)
 	_clients->erase( fd );
 }
 
+Client*			ACommand::getClientByNickname(const std::string& nickname)
+{
+	for (ACommand::clientMap::iterator it = _clients->begin(); it != _clients->end(); ++it)
+		if ((*it).second.getNickname() == nickname)
+			return &(*it).second;
+	return NULL;
+}

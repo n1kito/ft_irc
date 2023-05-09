@@ -6,10 +6,12 @@
 #include "Client.hpp"
 #include <map>
 
+class Client;
+
 class Nick : public ACommand
 {
 	public:
-		Nick(std::map<int, Client >* clients);
+		Nick(std::map< int, Client >* clients);
 		~Nick();
 
     	void		handleRequest(Client &client, std::string arg);

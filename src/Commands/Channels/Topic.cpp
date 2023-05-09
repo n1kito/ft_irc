@@ -31,7 +31,7 @@ void	Topic::parseArgument(std::string arg, std::string& channel, std::string& to
 	// A topic of multiple words that is not enclosed within quotes will just be cut at the first space.
 	//
 	// Let's be nice and start with removing any extra spaces at the end of the request
-	while (arg.find_last_of(' ') == arg.size() - 1)
+	while (!arg.empty() && arg.find_last_of(' ') == arg.size() - 1)
 		arg.erase(arg.size() - 1, 1);
 	// Check that there has been a topic value entered, if not store the channel name
 	if (arg.find(':') == std::string::npos)

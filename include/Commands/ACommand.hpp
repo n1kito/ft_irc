@@ -8,24 +8,29 @@
 # include <unistd.h>
 # include "numericReplies.hpp"
 
+class Client;
+
 class ACommand
 {
 	public:
+		typedef std::map< int, Client >	clientMap;
 		ACommand();
-		ACommand(std::map<int, Client>* clients);
+		ACommand(clientMap* clients);
 		ACommand(const ACommand &copyMe);
 		virtual ~ACommand();
 		ACommand&			operator = (const ACommand &copyMe);
 	
 		virtual void		handleRequest(Client &client, std::string arg) = 0;
 
+		// getters
+		Client*				getClientByNickname(const std::string& nickname);
+
 	protected:
 		virtual void		parseArgument() = 0;
 		virtual void		action() = 0;
 		void				killClient(int fd, std::string previousMsg, std::string errorMsg);
-		
-		std::map<int, Client>* _clients;
-		// add protected elements here
+
+		clientMap* 			_clients;
 
 	private:
 		// add private elements here
