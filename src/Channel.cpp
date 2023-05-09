@@ -83,39 +83,25 @@ void							Channel::setChannelProtection(const bool& status) { _channelIsProtect
 
 void							Channel::addConnectedClient(const Client& clientRef)
 { 
+	//TODO: what is this condition for, is it necessary ?    
 	if (_connectedClients.find(clientRef.getNickname()) == _connectedClients.end())
 		_connectedClients[clientRef.getNickname()] = &clientRef;
-	
-	// message = JOIN_SUCCESS(client.getNickname(), _channelList[_channelList.size() -1]);
-	// std::string finalmessage = PRIVMSG(client.getServerName(), _channelList[_channelList.size() -1], message);
-	// int numberOfReplies = _topic.empty() ? 3 : 4;
+
 	std::string nickname = clientRef.getNickname();
 	std::string server = clientRef.getServerName();
-
-	// if (numberOfReplies == 4)
+	std::string	channel = _name;
+	
+	// Let everyone on the Channel know that user has joined
 	broadcastNumericReplies(1, JOIN_MSG(server, _name, nickname).c_str());
-	int numberOfReplies = _topic.empty() ? 2 : 4;
-	if (numberOfReplies == 2)
-		sendNumericReplies(numberOfReplies, clientRef.getClientSocket(), \
-							RPL_NAMREPLY,
-							RPL_ENDOFNAMES)
-	else
-		sendNumericReplies(numberOfReplies, clientRef.getClientSocket(), \
-							RPL_TOPIC(server, nickname, _name).c_str(), \
-							RPL_TOPICWHOTIME(server, nickname, _name, _topic, _nicknameOfTopicSetter).c_str(),
-							RPL_NAMREPLY,
-							RPL_ENDOFNAMES);
-	// else
-	// {
-
-	// }
-
-    // 1.  A JOIN message with the client as the message <source> and the channel they have joined as the first parameter of the message.
-    // 2. The channel’s topic (with RPL_TOPIC (332)
-	// 3. Optionally RPL_TOPICWHOTIME (333)), and no message if the channel does not have a topic.
-    // 4. /A list of users currently joined to the channel (with one or more RPL_NAMREPLY (353) numerics followed by a single RPL_ENDOFNAMES (366) numeric). These RPL_NAMREPLY messages sent by the server MUST include the requesting client that has just joined the channel.
-
+	if (_topic.empty() == false)
+		sendNumericReplies(2, clientRef.getClientSocket(), \
+							RPL_TOPIC(server, nickname, channel, _topic).c_str(), \
+							RPL_TOPICWHOTIME(server, nickname, channel, _nicknameOfTopicSetter, _timeTopicWasSet).c_str());
+	sendNumericReplies(2, clientRef.getClientSocket(), \
+					RPL_NAMREPLY(server, nickname, channel, getUsersList()).c_str(), \
+					RPL_ENDOFNAMES(server, nickname, channel).c_str());
 }
+
 void							Channel::removeConnectedClient(const std::string& clientNickname)
 {
 	if (_connectedClients.find(clientNickname) != _connectedClients.end())
@@ -165,4 +151,25 @@ void							Channel::broadcastNumericReplies(const size_t& numberOfReplies, ...)
 			send(it->second->getClientSocket(), message.c_str(), message.length(), 0);
 	}
 	va_end(messages);
+}
+
+std::string		Channel::getUsersList()
+{
+	std::string				usersList = "";
+	clientNickMap::iterator it = _connectedClients.begin();
+	clientNickMap::iterator ite = _connectedClients.end();
+
+	while (it != ite)
+	{
+		// TODO: handle prefixes
+		// if (client is operator)
+		// usersList += "@";
+		// else if (client is founder)
+		// userList += "-";
+		usersList += it->second->getNickname();
+		if (it != --_connectedClients.end())
+			usersList += " ";
+		it++;
+	}
+	return (usersList);
 }

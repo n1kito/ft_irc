@@ -84,8 +84,6 @@ Server::Server(const int& port, const std::string& password, const std::string& 
 						throw std::runtime_error("Error connecting with client");
 					continue ;
 				}
-				char* clientIp = inet_ntoa(clientAddress.sin_addr);
-				std::cout << MAGENTA <<  clientIp << "\n" <<  RESET << std::endl;
 				// add the new client socket to the epoll instance
 				struct epoll_event event;
 				memset(&event, 0, sizeof(event));

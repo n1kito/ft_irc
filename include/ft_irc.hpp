@@ -51,11 +51,10 @@
 
 #include "ACommand.hpp"
 #include "Nick.hpp"
+
 // Prototypes
-// #include "Nick.hpp"
 void	checkArguments(const int& argc, char** arguments, int& port, std::string& password);
 bool	isSpecialCharacter(char checkMe);
 void	sendNumericReplies(const size_t& numberOfReplies, const size_t& clientFd, ...);
-
 
 #endif // FT_IRC_HPP

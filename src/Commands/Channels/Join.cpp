@@ -147,10 +147,6 @@ std::string	Join::parseArgument(Client &client, std::string& arg)
 		std::cout << GREEN << _keyList[i] << " ";
 	std::cout << RESET << "\n";
 	
-	// pas utile si irssi parse lui meme <#chan1, #chan2> <key1, x> 
-	// the list of a channel list must have the same size than the list of the key associated
-	// if (_channelList.size() != _keyList.size())
-	// 	return "CODE ERROR";
 	return "";
 }
 
@@ -191,3 +187,4 @@ void	Join::handleRequest(Client &client, std::string arg)
 	std::cout << "after clear: size " << YELLOW << _keyList.size() << RESET << std::endl;
 }
 
+// TODO:  

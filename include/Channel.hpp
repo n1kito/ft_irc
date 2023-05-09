@@ -48,7 +48,8 @@ class Channel
 		bool			checkTopic(const std::string argument);
 		bool			checkName(const std::string name);
 		void			broadcastNumericReplies(const size_t& numberofReplies, ...);
-
+		std::string		getUsersList();
+	
 	protected:
 		// add protected elements here
 
@@ -58,6 +59,7 @@ class Channel
 		std::string				_name;
 		std::string				_topic;
 		std::string				_nicknameOfTopicSetter;
+		std::string				_timeTopicWasSet;
 		
 		std::string				_key;
 		// Channel modes

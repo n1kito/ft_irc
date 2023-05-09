@@ -16,18 +16,25 @@
 // 333
 #define RPL_TOPICWHOTIME(server, nickname, channel, nicknameOfTopicSetter, setat) (std::string(":") + server + " 333 " + nickname + " " + channel + " " + nicknameOfTopicSetter + " " + setat + "\r\n")
 
+// 353
+#define RPL_NAMREPLY(server, nickname, channel, listUsers) (std::string(":") + server + " 353 " + nickname + " = " + channel + " :" + listUsers + "\r\n")
+
+// 366 
+#define RPL_ENDOFNAMES(server, nickname, channel) (std::string(":") + server + " 366 " + nickname + " " + channel + " :End of /NAMES list\r\n")
+
 // 403
 #define ERR_NOSUCHCHANNEL(server, nickname, channel) (std::string(":") + server + " 403 " + nickname + " " + channel + " :No such channel\r\n")
 // 431
 #define ERR_NONICKNAMEGIVEN(server) (std::string(":") + server + " 431 " + " :No nickname given\r\n")
 // 432
-#define ERR_ERRONEUSNICKNAME(server, client, nickname) (std::string(":") + server + " 432 " + client + " " + nickname + ": Erroneus nickname\r\n")
+#define ERR_ERRONEUSNICKNAME(server, client, nickname) (std::string(":") + server + " 432 " + client + " " + nickname + " :Erroneus nickname\r\n")
 // 433
 #define ERR_NICKNAMEINUSE(server, nickname) (std::string(":") + server + " 433 " + nickname + " " + nickname + " :Nickname is already in use\r\n")
 
+// 436
+#define ERR_NICKCOLLISION(server, nickname) (std::string(":") + server + " 436 " + nickname + " :Nickname collision KILL \r\n")
 // 461
 #define ERR_NEEDMOREPARAMS(server, commandName) (std::string(":") + server + " 461 " + commandName + " :Not enough parameters\r\n")
-// #define ERR_NEEDMOREPARAMS(server, nickname, commandName) (std::string(":") + server + " 461 " + nickname + " " + commandName + " :Not enough parameters\r\n")
 // 462
 #define ERR_ALREADYREGISTERED(server, nickname) (std::string(":") + server + " 462 " + nickname + " :You may not reregister.\r\n")
 // 464
@@ -39,7 +46,6 @@
 #define PASS_SUCCESS(server, nickname) (std::string(":") + server + " 001 " + nickname + " :Password set successfully !\r\n")
 #define PONG_SUCCESS(server, token) (std::string(":") + server + " PONG :" + token + "\r\n")
 
-#define ERR_NICKCOLLISION(server, nickname) (std::string(":") + server + " 436 " + nickname + " :Nickname collision KILL \r\n")
 
 #define KILL(server, nickname, reason ) (std::string(":") + server + " KILL " + nickname + " :" + server + "\r\n")
  
@@ -56,7 +62,7 @@
 
 // RPL_NAMREPLY (353) 
 //  "<client> <symbol> <channel> :[prefix]<nick>{ [prefix]<nick>}"
-
+// :server_name 353 your_nickname = #channel :user1 user2 user3 ...
 
 #define PRIVMSG(server, channel, message) (std::string(":") + server + " PRIVMSG " + channel + " :" + message)
 
