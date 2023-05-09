@@ -187,4 +187,5 @@ void	Join::handleRequest(Client &client, std::string arg)
 	std::cout << "after clear: size " << YELLOW << _keyList.size() << RESET << std::endl;
 }
 
-// TODO:  
+// TODO:
+command PART
