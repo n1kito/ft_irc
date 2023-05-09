@@ -9,6 +9,7 @@ Channel::Channel() :
 	_topic(""),
 	_key(""),
 	_clientLimit(0),
+	_inviteOnly(false),
 	_topicIsProtected(false),
 	_channelIsProtected(false)
 {
@@ -20,6 +21,7 @@ Channel::Channel( std::string name, const Client& client ) :
 	_topic(""),
 	_key(""),
 	_clientLimit(0),
+	_inviteOnly(false),
 	_topicIsProtected(false),
 	_channelIsProtected(false)
 {
@@ -48,6 +50,7 @@ Channel& Channel::operator = (const Channel &copyMe)
 	_name = copyMe.getName();
 	_key = copyMe.getKey();
 	_topic = copyMe.getTopic();
+	_inviteOnly = copyMe.isInviteOnly();
 	_clientLimit = copyMe.isClientLimitMode();
 	_topicIsProtected = copyMe.isTopicProtectedMode();
 	_channelIsProtected = copyMe.isChannelProtectedMode();

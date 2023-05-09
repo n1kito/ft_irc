@@ -47,9 +47,9 @@
 // 442
 #define ERR_NOTONCHANNEL(server, client, channel) (std::string(":") + server + " 442 " + client + " " + channel + " :You're not on that channel\r\n") 
 // 443
-#define ERR_USERONCHANNEL(server, client, nickname, channel) (std::string(":") + server + " 443 " + client + " " + nickname + " " + channel + " :is already on channel\r\n") 
+#define ERR_USERONCHANNEL(server, nickname, invitedUserNickname, channel) (std::string(":") + server + " 443 " + nickname + " " + channel + " " + invitedUserNickname + " :is already on channel\r\n") 
 // 461
-#define ERR_NEEDMOREPARAMS(server, commandName) (std::string(":") + server + " 461 " + commandName + " :Not enough parameters\r\n")
+#define ERR_NEEDMOREPARAMS(server, nickname, commandName) (std::string(":") + server + " 461 " + nickname + " " + commandName + " :Not enough parameters\r\n")
 // 462
 #define ERR_ALREADYREGISTERED(server, nickname) (std::string(":") + server + " 462 " + nickname + " :You may not reregister.\r\n")
 // 464
@@ -57,15 +57,17 @@
 // 482
 #define ERR_CHANOPRIVSNEEDED(server, client, channel) (std::string(":") + server + " 482 " + client + " " + channel + " :You're not channel operator\r\n")
 
+// TODO: check custom message codes and whether we need them at all or not
 // Custom Messages
 #define NICK_SUCCESS(nickname1, nickname2) (std::string(":") + nickname1 + " NICK " + nickname2 + "\r\n")
 #define USER_SUCCESS(server, nickname) (std::string(":") + server + " 001 " + nickname + " :User created successfully!\r\n")
 #define PASS_SUCCESS(server, nickname) (std::string(":") + server + " 001 " + nickname + " :Password set successfully !\r\n")
 #define PONG_SUCCESS(server, token) (std::string(":") + server + " PONG :" + token + "\r\n")
-
-
+// #define INVITE(server, sourceNickname, channel) (std::string(":") + server + " " + sourceNickname + " invites you to " + channel + "\r\n")
+#define INVITE(sourceNickname, targetNickname, channel) (std::string(":") + sourceNickname + " INVITE " + targetNickname + " " + channel + "\r\n")
+// :<inviter> INVITE <target> <channel>
 #define KILL(server, nickname, reason ) (std::string(":") + server + " KILL " + nickname + " :" + server + "\r\n")
- 
+
 // JOIN
 #define JOIN_MSG(server, channel, nickname) (std::string(":") + nickname + "!" + server + " JOIN " + channel + " " +  nickname + "\r\n")
 // #define RPL_TOPIC(server, nickname, channel, topic) (std::string(":") + server + " 332 " + nickname + " " + channel + " :" + topic + "\r\n")
