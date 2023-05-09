@@ -10,476 +10,6 @@ TOTAL CLIENTS :1
 [1m[[0m[2mRequest[0m[1m][0m
 [35mCAP LS
 PASS pwd
-NICK nikitoo
-USER jhpark jhpark localhost :Jee Hyun Park
-[0m
-[1m[[0m[2mHandling[0m[1m][0m
-CAP LS
-command: CAP
-request: LS
-PASS pwd
-command: PASS
-request: pwd
-[30;43mPassword sent[0mpwd
-NICK nikitoo
-command: NICK
-request: nikitoo
-USER jhpark jhpark localhost :Jee Hyun Park
-command: USER
-request: jhpark jhpark localhost :Jee Hyun Park
-[31mUsername : [0mjhpark | Realname : Jee Hyun Park
-
-client no.0: nikitoo[2m	[6][0m
-********************************************
-
-             [2m#1[0m
-************ Received from client **********
-
-[1m[[0m[2mRequest[0m[1m][0m
-[35mMODE nikitoo +i
-MODE nikitoo +i
-[0m
-[1m[[0m[2mHandling[0m[1m][0m
-MODE nikitoo +i
-command: MODE
-request: nikitoo +i
-MODE nikitoo +i
-command: MODE
-request: nikitoo +i
-
-client no.0: nikitoo[2m	[6][0m
-********************************************
-
-             [2m#2[0m
-************ Received from client **********
-
-[1m[[0m[2mRequest[0m[1m][0m
-[35mPING pouetMania
-[0m
-[1m[[0m[2mHandling[0m[1m][0m
-PING pouetMania
-command: PING
-request: pouetMania
-
-client no.0: nikitoo[2m	[6][0m
-********************************************
-
-             [2m#3[0m
-************ Received from client **********
-
-[1m[[0m[2mRequest[0m[1m][0m
-[35mJOIN #c1,#c2 k1,k2
-[0m
-[1m[[0m[2mHandling[0m[1m][0m
-JOIN #c1,#c2 k1,k2
-command: JOIN
-request: #c1,#c2 k1,k2
-[34m[JOIN - handleRequest]
-[0m[34m[JOIN - parseArgument]
-[0mchannelArg:<#c1,#c2>
-keyArg:<k1,k2>
-channelListSize:<2>
-keyListSize:<2>
-[33m#c1 [33m#c2 [0m
-[32mk1 [32mk2 [0m
-[34m[JOIN - action]
-[0m[33mchannel<#c1>
-Available channels: 
-
-[Add Channel]
-[33m#c1
-[0m
-[33mchannel<#c2>
-Available channels: #c1 
-
-[Add Channel]
-[33m#c2
-[33m#c2
-[0m
-final message:<>
-before clear: size [33m2[0m
-after clear: size [33m0[0m
-
-client no.0: nikitoo[2m	[6][0m
-********************************************
-
-             [2m#4[0m
-************ Received from client **********
-
-[1m[[0m[2mRequest[0m[1m][0m
-[35mMODE #c1
-[0m
-[1m[[0m[2mHandling[0m[1m][0m
-MODE #c1
-command: MODE
-request: #c1
-
-client no.0: nikitoo[2m	[6][0m
-********************************************
-
-             [2m#5[0m
-************ Received from client **********
-
-[1m[[0m[2mRequest[0m[1m][0m
-[35mPING pouetMania
-[0m
-[1m[[0m[2mHandling[0m[1m][0m
-PING pouetMania
-command: PING
-request: pouetMania
-
-client no.0: nikitoo[2m	[6][0m
-********************************************
-
-             [2m#6[0m
-************ Received from client **********
-
-[1m[[0m[2mRequest[0m[1m][0m
-[35mPING pouetMania
-[0m
-[1m[[0m[2mHandling[0m[1m][0m
-PING pouetMania
-command: PING
-request: pouetMania
-
-client no.0: nikitoo[2m	[6][0m
-********************************************
-
-             [2m#7[0m
-************ Received from client **********
-
-[1m[[0m[2mRequest[0m[1m][0m
-[35mMODE #c2
-[0m
-[1m[[0m[2mHandling[0m[1m][0m
-MODE #c2
-command: MODE
-request: #c2
-
-client no.0: nikitoo[2m	[6][0m
-********************************************
-
-             [2m#8[0m
-************ Received from client **********
-
-[1m[[0m[2mRequest[0m[1m][0m
-[35mPING pouetMania
-[0m
-[1m[[0m[2mHandling[0m[1m][0m
-PING pouetMania
-command: PING
-request: pouetMania
-
-client no.0: nikitoo[2m	[6][0m
-********************************************
-
-             [2m#9[0m
-************ Received from client **********
-
-[1m[[0m[2mRequest[0m[1m][0m
-[35mQUIT :leaving
-[0m
-[1m[[0m[2mHandling[0m[1m][0m
-QUIT :leaving
-command: QUIT
-request: :leaving
-
-client no.0: nikitoo[2m	[6][0m
-********************************************
-Client disconnected
-
-[removeClient]
- _client.size:1
-[30;41mMap size before erasing: [0m1
-[30;41mMap size after erasing: [0m0
-Constructing client with socket 6
-ADDING CLIENT :6
-TOTAL CLIENTS :1
-
-             [2m#10[0m
-************ Received from client **********
-
-[1m[[0m[2mRequest[0m[1m][0m
-[35mCAP LS
-PASS pwd
-NICK nikitoo
-USER jhpark jhpark localhost :Jee Hyun Park
-[0m
-[1m[[0m[2mHandling[0m[1m][0m
-CAP LS
-command: CAP
-request: LS
-PASS pwd
-command: PASS
-request: pwd
-[30;43mPassword sent[0mpwd
-NICK nikitoo
-command: NICK
-request: nikitoo
-USER jhpark jhpark localhost :Jee Hyun Park
-command: USER
-request: jhpark jhpark localhost :Jee Hyun Park
-[31mUsername : [0mjhpark | Realname : Jee Hyun Park
-
-client no.0: nikitoo[2m	[6][0m
-********************************************
-
-             [2m#11[0m
-************ Received from client **********
-
-[1m[[0m[2mRequest[0m[1m][0m
-[35mMODE nikitoo +i
-MODE nikitoo +i
-[0m
-[1m[[0m[2mHandling[0m[1m][0m
-MODE nikitoo +i
-command: MODE
-request: nikitoo +i
-MODE nikitoo +i
-command: MODE
-request: nikitoo +i
-
-client no.0: nikitoo[2m	[6][0m
-********************************************
-
-             [2m#12[0m
-************ Received from client **********
-
-[1m[[0m[2mRequest[0m[1m][0m
-[35mPING pouetMania
-[0m
-[1m[[0m[2mHandling[0m[1m][0m
-PING pouetMania
-command: PING
-request: pouetMania
-
-client no.0: nikitoo[2m	[6][0m
-********************************************
-
-             [2m#13[0m
-************ Received from client **********
-
-[1m[[0m[2mRequest[0m[1m][0m
-[35mJOIN #c1,#c2,#c3 k1,k2,k3
-[0m
-[1m[[0m[2mHandling[0m[1m][0m
-JOIN #c1,#c2,#c3 k1,k2,k3
-command: JOIN
-request: #c1,#c2,#c3 k1,k2,k3
-[34m[JOIN - handleRequest]
-[0m[34m[JOIN - parseArgument]
-[0mchannelArg:<#c1,#c2,#c3>
-keyArg:<k1,k2,k3>
-channelListSize:<3>
-keyListSize:<3>
-[33m#c1 [33m#c2 [33m#c3 [0m
-[32mk1 [32mk2 [32mk3 [0m
-[34m[JOIN - action]
-[0m[33mchannel<#c1>
-Available channels: #c1 #c2 
-trying to login with key
-key:<k1> trying with:<k1>
-
-[Add Channel]
-[33m#c1
-[0m
-[33mchannel<#c2>
-Available channels: #c1 #c2 
-trying to login with key
-key:<k2> trying with:<k2>
-
-[Add Channel]
-[33m#c1
-[33m#c2
-[0m
-[33mchannel<#c3>
-Available channels: #c1 #c2 
-
-[Add Channel]
-[33m#c1
-[33m#c2
-[33m#c3
-[0m
-final message:<>
-before clear: size [33m3[0m
-after clear: size [33m0[0m
-
-client no.0: nikitoo[2m	[6][0m
-********************************************
-
-             [2m#14[0m
-************ Received from client **********
-
-[1m[[0m[2mRequest[0m[1m][0m
-[35mMODE #c1
-[0m
-[1m[[0m[2mHandling[0m[1m][0m
-MODE #c1
-command: MODE
-request: #c1
-
-client no.0: nikitoo[2m	[6][0m
-********************************************
-
-             [2m#15[0m
-************ Received from client **********
-
-[1m[[0m[2mRequest[0m[1m][0m
-[35mQUIT :leaving
-[0m
-[1m[[0m[2mHandling[0m[1m][0m
-QUIT :leaving
-command: QUIT
-request: :leaving
-
-client no.0: nikitoo[2m	[6][0m
-********************************************
-Client disconnected
-
-[removeClient]
- _client.size:1
-[30;41mMap size before erasing: [0m1
-[30;41mMap size after erasing: [0m0
-Constructing client with socket 6
-ADDING CLIENT :6
-TOTAL CLIENTS :1
-
-             [2m#16[0m
-************ Received from client **********
-
-[1m[[0m[2mRequest[0m[1m][0m
-[35mCAP LS
-PASS pwd
-NICK nikitoo
-USER jhpark jhpark localhost :Jee Hyun Park
-[0m
-[1m[[0m[2mHandling[0m[1m][0m
-CAP LS
-command: CAP
-request: LS
-PASS pwd
-command: PASS
-request: pwd
-[30;43mPassword sent[0mpwd
-NICK nikitoo
-command: NICK
-request: nikitoo
-USER jhpark jhpark localhost :Jee Hyun Park
-command: USER
-request: jhpark jhpark localhost :Jee Hyun Park
-[31mUsername : [0mjhpark | Realname : Jee Hyun Park
-
-client no.0: nikitoo[2m	[6][0m
-********************************************
-
-             [2m#17[0m
-************ Received from client **********
-
-[1m[[0m[2mRequest[0m[1m][0m
-[35mMODE nikitoo +i
-[0m
-[1m[[0m[2mHandling[0m[1m][0m
-MODE nikitoo +i
-command: MODE
-request: nikitoo +i
-
-client no.0: nikitoo[2m	[6][0m
-********************************************
-
-             [2m#18[0m
-************ Received from client **********
-
-[1m[[0m[2mRequest[0m[1m][0m
-[35mMODE nikitoo +i
-[0m
-[1m[[0m[2mHandling[0m[1m][0m
-MODE nikitoo +i
-command: MODE
-request: nikitoo +i
-
-client no.0: nikitoo[2m	[6][0m
-********************************************
-
-             [2m#19[0m
-************ Received from client **********
-
-[1m[[0m[2mRequest[0m[1m][0m
-[35mPING pouetMania
-[0m
-[1m[[0m[2mHandling[0m[1m][0m
-PING pouetMania
-command: PING
-request: pouetMania
-
-client no.0: nikitoo[2m	[6][0m
-********************************************
-
-             [2m#20[0m
-************ Received from client **********
-
-[1m[[0m[2mRequest[0m[1m][0m
-[35mJOIN #c1,#c2 k1,k2
-[0m
-[1m[[0m[2mHandling[0m[1m][0m
-JOIN #c1,#c2 k1,k2
-command: JOIN
-request: #c1,#c2 k1,k2
-[34m[JOIN - handleRequest]
-[0m[34m[JOIN - parseArgument]
-[0mchannelArg:<#c1,#c2>
-keyArg:<k1,k2>
-channelListSize:<2>
-keyListSize:<2>
-[33m#c1 [33m#c2 [0m
-[32mk1 [32mk2 [0m
-[34m[JOIN - action]
-[0m[33mchannel<#c1>
-Available channels: #c1 #c2 #c3 
-trying to login with key
-key:<k1> trying with:<k1>
-
-[Add Channel]
-[33m#c1
-[0m
-[33mchannel<#c2>
-Available channels: #c1 #c2 #c3 
-trying to login with key
-key:<k2> trying with:<k2>
-
-[Add Channel]
-[33m#c1
-[33m#c2
-[0m
-final message:<>
-before clear: size [33m2[0m
-after clear: size [33m0[0m
-
-client no.0: nikitoo[2m	[6][0m
-********************************************
-
-             [2m#21[0m
-************ Received from client **********
-
-[1m[[0m[2mRequest[0m[1m][0m
-[35mMODE #c1
-[0m
-[1m[[0m[2mHandling[0m[1m][0m
-MODE #c1
-command: MODE
-request: #c1
-
-client no.0: nikitoo[2m	[6][0m
-********************************************
-Constructing client with socket 7
-ADDING CLIENT :7
-TOTAL CLIENTS :2
-
-             [2m#22[0m
-************ Received from client **********
-
-[1m[[0m[2mRequest[0m[1m][0m
-[35mCAP LS
-PASS pwd
 NICK chacha
 USER jhpark jhpark localhost :Jee Hyun Park
 [0m
@@ -499,41 +29,28 @@ command: USER
 request: jhpark jhpark localhost :Jee Hyun Park
 [31mUsername : [0mjhpark | Realname : Jee Hyun Park
 
-client no.0: nikitoo[2m	[6][0m
-client no.1: chacha[2m	[7][0m
+client no.0: chacha[2m	[6][0m
 ********************************************
 
-             [2m#23[0m
+             [2m#1[0m
 ************ Received from client **********
 
 [1m[[0m[2mRequest[0m[1m][0m
 [35mMODE chacha +i
+MODE chacha +i
 [0m
 [1m[[0m[2mHandling[0m[1m][0m
 MODE chacha +i
 command: MODE
 request: chacha +i
-
-client no.0: nikitoo[2m	[6][0m
-client no.1: chacha[2m	[7][0m
-********************************************
-
-             [2m#24[0m
-************ Received from client **********
-
-[1m[[0m[2mRequest[0m[1m][0m
-[35mMODE chacha +i
-[0m
-[1m[[0m[2mHandling[0m[1m][0m
 MODE chacha +i
 command: MODE
 request: chacha +i
 
-client no.0: nikitoo[2m	[6][0m
-client no.1: chacha[2m	[7][0m
+client no.0: chacha[2m	[6][0m
 ********************************************
 
-             [2m#25[0m
+             [2m#2[0m
 ************ Received from client **********
 
 [1m[[0m[2mRequest[0m[1m][0m
@@ -544,108 +61,10 @@ PING pouetMania
 command: PING
 request: pouetMania
 
-client no.0: nikitoo[2m	[6][0m
-client no.1: chacha[2m	[7][0m
+client no.0: chacha[2m	[6][0m
 ********************************************
 
-             [2m#26[0m
-************ Received from client **********
-
-[1m[[0m[2mRequest[0m[1m][0m
-[35mJOIN #c3
-[0m
-[1m[[0m[2mHandling[0m[1m][0m
-JOIN #c3
-command: JOIN
-request: #c3
-[34m[JOIN - handleRequest]
-[0m[34m[JOIN - parseArgument]
-[0mchannelArg:<#c3>
-keyArg:<>
-channelListSize:<1>
-keyListSize:<0>
-[33m#c3 [0m
-[0m
-[34m[JOIN - action]
-[0m[33mchannel<#c3>
-Available channels: #c1 #c2 #c3 
-trying to login with key
-key:<k3> trying with:<>
-final message:<:pouetMania 475 chacha #c3 :Cannot join channel (+k)
->
-before clear: size [33m0[0m
-after clear: size [33m0[0m
-
-client no.0: nikitoo[2m	[6][0m
-client no.1: chacha[2m	[7][0m
-********************************************
-
-             [2m#27[0m
-************ Received from client **********
-
-[1m[[0m[2mRequest[0m[1m][0m
-[35mJOIN #c3 k3
-[0m
-[1m[[0m[2mHandling[0m[1m][0m
-JOIN #c3 k3
-command: JOIN
-request: #c3 k3
-[34m[JOIN - handleRequest]
-[0m[34m[JOIN - parseArgument]
-[0mchannelArg:<#c3>
-keyArg:<k3>
-channelListSize:<1>
-keyListSize:<1>
-[33m#c3 [0m
-[32mk3 [0m
-[34m[JOIN - action]
-[0m[33mchannel<#c3>
-Available channels: #c1 #c2 #c3 
-trying to login with key
-key:<k3> trying with:<k3>
-
-[Add Channel]
-[33m#c3
-[0m
-final message:<>
-before clear: size [33m1[0m
-after clear: size [33m0[0m
-
-client no.0: nikitoo[2m	[6][0m
-client no.1: chacha[2m	[7][0m
-********************************************
-
-             [2m#28[0m
-************ Received from client **********
-
-[1m[[0m[2mRequest[0m[1m][0m
-[35mMODE #c3
-[0m
-[1m[[0m[2mHandling[0m[1m][0m
-MODE #c3
-command: MODE
-request: #c3
-
-client no.0: nikitoo[2m	[6][0m
-client no.1: chacha[2m	[7][0m
-********************************************
-
-             [2m#29[0m
-************ Received from client **********
-
-[1m[[0m[2mRequest[0m[1m][0m
-[35mPING pouetMania
-[0m
-[1m[[0m[2mHandling[0m[1m][0m
-PING pouetMania
-command: PING
-request: pouetMania
-
-client no.0: nikitoo[2m	[6][0m
-client no.1: chacha[2m	[7][0m
-********************************************
-
-             [2m#30[0m
+             [2m#3[0m
 ************ Received from client **********
 
 [1m[[0m[2mRequest[0m[1m][0m
@@ -665,147 +84,19 @@ keyListSize:<0>
 [0m
 [34m[JOIN - action]
 [0m[33mchannel<#c1>
-Available channels: #c1 #c2 #c3 
-trying to login with key
-key:<k1> trying with:<>
-final message:<:pouetMania 475 chacha #c1 :Cannot join channel (+k)
->
-before clear: size [33m0[0m
-after clear: size [33m0[0m
-
-client no.0: nikitoo[2m	[6][0m
-client no.1: chacha[2m	[7][0m
-********************************************
-
-             [2m#31[0m
-************ Received from client **********
-
-[1m[[0m[2mRequest[0m[1m][0m
-[35mJOIN #c1
-[0m
-[1m[[0m[2mHandling[0m[1m][0m
-JOIN #c1
-command: JOIN
-request: #c1
-[34m[JOIN - handleRequest]
-[0m[34m[JOIN - parseArgument]
-[0mchannelArg:<#c1>
-keyArg:<>
-channelListSize:<1>
-keyListSize:<0>
-[33m#c1 [0m
-[0m
-[34m[JOIN - action]
-[0m[33mchannel<#c1>
-Available channels: #c1 #c2 #c3 
-trying to login with key
-key:<k1> trying with:<>
-final message:<:pouetMania 475 chacha #c1 :Cannot join channel (+k)
->
-before clear: size [33m0[0m
-after clear: size [33m0[0m
-
-client no.0: nikitoo[2m	[6][0m
-client no.1: chacha[2m	[7][0m
-********************************************
-
-             [2m#32[0m
-************ Received from client **********
-
-[1m[[0m[2mRequest[0m[1m][0m
-[35mJOIN #c1 k1
-[0m
-[1m[[0m[2mHandling[0m[1m][0m
-JOIN #c1 k1
-command: JOIN
-request: #c1 k1
-[34m[JOIN - handleRequest]
-[0m[34m[JOIN - parseArgument]
-[0mchannelArg:<#c1>
-keyArg:<k1>
-channelListSize:<1>
-keyListSize:<1>
-[33m#c1 [0m
-[32mk1 [0m
-[34m[JOIN - action]
-[0m[33mchannel<#c1>
-Available channels: #c1 #c2 #c3 
-trying to login with key
-key:<k1> trying with:<k1>
+Available channels: 
 
 [Add Channel]
 [33m#c1
-[33m#c3
 [0m
 final message:<>
-before clear: size [33m1[0m
+before clear: size [33m0[0m
 after clear: size [33m0[0m
 
-client no.0: nikitoo[2m	[6][0m
-client no.1: chacha[2m	[7][0m
+client no.0: chacha[2m	[6][0m
 ********************************************
 
-             [2m#33[0m
-************ Received from client **********
-
-[1m[[0m[2mRequest[0m[1m][0m
-[35mPING pouetMania
-[0m
-[1m[[0m[2mHandling[0m[1m][0m
-PING pouetMania
-command: PING
-request: pouetMania
-
-client no.0: nikitoo[2m	[6][0m
-client no.1: chacha[2m	[7][0m
-********************************************
-
-             [2m#34[0m
-************ Received from client **********
-
-[1m[[0m[2mRequest[0m[1m][0m
-[35mPING pouetMania
-[0m
-[1m[[0m[2mHandling[0m[1m][0m
-PING pouetMania
-command: PING
-request: pouetMania
-
-client no.0: nikitoo[2m	[6][0m
-client no.1: chacha[2m	[7][0m
-********************************************
-
-             [2m#35[0m
-************ Received from client **********
-
-[1m[[0m[2mRequest[0m[1m][0m
-[35mMODE #c2
-[0m
-[1m[[0m[2mHandling[0m[1m][0m
-MODE #c2
-command: MODE
-request: #c2
-
-client no.0: nikitoo[2m	[6][0m
-client no.1: chacha[2m	[7][0m
-********************************************
-
-             [2m#36[0m
-************ Received from client **********
-
-[1m[[0m[2mRequest[0m[1m][0m
-[35mPING pouetMania
-[0m
-[1m[[0m[2mHandling[0m[1m][0m
-PING pouetMania
-command: PING
-request: pouetMania
-
-client no.0: nikitoo[2m	[6][0m
-client no.1: chacha[2m	[7][0m
-********************************************
-
-             [2m#37[0m
+             [2m#4[0m
 ************ Received from client **********
 
 [1m[[0m[2mRequest[0m[1m][0m
@@ -816,21 +107,16 @@ MODE #c1
 command: MODE
 request: #c1
 
-client no.0: nikitoo[2m	[6][0m
-client no.1: chacha[2m	[7][0m
+client no.0: chacha[2m	[6][0m
 ********************************************
 
-             [2m#38[0m
+             [2m#5[0m
 ************ Received from client **********
 
 [1m[[0m[2mRequest[0m[1m][0m
-[35mPING pouetMania
+[35mJOIN #0
 [0m
 [1m[[0m[2mHandling[0m[1m][0m
-PING pouetMania
-command: PING
-request: pouetMania
-
-client no.0: nikitoo[2m	[6][0m
-client no.1: chacha[2m	[7][0m
-********************************************
+JOIN #0
+command: JOIN
+request: #0

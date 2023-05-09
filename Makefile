@@ -73,7 +73,7 @@ fclean: clean
 re: fclean all
 
 launch: all $(LOG_DIR)
-	@clear -x && make && clear -x && valgrind --log-file="$(LOG_DIR)/leaks.log" ./${NAME} 6667 pwd | tee $(LOG_DIR)/serverOutput.log
+	@clear -x && make && clear -x && valgrind --leak-check=full --show-leak-kinds=all --log-file="$(LOG_DIR)/leaks.log" ./${NAME} 6667 pwd | tee $(LOG_DIR)/serverOutput.log
 
 valgrind: all
 	@clear -x && make && clear -x && valgrind ./${NAME} 6667 coucou

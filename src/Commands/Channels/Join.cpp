@@ -98,10 +98,6 @@ std::string	Join::parseArgument(Client &client, std::string& arg)
 	// adds automatically prefix '#' to channels' name.
 	// if key is missing, irssi defines key as 'x'
 	
-	// if arg == "0" ==> Leave all channels (send PART command for each channel) 
-	if (arg == "#0")
-		return ("PART");
-	
 	// split the channel list and the key list with a space
 	std::stringstream argStream(arg);
 	std::string channelArg;
@@ -146,9 +142,14 @@ void	Join::handleRequest(Client &client, std::string arg)
 {
 	std::cout << BLUE << "[JOIN - handleRequest]\n" << RESET;
 	std::string message = "";
-
+	
 	if (arg.empty())
 		message = ERR_NEEDMOREPARAMS(client.getServerName(), "JOIN");
+	else if (arg == "#0")
+	{
+		client.leaveAllChannels();
+		return;
+	}
 	else
 	{
 		std::string parseResults = parseArgument(client, arg);

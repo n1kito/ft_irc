@@ -91,3 +91,16 @@ void			Client::addChannel(const Channel& channelRef)
 
 }
 
+void			Client::leaveAllChannels()
+{
+	std::cout << "\n[leaveAllChannels]\n";
+	channelsMap::iterator it = _connectedToChannels.begin();
+	std::cout << it->second->getName();
+	// while (it != _connectedToChannels.end())
+	// {
+	// 	it->second->broadcastNumericReply(PART_MSG(_serverName, _nickname, "#c1"));
+	// 	it++;
+	// }
+
+}
+

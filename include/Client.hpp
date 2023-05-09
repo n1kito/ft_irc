@@ -43,7 +43,7 @@ class Client
 		void			setPasswordStatus(const bool& status);
 	
 		void			addChannel(const Channel& channelRef);
-
+		void			leaveAllChannels();
 	protected:
 		// add protected elements here
 
