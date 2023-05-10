@@ -78,13 +78,10 @@ void	sendNumericReplies(const size_t& numberOfReplies, const size_t& clientFd, .
 // Returns a human readable string of the current date
 std::string	getCurrentDate()
 {
-	time_t		rawTime;
-	struct tm*	timeInfo;
-
-	time(&rawTime);
-	timeInfo = localtime(&rawTime);
-	std::string	returnValue(asctime(timeInfo));
-	return returnValue;
+ 	std::time_t time = std::time(0);
+	std::stringstream	timeStream;
+	timeStream << time;
+	return timeStream.str();
 }
 
 // Custom numeric replies

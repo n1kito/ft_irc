@@ -73,7 +73,7 @@ class Channel
 		std::string				getUsersList();
 	
 		void					setNicknameOfTopicSetter(const std::string& name);
-		void					setTimeTopicWasSet(const std::string& time);
+		void					setTimeTopicWasSet(const std::string& secondsElapsedSinceUnixEpoch);
 
 	protected:
 		// add protected elements here
