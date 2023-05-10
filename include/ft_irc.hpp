@@ -60,5 +60,8 @@ bool isSpecialCharacter(char checkMe);
 void sendNumericReplies(const size_t &numberOfReplies, const size_t &clientFd, ...);
 void sendCustomNumericReply(const std::string &message, const int &code, const Client &client);
 std::string getCurrentDate();
+void	leftTrim(std::string& str, std::string trimmer);
+void	rightTrim(std::string& str, std::string trimmer);
+void	rlTrim(std::string& str, std::string trimmer);
 
 #endif // FT_IRC_HPP
