@@ -1,4 +1,10 @@
 #include "Client.hpp"
+// #define PART_MSG(server, channel, nickname) (std::string(":") + server + "!" + nickname + " PART " + channel + " " + nickname + "\r\n")
+
+#define PART_MSG(server, channel, nickname) (std::string(":") + server + "!" + nickname + " PART " + nickname + " " + channel + "\r\n")
+//:<nickname> PART <channel> [message]
+// :servername PART_RPL nickname #channel :message
+// #define JOIN_MSG(server, channel, nickname) (std::string(":") + nickname + "!" + server + " JOIN " + channel + " " +  nickname + "\r\n")
 
 /* CONSTRUCTORS ***************************************************************/
 
