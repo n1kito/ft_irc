@@ -23,6 +23,8 @@
 class Kick   : public ACommand
 {
 	public:
+		typedef std::map< std::string, Channel >	channelMap;
+
 		Kick(std::map< int, Client >* clients, std::map< std::string, Channel >* channels);
 		~Kick();
 	
@@ -34,7 +36,7 @@ class Kick   : public ACommand
 		// add protected elements here
 
 	private:
-		std::map< std::string, Channel >*		_channels;
+		channelMap*		_channelMap;
 		std::string								_kickReason;
 		std::vector< std::string >				_channelList;
 		std::vector< std::string >				_userList;
