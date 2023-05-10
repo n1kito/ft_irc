@@ -37,8 +37,8 @@ void		Invite::handleRequest(Client &client, std::string arg)
 	std::string	channel = "";
 	std::string	invitedUser = "";
 	parseArgument(arg, channel, invitedUser);
-	std::cout << "Channel is:\t<" << channel << ">" << std::endl;
 	std::cout << "User is:\t<" << invitedUser << ">" << std::endl;
+	std::cout << "Channel is:\t<" << channel << ">" << std::endl;
 	// if no channel was provided
 	if (channel.empty() || invitedUser.empty())
 		sendNumericReplies(1, client.getClientSocket(), ERR_NEEDMOREPARAMS(client.getServerName(), client.getNickname(), "INVITE").c_str());

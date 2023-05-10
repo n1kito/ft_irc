@@ -70,7 +70,7 @@ fclean: clean
 	@echo "\t💣 fclean"
 	@[ -f $(NAME) ] && rm -f $(NAME) && echo "\t[✔] $(YELLOW)$(NAME) executable cleaned$(END_COLOR)"\
 	|| echo "\t[ ] $(DIM)$(NAME) executable was already cleaned$(END_COLOR)"
-	@if tmux has-session -t $(TMUX_SESSION) 2>/dev/null; then tmux kill-session -t $(TMUX_SESSION) && echo "\t[✔] $(YELLOW)Successfully ended tmux session$(END_COLOR)"; else echo "\t[ ] $(DIM)no tmux session currently running$(END_COLOR)"; fi
+	@if tmux has-session -t $(TMUX_SESSION) 2>/dev/null; then tmux kill-session -t $(TMUX_SESSION) && echo "\t[✔] $(YELLOW)successfully ended tmux session$(END_COLOR)"; else echo "\t[ ] $(DIM)no tmux session currently running$(END_COLOR)"; fi
 	@echo
 
 re: fclean all
