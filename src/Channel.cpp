@@ -9,6 +9,7 @@ Channel::Channel() :
 	_topic(""),
 	_key(""),
 	_clientLimit(0),
+	_inviteOnly(false),
 	_topicIsProtected(false),
 	_channelIsProtected(false)
 {
@@ -20,6 +21,7 @@ Channel::Channel( std::string name, const Client& client ) :
 	_topic(""),
 	_key(""),
 	_clientLimit(0),
+	_inviteOnly(false),
 	_topicIsProtected(false),
 	_channelIsProtected(false)
 {
@@ -43,8 +45,8 @@ Channel::~Channel()
 
 Channel& Channel::operator = (const Channel &copyMe)
 {
-	_connectedClients = copyMe.getClientMap();;
-	_operators = copyMe.getOperators();;
+	_connectedClients = copyMe.getClientMap();
+	_operators = copyMe.getOperators();
 	_name = copyMe.getName();
 	_key = copyMe.getKey();
 	_topic = copyMe.getTopic();
@@ -112,7 +114,7 @@ void							Channel::addConnectedClient(const Client& clientRef)
 	//TODO: what is this condition for, is it necessary ?    
 	if (_connectedClients.find(clientRef.getNickname()) == _connectedClients.end())
 		_connectedClients[clientRef.getNickname()] = &clientRef;
-
+	
 	std::string nickname = clientRef.getNickname();
 	std::string server = clientRef.getServerName();
 	std::string	channel = _name;

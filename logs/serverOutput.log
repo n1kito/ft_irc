@@ -10,7 +10,7 @@ TOTAL CLIENTS :1
 [1m[[0m[2mRequest[0m[1m][0m
 [35mCAP LS
 PASS pwd
-NICK chacha
+NICK jee
 USER jhpark jhpark localhost :Jee Hyun Park
 [0m
 [1m[[0m[2mHandling[0m[1m][0m
@@ -21,33 +21,33 @@ PASS pwd
 command: PASS
 request: pwd
 [30;43mPassword sent[0mpwd
-NICK chacha
+NICK jee
 command: NICK
-request: chacha
+request: jee
 USER jhpark jhpark localhost :Jee Hyun Park
 command: USER
 request: jhpark jhpark localhost :Jee Hyun Park
 [31mUsername : [0mjhpark | Realname : Jee Hyun Park
 
-client no.0: chacha[2m	[6][0m
+client no.0: jee[2m	[6][0m
 ********************************************
 
              [2m#1[0m
 ************ Received from client **********
 
 [1m[[0m[2mRequest[0m[1m][0m
-[35mMODE chacha +i
-MODE chacha +i
+[35mMODE jee +i
+MODE jee +i
 [0m
 [1m[[0m[2mHandling[0m[1m][0m
-MODE chacha +i
+MODE jee +i
 command: MODE
-request: chacha +i
-MODE chacha +i
+request: jee +i
+MODE jee +i
 command: MODE
-request: chacha +i
+request: jee +i
 
-client no.0: chacha[2m	[6][0m
+client no.0: jee[2m	[6][0m
 ********************************************
 
              [2m#2[0m
@@ -61,39 +61,50 @@ PING pouetMania
 command: PING
 request: pouetMania
 
-client no.0: chacha[2m	[6][0m
+client no.0: jee[2m	[6][0m
 ********************************************
 
              [2m#3[0m
 ************ Received from client **********
 
 [1m[[0m[2mRequest[0m[1m][0m
-[35mJOIN #c1
+[35mJOIN #c1,#c2
 [0m
 [1m[[0m[2mHandling[0m[1m][0m
-JOIN #c1
+JOIN #c1,#c2
 command: JOIN
-request: #c1
+request: #c1,#c2
 [34m[JOIN - handleRequest]
 [0m[34m[JOIN - parseArgument]
-[0mchannelArg:<#c1>
+[0mchannelArg:<#c1,#c2>
 keyArg:<>
-channelListSize:<1>
+channelListSize:<2>
 keyListSize:<0>
-[33m#c1 [0m
+[33m#c1 [33m#c2 [0m
 [0m
 [34m[JOIN - action]
 [0m[33mchannel<#c1>
 Available channels: 
+[34m
+adding channel to client:
 
 [Add Channel]
 [33m#c1
+[0m
+[33mchannel<#c2>
+Available channels: #c1 
+[34m
+adding channel to client:
+
+[Add Channel]
+[33m#c1
+[33m#c2
 [0m
 final message:<>
 before clear: size [33m0[0m
 after clear: size [33m0[0m
 
-client no.0: chacha[2m	[6][0m
+client no.0: jee[2m	[6][0m
 ********************************************
 
              [2m#4[0m
@@ -107,10 +118,133 @@ MODE #c1
 command: MODE
 request: #c1
 
-client no.0: chacha[2m	[6][0m
+client no.0: jee[2m	[6][0m
 ********************************************
+Constructing client with socket 7
+ADDING CLIENT :7
+TOTAL CLIENTS :2
 
              [2m#5[0m
+************ Received from client **********
+
+[1m[[0m[2mRequest[0m[1m][0m
+[35mCAP LS
+PASS pwd
+NICK nikito
+USER jhpark jhpark localhost :Jee Hyun Park
+[0m
+[1m[[0m[2mHandling[0m[1m][0m
+CAP LS
+command: CAP
+request: LS
+PASS pwd
+command: PASS
+request: pwd
+[30;43mPassword sent[0mpwd
+NICK nikito
+command: NICK
+request: nikito
+USER jhpark jhpark localhost :Jee Hyun Park
+command: USER
+request: jhpark jhpark localhost :Jee Hyun Park
+[31mUsername : [0mjhpark | Realname : Jee Hyun Park
+
+client no.0: jee[2m	[6][0m
+client no.1: nikito[2m	[7][0m
+********************************************
+
+             [2m#6[0m
+************ Received from client **********
+
+[1m[[0m[2mRequest[0m[1m][0m
+[35mMODE nikito +i
+MODE nikito +i
+[0m
+[1m[[0m[2mHandling[0m[1m][0m
+MODE nikito +i
+command: MODE
+request: nikito +i
+MODE nikito +i
+command: MODE
+request: nikito +i
+
+client no.0: jee[2m	[6][0m
+client no.1: nikito[2m	[7][0m
+********************************************
+
+             [2m#7[0m
+************ Received from client **********
+
+[1m[[0m[2mRequest[0m[1m][0m
+[35mPING pouetMania
+[0m
+[1m[[0m[2mHandling[0m[1m][0m
+PING pouetMania
+command: PING
+request: pouetMania
+
+client no.0: jee[2m	[6][0m
+client no.1: nikito[2m	[7][0m
+********************************************
+
+             [2m#8[0m
+************ Received from client **********
+
+[1m[[0m[2mRequest[0m[1m][0m
+[35mJOIN #c1,#c2
+[0m
+[1m[[0m[2mHandling[0m[1m][0m
+JOIN #c1,#c2
+command: JOIN
+request: #c1,#c2
+[34m[JOIN - handleRequest]
+[0m[34m[JOIN - parseArgument]
+[0mchannelArg:<#c1,#c2>
+keyArg:<>
+channelListSize:<2>
+keyListSize:<0>
+[33m#c1 [33m#c2 [0m
+[0m
+[34m[JOIN - action]
+[0m[33mchannel<#c1>
+Available channels: #c1 #c2 
+trying to login with key
+
+[Add Channel]
+[33m#c1
+[0m
+[33mchannel<#c2>
+Available channels: #c1 #c2 
+trying to login with key
+
+[Add Channel]
+[33m#c1
+[33m#c2
+[0m
+final message:<>
+before clear: size [33m0[0m
+after clear: size [33m0[0m
+
+client no.0: jee[2m	[6][0m
+client no.1: nikito[2m	[7][0m
+********************************************
+
+             [2m#9[0m
+************ Received from client **********
+
+[1m[[0m[2mRequest[0m[1m][0m
+[35mMODE #c1
+[0m
+[1m[[0m[2mHandling[0m[1m][0m
+MODE #c1
+command: MODE
+request: #c1
+
+client no.0: jee[2m	[6][0m
+client no.1: nikito[2m	[7][0m
+********************************************
+
+             [2m#10[0m
 ************ Received from client **********
 
 [1m[[0m[2mRequest[0m[1m][0m
@@ -120,3 +254,28 @@ client no.0: chacha[2m	[6][0m
 JOIN #0
 command: JOIN
 request: #0
+[34m[JOIN - handleRequest]
+[0m
+[leaveAllChannels]
+[33m#c1
+[33m#c2
+[0m
+
+client no.0: jee[2m	[6][0m
+client no.1: nikito[2m	[7][0m
+********************************************
+
+             [2m#11[0m
+************ Received from client **********
+
+[1m[[0m[2mRequest[0m[1m][0m
+[35mPING pouetMania
+[0m
+[1m[[0m[2mHandling[0m[1m][0m
+PING pouetMania
+command: PING
+request: pouetMania
+
+client no.0: jee[2m	[6][0m
+client no.1: nikito[2m	[7][0m
+********************************************

@@ -3,9 +3,18 @@
 /* CONSTRUCTORS ***************************************************************/
 
 // TODO: is this neede or should it be private ?
-Client::Client() {}
+Client::Client() :
+	// _connectedToChannels(),
+	_isRegistered(false),
+	_passwordStatus(false),
+	_password(""),
+	_clientSocket(-1),
+	_welcomeState(0),
+	_serverName("")
+	{}
 
 Client::Client(const int& clientSocket, const std::string& serverName ) :
+	// _connectedToChannels(),
 	_isRegistered(false),
 	_passwordStatus(false),
 	_password(""),
@@ -36,6 +45,7 @@ Client::~Client()
 Client& Client::operator = (const Client &copyMe)
 {
 	// (void)copyMe;
+	_connectedToChannels = copyMe.getChannelsMap();
 	_isRegistered = copyMe.getRegisterState();
 	_clientSocket = copyMe.getClientSocket();
 	_username = copyMe.getUsername();
@@ -60,6 +70,7 @@ bool			Client::getWelcomeState() const { return _welcomeState; }
 std::string		Client::getServerName() const { return _serverName; }
 bool			Client::getPasswordStatus() const { return _passwordStatus; }
 Channel*		Client::getCurrentChannel() const { return _currentChannel; }
+const Client::channelsMap&	Client::getChannelsMap() const { return _connectedToChannels; }
 
 void			Client::setRegisterState(bool state) { _isRegistered = state; }
 void			Client::setUsername(std::string username) { _username = username; }
@@ -76,18 +87,17 @@ bool			Client::isAuthentificated() const
 	return (!_nickname.empty() && _isRegistered);
 }
 
-void			Client::addChannel(const Channel& channelRef)
+void			Client::addChannel(Channel& channelRef)
 {
 	std::cout << "\n[Add Channel]\n";
 	_connectedToChannels[channelRef.getName()] = &channelRef;
 	
-	channelsMap::iterator it = _connectedToChannels.begin();
-	while (it != _connectedToChannels.end())
-	{
-		std::cout << YELLOW << it->second->getName() << "\n";
-		it++;
-	}
-	std::cout << RESET << "\n";
+    channelsMap::iterator it;
+    for (it = _connectedToChannels.begin(); it != _connectedToChannels.end(); ++it)
+    {
+        std::cout << YELLOW << it->second->getName() << "\n";
+    }
+    std::cout << RESET << "\n";
 
 }
 
@@ -95,12 +105,17 @@ void			Client::leaveAllChannels()
 {
 	std::cout << "\n[leaveAllChannels]\n";
 	channelsMap::iterator it = _connectedToChannels.begin();
-	std::cout << it->second->getName();
-	// while (it != _connectedToChannels.end())
-	// {
-	// 	it->second->broadcastNumericReply(PART_MSG(_serverName, _nickname, "#c1"));
-	// 	it++;
-	// }
+	while (it != _connectedToChannels.end())
+	{
+		std::cout << YELLOW << it->first << "\n";
+		it->second->broadcastNumericReply(PART_MSG(_serverName, _nickname, it->first));
+		it->second->removeConnectedClient(_nickname);
+		it++;
+	}
+
+	_connectedToChannels.clear();
+	
+	std::cout << RESET << "\n";
 
 }
 
