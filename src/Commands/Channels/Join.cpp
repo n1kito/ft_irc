@@ -157,7 +157,7 @@ void	Join::handleRequest(Client &client, std::string arg)
 	std::string message = "";
 
 	if (arg.empty())
-		message = ERR_NEEDMOREPARAMS(client.getServerName(), "JOIN");
+		message = ERR_NEEDMOREPARAMS(client.getServerName(), client.getNickname(), "JOIN");
 	else
 	{
 		std::string parseResults = parseArgument(client, arg);

@@ -29,6 +29,7 @@ class ACommand
 		virtual void		parseArgument() = 0;
 		virtual void		action() = 0;
 		void				killClient(int fd, std::string previousMsg, std::string errorMsg);
+		// void				cleanRequestSpaces(std::string& request);
 
 		clientMap* 			_clients;
 

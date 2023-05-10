@@ -52,3 +52,22 @@ Client*			ACommand::getClientByNickname(const std::string& nickname)
 			return &(*it).second;
 	return NULL;
 }
+
+// // Trims leading and trailing spaced off of a string/request, as well as any duplicate spaces in the middle
+// void		ACommand::cleanRequestSpaces(std::string& request)
+// {
+// 	// remove leading whitespaces
+// 	while (!request.empty() && request.find_first_of(' ') == 0)
+// 		request.erase(0, 1);
+// 	// and remove them at the end of the request as well
+// 	while (!request.empty() && request.find_last_of(' ') == request.size() - 1)
+// 		request.erase(request.size() - 1, 1);
+// 	for (std::string::iterator it = request.begin(); it != request.end(); ++i)
+// 	{
+// 		size_t firstSpace = request.find(" ");
+// 		if (firstSpace != std::string::npos)
+// 		{
+// 			while (it != request.end() && )
+// 		}
+// 	}
+// }

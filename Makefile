@@ -31,6 +31,8 @@ INC_DIR			:=	-I include/Commands \
 					-I include/Commands/Channels \
 					-I include
 
+TMUX_SESSION	:=	irssi-session
+
 #░░░░█▀▄░█▀▀░█▀▀░▀█▀░█▀█░█▀▀░█▀▀░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
 #░░░░█▀▄░█▀▀░█░░░░█░░█▀▀░█▀▀░▀▀█░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
 #░░░░▀░▀░▀▀▀░▀▀▀░▀▀▀░▀░░░▀▀▀░▀▀▀░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
@@ -59,28 +61,49 @@ $(LOG_DIR):
 clean: title
 	@echo "\t🧹 clean"
 	@[ -d $(BIN_DIR) ] && rm -rf $(BIN_DIR) && echo "\t[✔] $(YELLOW).o files cleaned$(END_COLOR) "\
-	|| echo "\t[✔] $(DIM).o files were already cleaned$(END_COLOR)"
+	|| echo "\t[ ] $(DIM).o files were already cleaned$(END_COLOR)"
 	@[ -d $(LOG_DIR) ] && rm -rf $(LOG_DIR) && echo "\t[✔] $(YELLOW).log files cleaned$(END_COLOR)"\
-	|| echo "\t[✔] $(DIM)no log files to clean$(END_COLOR)"
+	|| echo "\t[ ] $(DIM)no log files to clean$(END_COLOR)"
 	@echo
 
 fclean: clean
 	@echo "\t💣 fclean"
 	@[ -f $(NAME) ] && rm -f $(NAME) && echo "\t[✔] $(YELLOW)$(NAME) executable cleaned$(END_COLOR)"\
-	|| echo "\t[✔] $(DIM)$(NAME) executable was already cleaned$(END_COLOR)"
+	|| echo "\t[ ] $(DIM)$(NAME) executable was already cleaned$(END_COLOR)"
+	@if tmux has-session -t $(TMUX_SESSION) 2>/dev/null; then tmux kill-session -t $(TMUX_SESSION) && echo "\t[✔] $(YELLOW)successfully ended tmux session$(END_COLOR)"; else echo "\t[ ] $(DIM)no tmux session currently running$(END_COLOR)"; fi
 	@echo
 
 re: fclean all
 
-launch: all $(LOG_DIR)
+launch: all $(LOG_DIR) stop-irssi
+# @if tmux has-session -t $(TMUX_SESSION) 2>/dev/null; then tmux kill-session -t $(TMUX_SESSION); fi
 	@clear -x && make && clear -x && valgrind --log-file="$(LOG_DIR)/leaks.log" ./${NAME} 6667 pwd | tee $(LOG_DIR)/serverOutput.log
 
 valgrind: all
 	@clear -x && make && clear -x && valgrind ./${NAME} 6667 coucou
 
+# This one would allow to launch the server and then split two panels and connect them automatically to the server
+# Not practical when using docker and containers that do not have irssi and tmux installed
+# open-irssi:
+# 	tmux new-session -d -s $(TMUX_SESSION) 'clear -x && make && clear -x && valgrind --log-file="$(LOG_DIR)/leaks.log" ./${NAME} 6667 pwd | tee $(LOG_DIR)/serverOutput.log && sleep 2'
+# 	tmux split-window -v -t $(TMUX_SESSION) 'sleep 2 && irssi -c localhost -p 6667 -w pwd -n chacha'
+# 	tmux split-window -v -t $(TMUX_SESSION) 'sleep 2 && irssi -c localhost -p 6667 -w pwd -n jee'
+# 	tmux select-pane -t $(TMUX_SESSION):.1
+# 	tmux attach -t $(TMUX_SESSION)
+
+irssi: stop-irssi
+	@clear -x
+	tmux new-session -d -s $(TMUX_SESSION) 'irssi -c localhost -p 6667 -w pwd -n chacha'
+	tmux split-window -v -t $(TMUX_SESSION) 'irssi -c localhost -p 6667 -w pwd -n jee'
+	tmux select-pane -t $(TMUX_SESSION):.0
+	tmux attach -t $(TMUX_SESSION)
+
+stop-irssi:
+	@if tmux has-session -t $(TMUX_SESSION) 2>/dev/null; then tmux kill-session -t $(TMUX_SESSION) && echo "$(DIM)Successfully closed irssi session.$(END_COLOR)"; else echo "$(DIM)No running irssi sessions.$(END_COLOR)"; fi
+
 -include $(OBJ_FILES:%.o=%.d)
 
-.PHONY: all clean fclean re title launch valgrind
+.PHONY: all clean fclean re title launch valgrind irssi stop-irssi
 
 #░░░░█░█░▀█▀░▀█▀░█░░░▀█▀░▀█▀░▀█▀░█▀▀░█▀▀░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
 #░░░░█░█░░█░░░█░░█░░░░█░░░█░░░█░░█▀▀░▀▀█░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
