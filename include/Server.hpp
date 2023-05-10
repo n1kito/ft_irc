@@ -65,9 +65,7 @@ class Server
 		Server(const Server &copyMe);
 		Server&		operator = (const Server &copyMe);
 		Client&		operator [] (const int fd);
-		
-		std::string							_getCurrentDate() const;
-
+	
 		int									_port;
 		std::string							_password;
 		channelMap							_channels;

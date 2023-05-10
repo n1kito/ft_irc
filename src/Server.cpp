@@ -9,7 +9,7 @@ Server::Server() {}
 Server::Server(const int& port, const std::string& password, const std::string& serverName) :
 	_port(port),
 	_password(password),
-	_creationDate(_getCurrentDate()),
+	_creationDate(getCurrentDate()),
 	_serverName(serverName)
 {
 	int requestIndex = 0; // TODO: remove this, only for development purposes
@@ -330,16 +330,4 @@ std::string						Server::cleanBuffer(std::string buffer) const
 	}
 	// std::cout << "[after cleanBuffer()]\n" << YELLOW << buffer << RESET << std::endl;
 	return buffer;
-}
-
-// Returns a human readable string of the current date
-std::string						Server::_getCurrentDate() const
-{
-	time_t		rawTime;
-	struct tm*	timeInfo;
-
-	time(&rawTime);
-	timeInfo = localtime(&rawTime);
-	std::string	returnValue(asctime(timeInfo));
-	return returnValue;
 }
