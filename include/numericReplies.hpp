@@ -75,13 +75,10 @@
 #define ERR_BADCHANNELKEY(server, nickname, channel) (std::string(":") + server +  " 475 " + nickname + " " + channel + " :Cannot join channel (+k)\r\n")
 #define ERR_TOOMANYCHANNELS(server, nickname, channel) (std::string(":") + server +  " 405 " + nickname + " " + channel + " :You have joined too many channels\r\n") 
 
-// #define PART_MSG(server, channel, nickname) (std::string(":") + nickname + " PART " + nickname + " " + channel + "\r\n")
-// :<server> <code> <nickname> <channel> :<message>
-// :irc.example.com PART Alice #channel
+#define ERR_CHANNELISFULL(server, nickname, channel) (std::string(":") + server + " 353 " + nickname + " " + channel + " :Cannot join channel (+l)\r\n")
 
-
-// RPL_NAMREPLY (353) 
-//  "<client> <symbol> <channel> :[prefix]<nick>{ [prefix]<nick>}"
+// ERR_CHANNELISFULL (471) 
+//   "<client> <channel> :Cannot join channel (+l)"
 // :server_name 353 your_nickname = #channel :user1 user2 user3 ...
 
 #define PRIVMSG(server, channel, message) (std::string(":") + server + " PRIVMSG " + channel + " :" + message)

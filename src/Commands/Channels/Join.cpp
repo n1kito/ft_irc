@@ -41,15 +41,29 @@ Join& Join::operator = (const Join &copyMe)
 void		Join::parseArgument() {}
 void		Join::action() {}
 
+std::string 	Join::createErrorTooManyChannels(Client const& client, size_t idx)
+{
+	std::string message;
+	while (idx < _channelList.size())
+	{
+		message += (ERR_TOOMANYCHANNELS(client.getServerName(), client.getNickname(), _channelList[idx]) + "\r\n");
+		idx++;
+	}
+	return message;
+}
+
 std::string		Join::action(Client &client)
 {
 	std::cout << BLUE << "[JOIN - action]\n" << RESET;
-
+	std::cout << "Channel map size: " << client.getChannelsMap().size() << "\n";
 	//if channel does not exist, create channel
 	for (size_t i = 0; i < _channelList.size(); i++)
 	{
 		std::cout << YELLOW << "channel<" << _channelList[i] << ">\n";
-		//
+		// if client joined too many channels (max=20) return error
+		if (client.getChannelsMap().size() >= MAXCHANNELS)
+			return (createErrorTooManyChannels(client, i));
+		
 		std::cout << "Available channels: ";
 		for(std::map<std::string, Channel>::iterator it = _channels->begin(); it != _channels->end(); ++it)
 			std::cout << it->second.getName() << " ";
@@ -76,6 +90,7 @@ std::string		Join::action(Client &client)
 		else
 		{
 			std::cout << "trying to login with key\n";
+			// if (it->second.getClientMap().size() >= it->second.getclientLimit())
 			if (!it->second.getKey().empty())
 			{
 				// if key is incorrect, cannot join channel and send error
@@ -148,6 +163,7 @@ void	Join::handleRequest(Client &client, std::string arg)
 		message = ERR_NEEDMOREPARAMS(client.getServerName(), "JOIN");
 	else if (arg == "#0")
 	{
+		std::cout << "\n#0\n";
 		client.leaveAllChannels();
 		return;
 	}

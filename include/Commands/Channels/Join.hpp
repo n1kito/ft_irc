@@ -17,6 +17,8 @@ class Join : public ACommand
     	std::string	parseArgument(Client &client, std::string& arg);
     	std::string action(Client &client);
 
+		std::string createErrorTooManyChannels(Client const &client, size_t idx);
+
 	protected:
 		// add protected elements here
 
