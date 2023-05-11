@@ -69,6 +69,7 @@ int				Client::getClientSocket() const { return _clientSocket; }
 bool			Client::getWelcomeState() const { return _welcomeState; }
 std::string		Client::getServerName() const { return _serverName; }
 bool			Client::getPasswordStatus() const { return _passwordStatus; }
+bool			Client::getInvitationStatus() const { return _invitationStatus; }
 Channel*		Client::getCurrentChannel() const { return _currentChannel; }
 const Client::channelsMap&	Client::getChannelsMap() const { return _connectedToChannels; }
 
@@ -79,6 +80,7 @@ void			Client::setNickname(std::string nickname) { _nickname = nickname; }
 void			Client::setPassword(std::string password) { _password = password; }
 void			Client::setWelcomeState(const bool &state) { _welcomeState = state; }
 void			Client::setPasswordStatus(const bool& status) { _passwordStatus = status;}
+void			Client::setInvitationStatus(const bool& status) { _invitationStatus = status; }
 
 /* METHODS ********************************************************************/
 

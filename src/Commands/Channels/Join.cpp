@@ -53,7 +53,6 @@ std::string 	Join::createErrorTooManyChannels(Client const& client, size_t idx)
 
 std::string		Join::action(Client &client)
 {
-	std::cout << BLUE << "[JOIN - action]\n" << RESET;
 	//if channel does not exist, create channel
 	for (size_t i = 0; i < _channelList.size(); i++)
 	{
@@ -82,7 +81,8 @@ std::string		Join::action(Client &client)
 			// check if channel has set limit for nb users 
 			// if (it->second.getClientMap().size() >= it->second.getClientLimit())
 			// 	return (ERR_CHANNELISFULL(client.getServerName(), client.getNickname(), it->second.getName()));
-			// if (it->second.isInviteOnly == true )
+			// if (it->second.isInviteOnly == true && client->getInvitationstatus == false)
+			//	return (ERR_INVITEONLYCHAN(client.getServerName(), client.getNickname(), it->second.getName()));
 			if (!it->second.getKey().empty())
 			{
 				// if key is incorrect, cannot join channel and send error
@@ -99,8 +99,6 @@ std::string		Join::action(Client &client)
 
 std::string	Join::parseArgument(std::string& arg)
 {
-	std::cout << BLUE << "[JOIN - parseArgument]\n" << RESET;
-	
 	// split the channel list and the key list with a space
 	std::stringstream argStream(arg);
 	std::string channelArg;
@@ -135,16 +133,13 @@ std::string	Join::parseArgument(std::string& arg)
 	return "";
 }
 
-
 void	Join::handleRequest(Client &client, std::string arg)
 {
-	std::cout << BLUE << "[JOIN - handleRequest]\n" << RESET;
 	std::string message = "";
 	if (arg.empty())
 		message = ERR_NEEDMOREPARAMS(client.getServerName(), "JOIN");
 	else if (arg == "0")
 	{
-		std::cout << "\n0\n";
 		client.leaveAllChannels();
 		return;
 	}
@@ -163,6 +158,3 @@ void	Join::handleRequest(Client &client, std::string arg)
 	std::fill(_keyList.begin(), _keyList.end(), "");
 	_keyList.clear();
 }
-
-// TODO:
-//command PART:
