@@ -14,7 +14,6 @@ Join::Join(std::map<int, Client>* clients, std::map< std::string, Channel >* cha
 	
 }
 
-
 Join::Join(const Join &copyMe) : ACommand(copyMe)
 {
 	// std::cout << "Copy constructor called" << std::endl;
@@ -55,11 +54,10 @@ std::string 	Join::createErrorTooManyChannels(Client const& client, size_t idx)
 std::string		Join::action(Client &client)
 {
 	std::cout << BLUE << "[JOIN - action]\n" << RESET;
-	std::cout << "Channel map size: " << client.getChannelsMap().size() << "\n";
 	//if channel does not exist, create channel
 	for (size_t i = 0; i < _channelList.size(); i++)
 	{
-		// if client joined too many channels (max=20) return error
+		// if client has joined too many channels (max=20) return error
 		if (client.getChannelsMap().size() >= MAXCHANNELS)
 			return (createErrorTooManyChannels(client, i));
 		std::map<std::string, Channel>::iterator it = _channels->find(_channelList[i]);
@@ -88,7 +86,6 @@ std::string		Join::action(Client &client)
 			if (!it->second.getKey().empty())
 			{
 				// if key is incorrect, cannot join channel and send error
-				std::cout << "key:<" << it->second.getKey() << "> trying with:<" << _keyList[i] << ">\n";
                 if (_keyList.empty() || (i < _keyList.size() && it->second.getKey() != _keyList[i]))
 					return (ERR_BADCHANNELKEY(client.getServerName(), client.getNickname(), it->second.getName()));
 			}
@@ -143,7 +140,6 @@ void	Join::handleRequest(Client &client, std::string arg)
 {
 	std::cout << BLUE << "[JOIN - handleRequest]\n" << RESET;
 	std::string message = "";
-	
 	if (arg.empty())
 		message = ERR_NEEDMOREPARAMS(client.getServerName(), "JOIN");
 	else if (arg == "0")
@@ -160,17 +156,12 @@ void	Join::handleRequest(Client &client, std::string arg)
 		else
 			message = action(client);
 	}
-	std::cout << "final message:<" << message << ">\n";
 	send(client.getClientSocket(), message.c_str(), message.length(), 0);
-
-	// clear data for next JOIN command 
-	std::cout << "before clear: size " << YELLOW << _keyList.size() << RESET << std::endl;
-
+x	// clear data for next JOIN command 
 	std::fill(_channelList.begin(), _channelList.end(), "");
 	_channelList.clear();
 	std::fill(_keyList.begin(), _keyList.end(), "");
 	_keyList.clear();
-	std::cout << "after clear: size " << YELLOW << _keyList.size() << RESET << std::endl;
 }
 
 // TODO:
