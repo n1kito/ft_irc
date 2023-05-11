@@ -92,11 +92,11 @@ void	Invite::action(const Client& client, const std::string& channel, const std:
 	// If client inviting is not part of the channel
 	if (targetChannel.isClientConnected(client) == false)
 		sendNumericReplies(1, client.getClientSocket(), \
-			ERR_NOTONCHANNEL(client.getServerName(), client.getNickname(), channel));
+			ERR_NOTONCHANNEL(client.getServerName(), client.getNickname(), channel).c_str());
 	// If channel is invite only and user inviting is not an operator
 	else if (targetChannel.isInviteOnly() && targetChannel.isClientOperator(client) == false)
 		sendNumericReplies(1, client.getClientSocket(), \
-			ERR_CHANOPRIVSNEEDED(client.getServerName(), client.getNickname(), channel));
+			ERR_CHANOPRIVSNEEDED(client.getServerName(), client.getNickname(), channel).c_str());
 	// If user is already on the channel
 	else if (targetChannel.isClientConnected(invitedClient) == true)
 		sendNumericReplies(1, client.getClientSocket(), \
