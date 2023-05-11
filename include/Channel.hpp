@@ -40,13 +40,9 @@ class Channel
 		std::string				getTimeTopicWasSet() const;
 		
 		// getters -> channel modes
-		bool					isClientLimitMode() const;
-		bool					isTopicProtectedMode() const;
-		bool					isChannelProtectedMode() const;
-		bool					isInviteOnly() const;
 		bool					addChannelMode(const std::string& mode);
 		bool					removeChannelMode(const std::string& mode);
-		bool					channelModeIs(const std::string &mode);
+		bool					modeIs(const std::string &mode);
 
 		// checkers
 		bool					isClientOperator(const Client& clientRef) const;

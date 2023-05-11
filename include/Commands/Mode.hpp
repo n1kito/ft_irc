@@ -3,6 +3,7 @@
 
 #include "ACommand.hpp"
 #include "ft_irc.hpp"
+#include "Channel.hpp"
 
 class Client;
 
@@ -12,14 +13,15 @@ class Mode : public ACommand
 		typedef std::map< std::string, Channel >	channelMap;
 		typedef ACommand::clientMap					clientMap;
 
-		Mode(ACommand::clientMap* clients);
-		Mode(ACommand::clientMap* clients, channelMap* channels);
+		Mode(clientMap* clients);
+		Mode(clientMap* clients, channelMap* channels);
 		~Mode();
 
     	void		handleRequest(Client &client, std::string arg);
     	void		parseArgument();
-    	// std::string	parseArgument(Client &client, std::string& arg);
+    	void		parseArgument(std::string& arg, std::string& target, std::string& modes, std::vector<std::string>& arguments);
     	void		action();
+		void		applyModes(Client& client, const std::string& target, std::string modes);
     	// std::string	action(Client &client, std::string nickname);
 
 	protected:

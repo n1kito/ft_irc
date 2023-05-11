@@ -23,8 +23,6 @@ Channel::Channel( std::string name, const Client& client ) :
 	_key(""),
 	_channelModes(""),
 	_clientLimit(0),
-	_inviteOnly(false),
-	_topicIsProtected(false),
 	_channelIsProtected(false)
 {
 	addConnectedClient(client);
@@ -52,11 +50,6 @@ Channel& Channel::operator = (const Channel &copyMe)
 	_name = copyMe.getName();
 	_key = copyMe.getKey();
 	_topic = copyMe.getTopic();
-	_inviteOnly = copyMe.isInviteOnly();
-	_clientLimit = copyMe.isClientLimitMode();
-	_topicIsProtected = copyMe.isTopicProtectedMode();
-	_channelIsProtected = copyMe.isChannelProtectedMode();
-
 	// std::cout << "Copy assignment operator called" << std::endl;
 	return *this;
 }
@@ -82,28 +75,51 @@ std::string						Channel::getNicknameOfTopicSetter() const { return _nicknameOfT
 std::string						Channel::getTimeTopicWasSet() const { return _timeTopicWasSet; }
 
 // getters -> channel modes
-// TODO: these first methods can be removed is the ones using the string work
-bool							Channel::isClientLimitMode() const { return _clientLimit > 0; }
-bool							Channel::isTopicProtectedMode() const { return _topicIsProtected; }
-bool							Channel::isChannelProtectedMode() const { return _channelIsProtected; }
-bool							Channel::isInviteOnly() const { return _inviteOnly; }
 // TODO: check if this should return a bool or just void ?
 bool							Channel::addChannelMode(const std::string& mode)
 {
-	std::string::iterator	notFound = _channelModes.end();
-
-	if ((mode == "ban" || mode == "b") && _channelModes.find('b') == notFound)
+	if ((mode == "invite-only" || mode == "i") && !(*this).modeIs("i"))
 		_channelModes.push_back('b');
-	else if ((mode == "exception" || mode == "e") && _channelModes.find('e') == notFound)
+	else if ((mode == "protected-topic" || mode == "t") && !(*this).modeIs("t"))
+		_channelModes.push_back('t');
+	else if ((mode == "key" || mode == "k") && !(*this).modeIs("k"))
+		_channelModes.push_back('k');
+	else if ((mode == "client-limit" || mode == "l") && !(*this).modeIs("l"))
+		_channelModes.push_back('l');
+	else
+		return false;
+	return true;
 }
 // TODO: check if this should return a bool or just void ?
 bool							Channel::removeChannelMode(const std::string& mode)
 {
+	size_t	modePositionInString = 0;
 
+	if (mode == "invite-only" || mode == "i")
+		modePositionInString = _channelModes.find('i');
+	else if (mode == "protected-topic" || mode == "t")
+		modePositionInString = _channelModes.find('t');
+	else if (mode == "key" || mode == "k")
+		modePositionInString = _channelModes.find('k');
+	else if (mode == "client-limit" || mode == "l")
+		modePositionInString = _channelModes.find('l');
+	if (modePositionInString != std::string::npos)
+		_channelModes.erase(modePositionInString, 1);
+	else
+		return false;
+	return true;
 }
-bool							Channel::channelModeIs(const std::string& mode)
+bool							Channel::modeIs(const std::string& mode)
 {
-
+	if (mode == "invite-only" || mode == "i")
+		return _channelModes.find('i') != std::string::npos;
+	else if (mode == "protected-topic" || mode == "t")
+		return _channelModes.find('t') != std::string::npos;
+	else if (mode == "key" || mode == "k")
+		return _channelModes.find('k') != std::string::npos;
+	else if (mode == "client-limit" || mode == "l")
+		return _channelModes.find('l') != std::string::npos;
+	return false;
 }
 
 // checkers

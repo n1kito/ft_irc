@@ -30,6 +30,12 @@ class Client
 		std::string		getServerName() const;
 		bool			getPasswordStatus() const;
 		Channel*		getCurrentChannel() const;
+		std::string		getUserModes() const;
+
+		// getters -> channel modes
+		bool			addUserMode(const std::string& mode);
+		bool			removeUserMode(const std::string& mode);
+		bool			modeIs(const std::string &mode);
 
 		void			setRegisterState(bool state);
 		void			setUsername(std::string username);
@@ -37,7 +43,6 @@ class Client
 		void			setNickname(std::string nickname);
 		void			setPassword(std::string password);
 		void			setWelcomeState(const bool& state);
-
 		bool			isAuthentificated() const;
 		void			setPasswordStatus(const bool& status);
 
@@ -55,6 +60,7 @@ class Client
 		bool			_welcomeState;
 
 		Channel*		_currentChannel;
+		std::string		_userModes;
 
 		std::string		_serverName;
 };

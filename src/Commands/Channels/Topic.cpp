@@ -91,7 +91,7 @@ void	Topic::action(std::string& topic, Channel& targetChannel, const Client& cli
 		if (topic == "\"\"")
 			topic = "";
 		// Can only update if channel topic is not protected or user is an Operator
-		if (targetChannel.isTopicProtectedMode() == false || targetChannel.isClientOperator(client))
+		if (targetChannel.modeIs("protected-topic") == false || targetChannel.isClientOperator(client))
 		{
 			// Update channel properties
 			targetChannel.setTimeTopicWasSet(getCurrentDate());
