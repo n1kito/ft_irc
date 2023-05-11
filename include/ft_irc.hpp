@@ -34,7 +34,8 @@
 #define USERLEN 10
 #define REALNAMELEN 50
 #define NICKLEN 10
-#define MAXCHANNELS 3
+#define CHANLEN 10
+#define MAXCHANNELS 20
 #define MAXCLIENTS 100
 
 #include <iostream>

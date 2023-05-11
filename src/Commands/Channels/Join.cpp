@@ -59,19 +59,11 @@ std::string		Join::action(Client &client)
 	//if channel does not exist, create channel
 	for (size_t i = 0; i < _channelList.size(); i++)
 	{
-		std::cout << YELLOW << "channel<" << _channelList[i] << ">\n";
 		// if client joined too many channels (max=20) return error
 		if (client.getChannelsMap().size() >= MAXCHANNELS)
 			return (createErrorTooManyChannels(client, i));
-		
-		std::cout << "Available channels: ";
-		for(std::map<std::string, Channel>::iterator it = _channels->begin(); it != _channels->end(); ++it)
-			std::cout << it->second.getName() << " ";
-		std::cout << std::endl;
-
 		std::map<std::string, Channel>::iterator it = _channels->find(_channelList[i]);
-		// std::cout << "Found channel: " << it->second.getName() << "with key:" << it->second.getKey() << "\n";
-		// if doesn't exist, create channel (its ctor adds itself client) 
+		// if doesn't exist, create channel (its ctor adds itself client)
 		if (it == _channels->end())
 		{
 			Channel newChannel(_channelList[i], client);
@@ -83,7 +75,6 @@ std::string		Join::action(Client &client)
 				if (!_keyList[i].empty())
 					(*_channels)[_channelList[i]].setKey(_keyList[i]);
 			}
-			std::cout << BLUE << "\nadding channel to client:\n";
 			client.addChannel((*_channels)[_channelList[i]]);
 		}
 		// else add client to existing channel
@@ -93,6 +84,7 @@ std::string		Join::action(Client &client)
 			// check if channel has set limit for nb users 
 			// if (it->second.getClientMap().size() >= it->second.getClientLimit())
 			// 	return (ERR_CHANNELISFULL(client.getServerName(), client.getNickname(), it->second.getName()));
+			// if (it->second.isInviteOnly == true )
 			if (!it->second.getKey().empty())
 			{
 				// if key is incorrect, cannot join channel and send error
@@ -108,13 +100,9 @@ std::string		Join::action(Client &client)
 }
 
 
-std::string	Join::parseArgument(Client &client, std::string& arg)
+std::string	Join::parseArgument(std::string& arg)
 {
-	(void)client;
 	std::cout << BLUE << "[JOIN - parseArgument]\n" << RESET;
-	// irssi client pre-parses arguments: will count only one space to split <#chan, #chan,> <key,key>
-	// adds automatically prefix '#' to channels' name.
-	// if key is missing, irssi defines key as 'x'
 	
 	// split the channel list and the key list with a space
 	std::stringstream argStream(arg);
@@ -129,7 +117,7 @@ std::string	Join::parseArgument(Client &client, std::string& arg)
 	while (std::getline(channelStream, buffer, ','))
 	{
 		// check if channel channel name's length is at least 1
-		if (buffer.size() <= 1)
+		if (buffer.size() <= 1 || buffer.size() > CHANLEN)
 			return (ERR_BADCHANMASK(buffer));
 		_channelList.push_back(buffer);
 	}
@@ -140,11 +128,6 @@ std::string	Join::parseArgument(Client &client, std::string& arg)
 		_keyList.push_back(buffer);
 
 	/* DEBUG */
-	std::cout << "channelArg:<" << channelArg << ">\n";
-	std::cout << "keyArg:<" << keyArg << ">\n";
-	std::cout << "channelListSize:<" << _channelList.size() << ">\n";
-	std::cout << "keyListSize:<" << _keyList.size() << ">\n";
-
 	for (size_t i = 0; i < _channelList.size(); i++)
 		std::cout << YELLOW << _channelList[i] << " ";
 	std::cout << RESET << "\n";
@@ -163,15 +146,15 @@ void	Join::handleRequest(Client &client, std::string arg)
 	
 	if (arg.empty())
 		message = ERR_NEEDMOREPARAMS(client.getServerName(), "JOIN");
-	else if (arg == "#0")
+	else if (arg == "0")
 	{
-		std::cout << "\n#0\n";
+		std::cout << "\n0\n";
 		client.leaveAllChannels();
 		return;
 	}
 	else
 	{
-		std::string parseResults = parseArgument(client, arg);
+		std::string parseResults = parseArgument(arg);
 		if (!parseResults.empty())
 			message = parseResults;
 		else
