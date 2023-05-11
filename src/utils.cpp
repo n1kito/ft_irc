@@ -60,7 +60,7 @@ bool	isSpecialCharacter(char checkMe)
 }
 
 // Send several numeric replies to one client
-void	sendNumericReplies(const size_t& numberOfReplies, const size_t& clientFd, ...)
+void	sendNumericReplies(const size_t& numberOfReplies, const size_t clientFd, ...)
 {
 	std::va_list	messages;
 
