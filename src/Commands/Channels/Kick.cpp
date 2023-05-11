@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Kick.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mjallada <mjallada@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cgosseli <cgosseli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/09 17:02:15 by mjallada          #+#    #+#             */
-/*   Updated: 2023/05/09 17:02:15 by mjallada         ###   ########.fr       */
+/*   Updated: 2023/05/11 15:29:23 by cgosseli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,20 +146,40 @@ std::string Kick::action(Client &client)
 			message += ERR_NOSUCHCHANNEL(client.getServerName(), client.getNickname(), *it);
 		else
 		{
+			std::cout << RED << "The print debugger was here: " << RESET << "Kick.cpp:149" << std::endl;
 			// get the client map of the channel found and check if the client that wants to kick someone exists
-			if (posInChannelMap->second.getClientMap().find(client.getUsername()) == posInChannelMap->second.getClientMap().end())
+			if (!posInChannelMap->second.isClientConnected(client))
 				message += ERR_NOTONCHANNEL(client.getServerName(), client.getNickname(), *it);
 			// else if (client not privilege)
 			// 	message += ERR_CHANOPRIVSNEEDED(client.getServerName(), client.getNickname(), *it);
-			// get the client map of the channel found and check if the user to kick exists
-			// else
-			// {
-			// 	(posInChannelMap->second.getClientMap().find(user to kick) == posInChannelMap->second.getClientMap().end())
-			// 	message += ERR_USERNOTINCHANNEL(client.getServerName(), client.getNickname());
-			// }
+			else
+			{
+				std::cout << RED << "The print debugger was here: " << RESET << "Kick.cpp:157" << std::endl;
+				for (std::vector< std::string >::iterator it = _userList.begin(); it != _userList.end(); ++it)
+				{
+					// get the client information of the user to kick
+					std::map< std::string, const Client* >::const_iterator	posInClientMap	=  posInChannelMap->second.getClientMap().find(*it);
+					// check if the user to kick is connected in the channel
+					if (posInClientMap == posInChannelMap->second.getClientMap().end())
+						message += ERR_USERNOTINCHANNEL(client.getServerName(), client.getNickname(), *it, posInChannelMap->first);
+					else
+					{
+						std::cout << RED << "The print debugger was here: " << RESET << "Kick.cpp:167" << std::endl;
+						std::cout	<< BLUE << "Size of client map before erasing: "
+									<< RESET << posInChannelMap->second.getClientMap().size() << std::endl;
+						posInChannelMap->second.broadcastNumericReply(KICK_MSG(client.getNickname(), \
+																		posInChannelMap->first,\
+																		posInClientMap->first,\
+																		_kickReason));
+						posInChannelMap->second.removeConnectedClient(*it);
+						std::cout	<< BLUE << "Size of client map after erasing: "
+									<< RESET << posInChannelMap->second.getClientMap().size() << std::endl;
+					}
+				}
+			}
 		}
 	}
 	(void)client;
-	return "";
+	return message;
 }
 

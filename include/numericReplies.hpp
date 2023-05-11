@@ -44,11 +44,15 @@
 #define ERR_NICKNAMEINUSE(server, nickname) (std::string(":") + server + " 433 " + nickname + " " + nickname + " :Nickname is already in use\r\n")
 // 436
 #define ERR_NICKCOLLISION(server, nickname) (std::string(":") + server + " 436 " + nickname + " :Nickname collision KILL \r\n")
+
+
 // 441
 # define ERR_USERNOTINCHANNEL(server, clientNick, userNick, channel) (std::string(":"  + server + " 441 " + clientNick + " " + userNick + " " + channel + " :They aren't on that channel\r\n"))
 // 442
 #define ERR_NOTONCHANNEL(server, client, channel) (std::string(":") + server + " 442 " + client + " " + channel + " :You're not on that channel\r\n") 
-// 443
+
+
+// 443 
 #define ERR_USERONCHANNEL(server, client, nickname, channel) (std::string(":") + server + " 443 " + client + " " + nickname + " " + channel + " :is already on channel\r\n") 
 // 461
 #define ERR_NEEDMOREPARAMS(server, commandName) (std::string(":") + server + " 461 " + commandName + " :Not enough parameters\r\n")
@@ -65,7 +69,8 @@
 #define PASS_SUCCESS(server, nickname) (std::string(":") + server + " 001 " + nickname + " :Password set successfully !\r\n")
 #define PONG_SUCCESS(server, token) (std::string(":") + server + " PONG :" + token + "\r\n")
 
-
+#define KICK_MSG(kicker, channel, nick, reason) (std::string(":") + kicker + " KICK " + channel + " " + nick + " " + reason + "\r\n")
+// KICK <channel> <nick> [<reason>]
 #define KILL(server, nickname, reason ) (std::string(":") + server + " KILL " + nickname + " :" + server + "\r\n")
  
 // JOIN
