@@ -38,7 +38,7 @@ class Channel
 		const clientNickMap&	getOperators() const;
 		std::string				getNicknameOfTopicSetter() const;
 		std::string				getTimeTopicWasSet() const;
-		
+		size_t					getClientLimit() const;
 		// getters -> channel modes
 		bool					isClientLimitMode() const;
 		bool					isTopicProtectedMode() const;

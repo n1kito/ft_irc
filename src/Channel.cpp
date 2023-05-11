@@ -77,6 +77,7 @@ const Channel::clientNickMap&	Channel::getClientMap() const { return _connectedC
 const Channel::clientNickMap&	Channel::getOperators() const { return _operators; }
 std::string						Channel::getNicknameOfTopicSetter() const { return _nicknameOfTopicSetter; }
 std::string						Channel::getTimeTopicWasSet() const { return _timeTopicWasSet; }
+size_t							Channel::getClientLimit() const { return _clientLimit; }
 
 // getters -> channel modes
 bool							Channel::isClientLimitMode() const { return _clientLimit > 0; }

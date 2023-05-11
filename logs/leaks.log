@@ -1,26 +1,26 @@
-==217704== Memcheck, a memory error detector
-==217704== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
-==217704== Using Valgrind-3.18.1 and LibVEX; rerun with -h for copyright info
-==217704== Command: ./ircserv 6667 pwd
-==217704== Parent PID: 217672
-==217704== 
-==217704== 
-==217704== Process terminating with default action of signal 2 (SIGINT)
-==217704==    at 0x4CCAF9A: epoll_wait (epoll_wait.c:30)
-==217704==    by 0x405E4A: Server::Server(int const&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) (Server.cpp:68)
-==217704==    by 0x404D5D: main (main.cpp:26)
-==217704== 
-==217704== HEAP SUMMARY:
-==217704==     in use at exit: 80,130 bytes in 28 blocks
-==217704==   total heap usage: 241 allocs, 213 frees, 93,233 bytes allocated
-==217704== 
-==217704== LEAK SUMMARY:
-==217704==    definitely lost: 0 bytes in 0 blocks
-==217704==    indirectly lost: 0 bytes in 0 blocks
-==217704==      possibly lost: 0 bytes in 0 blocks
-==217704==    still reachable: 80,130 bytes in 28 blocks
-==217704==         suppressed: 0 bytes in 0 blocks
-==217704== Rerun with --leak-check=full to see details of leaked memory
-==217704== 
-==217704== For lists of detected and suppressed errors, rerun with: -s
-==217704== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==221074== Memcheck, a memory error detector
+==221074== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==221074== Using Valgrind-3.18.1 and LibVEX; rerun with -h for copyright info
+==221074== Command: ./ircserv 6667 pwd
+==221074== Parent PID: 221053
+==221074== 
+==221074== 
+==221074== Process terminating with default action of signal 2 (SIGINT)
+==221074==    at 0x4CCAF9A: epoll_wait (epoll_wait.c:30)
+==221074==    by 0x405E4A: Server::Server(int const&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) (Server.cpp:68)
+==221074==    by 0x404D5D: main (main.cpp:26)
+==221074== 
+==221074== HEAP SUMMARY:
+==221074==     in use at exit: 80,666 bytes in 32 blocks
+==221074==   total heap usage: 264 allocs, 232 frees, 94,702 bytes allocated
+==221074== 
+==221074== LEAK SUMMARY:
+==221074==    definitely lost: 0 bytes in 0 blocks
+==221074==    indirectly lost: 0 bytes in 0 blocks
+==221074==      possibly lost: 0 bytes in 0 blocks
+==221074==    still reachable: 80,666 bytes in 32 blocks
+==221074==         suppressed: 0 bytes in 0 blocks
+==221074== Rerun with --leak-check=full to see details of leaked memory
+==221074== 
+==221074== For lists of detected and suppressed errors, rerun with: -s
+==221074== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)

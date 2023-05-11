@@ -89,8 +89,10 @@ std::string		Join::action(Client &client)
 		// else add client to existing channel
 		else
 		{
-			std::cout << "trying to login with key\n";
-			// if (it->second.getClientMap().size() >= it->second.getclientLimit())
+			// TODO: MODE
+			// check if channel has set limit for nb users 
+			// if (it->second.getClientMap().size() >= it->second.getClientLimit())
+			// 	return (ERR_CHANNELISFULL(client.getServerName(), client.getNickname(), it->second.getName()));
 			if (!it->second.getKey().empty())
 			{
 				// if key is incorrect, cannot join channel and send error

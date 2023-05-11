@@ -137,12 +137,33 @@ client no.1: jee[2m	[7][0m
 ************ Received from client **********
 
 [1m[[0m[2mRequest[0m[1m][0m
-[35mPING pouetMania
+[35mJOIN #c1
 [0m
 [1m[[0m[2mHandling[0m[1m][0m
-PING pouetMania
-command: PING
-request: pouetMania
+JOIN #c1
+command: JOIN
+request: #c1
+[34m[JOIN - handleRequest]
+[0m[34m[JOIN - parseArgument]
+[0mchannelArg:<#c1>
+keyArg:<>
+channelListSize:<1>
+keyListSize:<0>
+[33m#c1 [0m
+[0m
+[34m[JOIN - action]
+[0mChannel map size: 0
+[33mchannel<#c1>
+Available channels: 
+[34m
+adding channel to client:
+
+[Add Channel]
+[33m#c1
+[0m
+final message:<>
+before clear: size [33m0[0m
+after clear: size [33m0[0m
 
 client no.0: chacha[2m	[6][0m
 client no.1: jee[2m	[7][0m
@@ -152,12 +173,12 @@ client no.1: jee[2m	[7][0m
 ************ Received from client **********
 
 [1m[[0m[2mRequest[0m[1m][0m
-[35mPING pouetMania
+[35mMODE #c1
 [0m
 [1m[[0m[2mHandling[0m[1m][0m
-PING pouetMania
-command: PING
-request: pouetMania
+MODE #c1
+command: MODE
+request: #c1
 
 client no.0: chacha[2m	[6][0m
 client no.1: jee[2m	[7][0m
@@ -227,12 +248,12 @@ client no.1: jee[2m	[7][0m
 ************ Received from client **********
 
 [1m[[0m[2mRequest[0m[1m][0m
-[35mPING pouetMania
+[35mMODE #c1
 [0m
 [1m[[0m[2mHandling[0m[1m][0m
-PING pouetMania
-command: PING
-request: pouetMania
+MODE #c1
+command: MODE
+request: #c1
 
 client no.0: chacha[2m	[6][0m
 client no.1: jee[2m	[7][0m
@@ -278,6 +299,36 @@ client no.1: jee[2m	[7][0m
 PING pouetMania
 command: PING
 request: pouetMania
+
+client no.0: chacha[2m	[6][0m
+client no.1: jee[2m	[7][0m
+********************************************
+
+             [2m#16[0m
+************ Received from client **********
+
+[1m[[0m[2mRequest[0m[1m][0m
+[35mPING pouetMania
+[0m
+[1m[[0m[2mHandling[0m[1m][0m
+PING pouetMania
+command: PING
+request: pouetMania
+
+client no.0: chacha[2m	[6][0m
+client no.1: jee[2m	[7][0m
+********************************************
+
+             [2m#17[0m
+************ Received from client **********
+
+[1m[[0m[2mRequest[0m[1m][0m
+[35mWHO #c1
+[0m
+[1m[[0m[2mHandling[0m[1m][0m
+WHO #c1
+command: WHO
+request: #c1
 
 client no.0: chacha[2m	[6][0m
 client no.1: jee[2m	[7][0m
