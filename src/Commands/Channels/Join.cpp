@@ -157,7 +157,7 @@ void	Join::handleRequest(Client &client, std::string arg)
 			message = action(client);
 	}
 	send(client.getClientSocket(), message.c_str(), message.length(), 0);
-x	// clear data for next JOIN command 
+	// clear data for next JOIN command 
 	std::fill(_channelList.begin(), _channelList.end(), "");
 	_channelList.clear();
 	std::fill(_keyList.begin(), _keyList.end(), "");
