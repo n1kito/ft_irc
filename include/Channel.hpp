@@ -69,7 +69,7 @@ class Channel
 
 		bool					checkTopic(const std::string argument);
 		bool					checkName(const std::string name);
-		void					broadcastNumericReplies(const size_t& numberofReplies, ...);
+		void					broadcastNumericReplies(const size_t numberofReplies, ...);
 		std::string				getUsersList();
 	
 		void					setNicknameOfTopicSetter(const std::string& name);

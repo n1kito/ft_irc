@@ -182,7 +182,7 @@ bool							Channel::checkTopic(const std::string arg)
 	return true;
 }
 
-void							Channel::broadcastNumericReplies(const size_t& numberOfReplies, ...)
+void							Channel::broadcastNumericReplies(const size_t numberOfReplies, ...)
 {
 	std::va_list	messages;
 
