@@ -160,11 +160,10 @@ Server::Server(const Server &copyMe)
 Server::~Server()
 {
 	// std::cout << "Destructor called" << std::endl;
-	// while(_commands.size() != 0)
-	// {
-	// 	delete _commands[0].first;
-
-	// }
+	while(_commands.size() != 0)
+	{
+		delete _commands[0];
+	}
 }
 
 /* OVERLOADS ******************************************************************/
@@ -244,13 +243,14 @@ void								Server::removeClient( int fd )
 // Add all command instances to the server's _commands map
 void								Server::initCommands()
 {
-	_commands["NICK"] = new Nick(&_clients);
-	_commands["USER"] = new User(&_clients);
-	_commands["PING"] = new Ping(&_clients);
-	_commands["PASS"] = new Pass(&_clients, _password);
-	_commands["JOIN"] = new Join(&_clients, &_channels);
-	_commands["TOPIC"] = new Topic(&_clients, &_channels);
-	_commands["INVITE"] = new Invite(&_clients, &_channels);
+	_commands["NICK"]	= new Nick(&_clients);
+	_commands["USER"]	= new User(&_clients);
+	_commands["PING"]	= new Ping(&_clients);
+	_commands["PASS"]	= new Pass(&_clients, _password);
+	_commands["JOIN"]	= new Join(&_clients, &_channels);
+	_commands["TOPIC"]	= new Topic(&_clients, &_channels);
+	_commands["INVITE"]	= new Invite(&_clients, &_channels);
+	_commands["MODE"]	= new Mode(&_clients, &_channels);
 }
 
 void								Server::handleRequest(Client& client, const std::string& request)

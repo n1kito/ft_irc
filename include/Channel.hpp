@@ -44,6 +44,9 @@ class Channel
 		bool					isTopicProtectedMode() const;
 		bool					isChannelProtectedMode() const;
 		bool					isInviteOnly() const;
+		bool					addChannelMode(const std::string& mode);
+		bool					removeChannelMode(const std::string& mode);
+		bool					channelModeIs(const std::string &mode);
 
 		// checkers
 		bool					isClientOperator(const Client& clientRef) const;
@@ -69,7 +72,7 @@ class Channel
 
 		bool					checkTopic(const std::string argument);
 		bool					checkName(const std::string name);
-		void					broadcastNumericReplies(const size_t& numberofReplies, ...);
+		void					broadcastNumericReplies(const size_t numberofReplies, ...);
 		std::string				getUsersList();
 	
 		void					setNicknameOfTopicSetter(const std::string& name);
@@ -88,11 +91,14 @@ class Channel
 		std::string				_timeTopicWasSet;
 		
 		std::string				_key;
+
 		// Channel modes
+		std::string				_channelModes;
 		size_t					_clientLimit;
 		bool					_inviteOnly;
 		bool					_topicIsProtected;
 		bool					_channelIsProtected;
+
 		// Channel&		operator = (const Channel &copyMe);
 
 };

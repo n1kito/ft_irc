@@ -8,6 +8,7 @@ Channel::Channel() :
 	_name(""),
 	_topic(""),
 	_key(""),
+	_channelModes(""),
 	_clientLimit(0),
 	_inviteOnly(false),
 	_topicIsProtected(false),
@@ -20,6 +21,7 @@ Channel::Channel( std::string name, const Client& client ) :
 	_name(name),
 	_topic(""),
 	_key(""),
+	_channelModes(""),
 	_clientLimit(0),
 	_inviteOnly(false),
 	_topicIsProtected(false),
@@ -80,10 +82,29 @@ std::string						Channel::getNicknameOfTopicSetter() const { return _nicknameOfT
 std::string						Channel::getTimeTopicWasSet() const { return _timeTopicWasSet; }
 
 // getters -> channel modes
+// TODO: these first methods can be removed is the ones using the string work
 bool							Channel::isClientLimitMode() const { return _clientLimit > 0; }
 bool							Channel::isTopicProtectedMode() const { return _topicIsProtected; }
 bool							Channel::isChannelProtectedMode() const { return _channelIsProtected; }
 bool							Channel::isInviteOnly() const { return _inviteOnly; }
+// TODO: check if this should return a bool or just void ?
+bool							Channel::addChannelMode(const std::string& mode)
+{
+	std::string::iterator	notFound = _channelModes.end();
+
+	if ((mode == "ban" || mode == "b") && _channelModes.find('b') == notFound)
+		_channelModes.push_back('b');
+	else if ((mode == "exception" || mode == "e") && _channelModes.find('e') == notFound)
+}
+// TODO: check if this should return a bool or just void ?
+bool							Channel::removeChannelMode(const std::string& mode)
+{
+
+}
+bool							Channel::channelModeIs(const std::string& mode)
+{
+
+}
 
 // checkers
 // Checks if a client is an operator of the Channel
@@ -182,7 +203,7 @@ bool							Channel::checkTopic(const std::string arg)
 	return true;
 }
 
-void							Channel::broadcastNumericReplies(const size_t& numberOfReplies, ...)
+void							Channel::broadcastNumericReplies(const size_t numberOfReplies, ...)
 {
 	std::va_list	messages;
 
