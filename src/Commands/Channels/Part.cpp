@@ -6,7 +6,7 @@
 /*   By: jeepark <jeepark@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 14:09:42 by jeepark           #+#    #+#             */
-/*   Updated: 2023/05/12 17:23:39 by jeepark          ###   ########.fr       */
+/*   Updated: 2023/05/12 17:31:44 by jeepark          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ Part::Part() : ACommand() {}
 Part::Part(std::map<int, Client>* clients, std::map< std::string, Channel >* channels) :
 	ACommand(clients),
 	_channels(channels),
-	_message("")
+	_reason("")
 {
 	
 }
@@ -34,7 +34,7 @@ Part::Part(const Part &copyMe)
 
 Part::~Part()
 {
-	// std::cout << "Destructor called" << std::endl;
+	// std::cout << "Destructor  called" << std::endl;
 }
 
 /* OVERLOADS ******************************************************************/
@@ -63,7 +63,7 @@ void	Part::action(Client &client)
 			sendNumericReplies(1, client.getClientSocket(), (ERR_NOTONCHANNEL(client.getServerName(), client.getNickname(), _channelList[i])).c_str());
 		else
 		{
-			it->second.broadcastNumericReply(PART_MSG(client.getServerName(), client.getNickname(), it->first, _message));
+			it->second.broadcastNumericReply(PART_MSG(client.getServerName(), client.getNickname(), it->first, _reason));
 			client.removeChannel(_channelList[i]);
 		}
 	}
@@ -77,12 +77,12 @@ void Part::parseArgument(std::string& arg)
 	std::string channelArg;
 	// std::string message;
 	std::getline(argStream, channelArg, ' ');
-	std::getline(argStream, this->_message);
+	std::getline(argStream, this->_reason);
 	
-	std::cout << "message:<" <<  _message << ">\n";
-	std::size_t colonMarkFinder = _message.find(':');
+	std::cout << "message:<" <<  _reason << ">\n";
+	std::size_t colonMarkFinder = _reason.find(':');
 	if (colonMarkFinder != std::string::npos)
-		_message.erase(colonMarkFinder, colonMarkFinder + 1);
+		_reason.erase(colonMarkFinder, colonMarkFinder + 1);
 	// split channelArg with ',' and check if valid 
 	std::string buffer;
 	std::stringstream channelStream(channelArg);
@@ -105,7 +105,7 @@ void	Part::handleRequest(Client &client, std::string arg)
 	// clear data for next JOIN command 
 	std::fill(_channelList.begin(), _channelList.end(), "");
 	_channelList.clear();
-	_message.clear();
+	_reason.clear();
 	
 	
 }

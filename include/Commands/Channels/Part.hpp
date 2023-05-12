@@ -24,7 +24,7 @@ class Part : public ACommand
 	private:
 		std::map< std::string, Channel >*		_channels;
 		std::vector< std::string >				_channelList;
-		std::string								_message;
+		std::string								_reason;
 
     	void		parseArgument();
     	void		action();
