@@ -62,6 +62,7 @@ void	Kick::handleRequest(Client &client, std::string arg)
 	_channelList.clear();
 	std::fill(_userList.begin(), _userList.end(), "");
 	_userList.clear();
+	_kickReason = "";
 }
 
 std::string	Kick::parseArgument(Client &client, std::string& arg)
