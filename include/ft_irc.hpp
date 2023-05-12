@@ -49,7 +49,7 @@
 #include <sstream>
 #include <cctype>
 #include <cstdarg>
-
+#include <algorithm>
 // #include "ACommand.hpp"
 // #include "Nick.hpp"
 #include "Client.hpp"

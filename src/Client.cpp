@@ -109,7 +109,6 @@ void			Client::removeChannel(const std::string& channelName)
 	channelsMap::iterator it = _connectedToChannels.find(channelName);
 	if (it == _connectedToChannels.end())
 		return;
-	// it->second->broadcastNumericReply(PART_MSG(_serverName, _nickname, it->first, "message"));
 	it->second->removeConnectedClient(_nickname);
 	it->second->removeOperator(_nickname);
 	_connectedToChannels.erase(channelName);
@@ -119,14 +118,14 @@ void			Client::removeChannel(const std::string& channelName)
 void			Client::leaveAllChannels()
 {
 	std::cout << "\n[leaveAllChannels]\n";
-	channelsMap::iterator it = _connectedToChannels.begin();
-	while (it != _connectedToChannels.end())
+	channelsMap::iterator itChannel = _connectedToChannels.begin();
+	while (itChannel != _connectedToChannels.end())
 	{
-		std::cout << YELLOW << it->first << "\n";
-		it->second->broadcastNumericReply(PART_MSG(_serverName, _nickname, it->first, "message"));
-		it->second->removeConnectedClient(_nickname);
-		it->second->removeOperator(_nickname);
-		it++;
+		std::cout << YELLOW << itChannel->first << "\n";
+		itChannel->second->broadcastNumericReply(PART_MSG(_serverName, _nickname, itChannel->first, ""));
+		itChannel->second->removeConnectedClient(_nickname);
+		itChannel->second->removeOperator(_nickname);
+		itChannel++;
 	}
 
 	_connectedToChannels.clear();

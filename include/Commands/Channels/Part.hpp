@@ -14,8 +14,8 @@ class Part : public ACommand
 		~Part();
 
     	void		handleRequest(Client &client, std::string arg);
-    	std::string	parseArgument(std::string& arg);
-    	std::string action(Client &client);
+    	void		parseArgument(std::string& arg);
+    	void		action(Client &client);
 
 	
 	protected:

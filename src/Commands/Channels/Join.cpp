@@ -141,6 +141,7 @@ void	Join::handleRequest(Client &client, std::string arg)
 		message = ERR_NEEDMOREPARAMS(client.getServerName(), "JOIN");
 	else if (arg == "0")
 	{
+		
 		client.leaveAllChannels();
 		return;
 	}
