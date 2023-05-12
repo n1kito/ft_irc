@@ -19,8 +19,10 @@ class Channel
 	public:
 		typedef std::map< std::string, const Client* >	clientNickMap;
 		typedef std::vector< std::string >				nickVector;
+		typedef std::map< char, std::string >			modeMap;
 
 		Channel( std::string name, const Client& client );
+		// TODO: should the copy constructors and default constructor be made private ?
 		Channel(const Channel &copyMe);
 		Channel&				operator = (const Channel &copyMe);
 		Channel();
@@ -40,9 +42,10 @@ class Channel
 		std::string				getTimeTopicWasSet() const;
 		
 		// getters -> channel modes
-		bool					addChannelMode(const std::string& mode);
-		bool					removeChannelMode(const std::string& mode);
-		bool					modeIs(const std::string &mode);
+		bool					addChannelMode(const char& mode, const std::string& parameter = "");
+		bool					removeChannelMode(const char& mode);
+		bool					modeIs(const char& Str);
+		bool					modeIs(const std::string& Str);
 
 		// checkers
 		bool					isClientOperator(const Client& clientRef) const;
@@ -85,11 +88,12 @@ class Channel
 		std::string				_topic;
 		std::string				_nicknameOfTopicSetter;
 		std::string				_timeTopicWasSet;
+		const std::string		_timeChannelWasCreated;
 		
 		std::string				_key;
 
 		// Channel modes
-		std::string				_channelModes;
+		modeMap					_channelModes;
 		size_t					_clientLimit;
 		bool					_inviteOnly;
 		bool					_topicIsProtected;

@@ -33,9 +33,9 @@ class Client
 		std::string		getUserModes() const;
 
 		// getters -> channel modes
-		bool			addUserMode(const std::string& mode);
-		bool			removeUserMode(const std::string& mode);
-		bool			modeIs(const std::string &mode);
+		bool			addUserMode(const char& mode);
+		bool			removeUserMode(const char& mode);
+		bool			modeIs(const char &mode);
 
 		void			setRegisterState(bool state);
 		void			setUsername(std::string username);

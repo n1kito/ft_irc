@@ -73,6 +73,14 @@ void	Mode::handleRequest(Client &client, std::string arg)
 	if (target[0] == '#')
 	{
 		// Target is channel
+		// If the channel does not exist
+		if (_channelMap->find(target) == _channelMap->end())
+			sendNumericReplies(1, client.getClientSocket(), \
+			ERR_NOSUCHCHANNEL(client.getServerName(), client.getNickname(), target).c_str());
+		// If there are no modes given, return the current modes of the channel and channel creation time
+		// else if (modes.empty())
+		// 	sendNumericReplies(1, client.getClientSocket(), \
+		// 	ERR)
 	}
 	else
 	{
@@ -115,18 +123,18 @@ void	Mode::applyModes(Client& client, const std::string& target, std::string mod
 	{
 		if (changeMode == '+')
 		{
-			if (client.modeIs(modes.substr(i, 1)) == true)
+			if (client.modeIs(modes[i]) == true)
 				continue;
-			if (client.addUserMode(modes.substr(i, 1)) == true)
+			if (client.addUserMode(modes[i]) == true)
 				successfullyChanged.push_back(modes[i]);
 			else
 				failedToChange.push_back(modes[i]);
 		}
 		else
 		{
-			if (modes[i] == 'i' && client.modeIs(modes.substr(i, 1)) == false)
+			if (modes[i] == 'i' && client.modeIs(modes[i]) == false)
 				continue;
-			if (client.removeUserMode(modes.substr(i, 1)) == true)
+			if (client.removeUserMode(modes[i]) == true)
 				successfullyChanged.push_back(modes[i]);
 			else
 				failedToChange.push_back(modes[i]);

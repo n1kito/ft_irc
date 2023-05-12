@@ -63,21 +63,22 @@ Channel*		Client::getCurrentChannel() const { return _currentChannel; }
 std::string		Client::getUserModes() const { return _userModes.empty() ? _userModes : "+" + _userModes; }
 
 // getters -> channel modes
-bool			Client::addUserMode(const std::string& mode)
+// TODO: do we want these methods to take a char instead of a string ? Easier
+bool			Client::addUserMode(const char& mode)
 {
-	if ((mode == "invisible" || mode == "i"))
+	if (mode == 'i')
 	{
-		if (!(*this).modeIs("i"))
+		if ((*this).modeIs('i') == false)
 			_userModes.push_back('i');
 		return true;
 	}
 	return false;
 }
-bool			Client::removeUserMode(const std::string& mode)
+bool			Client::removeUserMode(const char& mode)
 {
 	size_t	modePositionInString = 0;
 
-	if (mode == "invisible" || mode == "i")
+	if (mode == 'i')
 	{
 		modePositionInString = _userModes.find('i');
 		if (modePositionInString != std::string::npos)
@@ -88,9 +89,9 @@ bool			Client::removeUserMode(const std::string& mode)
 	}
 	return false;
 }
-bool			Client::modeIs(const std::string &mode)
+bool			Client::modeIs(const char &mode)
 {
-	if (mode == "invisible" || mode == "i")
+	if (mode == 'i')
 		return _userModes.find('i') != std::string::npos;
 	return false;
 }

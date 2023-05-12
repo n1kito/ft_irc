@@ -62,8 +62,11 @@
 #define ERR_USERSDONTMATCH(server, client) (std::string(":") + server + " 502 " + client + " :Cannot change mode for other users\r\n")
 #define RPL_UMODEIS(server, client, modes) (std::string(":") + server + " 221 " + client + " " + modes + "\r\n")
 #define ERR_UMODEUNKNOWNFLAG(server, client, modeCharacter) (std::string(":") + server + " 501 " + client + " :Unknown mode flag " + modeCharacter + "\r\n") 
-// TODO: check this MODE_MSG, especially since some info is between brackets which implies use of ! in the macro
 #define MODE_MSG(server, client, target, modes) (std::string(":") + server + "!" + client + " MODE " + target + " " + modes + "\r\n")
+// #define RPL_CHANNELMODEIS(server, client, channel, modes, modeArguments) (324) 
+//   "<client> <channel> <modestring> <mode arguments>..."
+
+
 // TODO: check custom message codes and whether we need them at all or not
 // Custom Messages
 #define NICK_SUCCESS(nickname1, nickname2) (std::string(":") + nickname1 + " NICK " + nickname2 + "\r\n")
