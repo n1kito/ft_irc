@@ -6,7 +6,7 @@
 /*   By: jeepark <jeepark@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 14:09:42 by jeepark           #+#    #+#             */
-/*   Updated: 2023/05/12 15:26:03 by jeepark          ###   ########.fr       */
+/*   Updated: 2023/05/12 16:22:04 by jeepark          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,8 @@ Part::Part() : ACommand() {}
 
 Part::Part(std::map<int, Client>* clients, std::map< std::string, Channel >* channels) :
 	ACommand(clients),
-	_channels(channels)
+	_channels(channels),
+	_message("")
 {
 	
 }
@@ -50,35 +51,36 @@ void			Part::parseArgument() {}
 void			Part::action() {}
 std::string		Part::action(Client &client)
 {
-	(void)client;
-	std::string res;
+	std::string res = "";
 	std::map< std::string, Channel >::iterator it;
-	
 	for (size_t i = 0; i < _channelList.size(); i++)
 	{
 		it = _channels->find(_channelList[i]);
 		// return error if channel does not exist
 		if (it == _channels->end())
-			return ERR_NOSUCHCHANNEL(client.getServerName(), client.getNickname(), _channelList[i]);
+			sendNumericReplies(1, client.getClientSocket(), (ERR_NOSUCHCHANNEL(client.getServerName(), client.getNickname(), _channelList[i])).c_str());
 		// return error if channel exist but client is not connected to.
 		else if (it != _channels->end() && it->second.getClientMap().find(client.getNickname()) == it->second.getClientMap().end())
-			return ERR_NOTONCHANNEL(client.getServerName(), client.getNickname(), _channelList[i]);
-		// res += PART_MSG(client.getServerName(), client.getNickname(), _channelList[i]);
-		client.removeChannel(_channelList[i]);
+			sendNumericReplies(1, client.getClientSocket(), (ERR_NOTONCHANNEL(client.getServerName(), client.getNickname(), _channelList[i])).c_str());
+		else
+		{
+			it->second.broadcastNumericReply(PART_MSG(client.getServerName(), client.getNickname(), it->first, _message));
+			client.removeChannel(_channelList[i]);
+		}
 	}
-	
-	return "";
+	return res;
 }
 
 std::string	Part::parseArgument(std::string& arg)
 {
+	std::cout << BLUE << "\n[PART - parseArgument()]\n" << RESET;
 	// split the channel list and the key list with a space
 	std::stringstream argStream(arg);
 	std::string channelArg;
-	std::string message;
-	std::getline(argStream, channelArg, ' ');
-	std::getline(argStream, message);
-	
+	// std::string message;
+	std::getline(argStream, channelArg, ':');
+	std::getline(argStream, this->_message);
+	std::cout << "message:<" <<  _message << ">\n";
 	// split channelArg with ',' and check if valid 
 	std::string buffer;
 	std::stringstream channelStream(channelArg);

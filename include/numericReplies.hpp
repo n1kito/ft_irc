@@ -68,12 +68,17 @@
  
 // JOIN
 #define JOIN_MSG(server, channel, nickname) (std::string(":") + nickname + "!" + server + " JOIN " + channel + " " +  nickname + "\r\n")
-#define PART_MSG(server, channel, nickname) (std::string(":") + channel + "!" + server + " PART " + nickname + "\r\n")
+#define PART_MSG(server, channel, nickname, message) (std::string(":") + channel + "!" + server + " PART " + nickname +" :" + message+ "\r\n")
 
+// 476 
 #define ERR_BADCHANMASK(channel) (std::string(":") + channel + " 476 " + ":Bad Channel Mask\r\n")
+// 475
 #define ERR_BADCHANNELKEY(server, nickname, channel) (std::string(":") + server +  " 475 " + nickname + " " + channel + " :Cannot join channel (+k)\r\n")
+// 405
 #define ERR_TOOMANYCHANNELS(server, nickname, channel) (std::string(":") + server +  " 405 " + nickname + " " + channel + " :You have joined too many channels\r\n") 
+// 353
 #define ERR_CHANNELISFULL(server, nickname, channel) (std::string(":") + server + " 353 " + nickname + " " + channel + " :Cannot join channel (+l)\r\n")
+// 473
 #define ERR_INVITEONLYCHAN(server, nickname, channel) (std::string(":") + server + " 473 " + nickname + " " + channel + " :Cannot join channel (+i)\r\n")
 
 #define PRIVMSG(server, channel, message) (std::string(":") + server + " PRIVMSG " + channel + " :" + message)
