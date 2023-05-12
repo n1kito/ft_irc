@@ -60,7 +60,7 @@ bool			Client::getWelcomeState() const { return _welcomeState; }
 std::string		Client::getServerName() const { return _serverName; }
 bool			Client::getPasswordStatus() const { return _passwordStatus; }
 Channel*		Client::getCurrentChannel() const { return _currentChannel; }
-std::string		Client::getUserModes() const { return _userModes;}
+std::string		Client::getUserModes() const { return _userModes.empty() ? _userModes : "+" + _userModes; }
 
 // getters -> channel modes
 bool			Client::addUserMode(const std::string& mode)

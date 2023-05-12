@@ -124,7 +124,7 @@ void	Mode::applyModes(Client& client, const std::string& target, std::string mod
 		}
 		else
 		{
-			if (client.modeIs(modes.substr(i, 1)) == false)
+			if (modes[i] == 'i' && client.modeIs(modes.substr(i, 1)) == false)
 				continue;
 			if (client.removeUserMode(modes.substr(i, 1)) == true)
 				successfullyChanged.push_back(modes[i]);
