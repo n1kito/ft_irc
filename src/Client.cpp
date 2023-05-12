@@ -112,6 +112,7 @@ void			Client::leaveAllChannels()
 		std::cout << YELLOW << it->first << "\n";
 		it->second->broadcastNumericReply(PART_MSG(_serverName, _nickname, it->first));
 		it->second->removeConnectedClient(_nickname);
+		it->second->removeOperator(_nickname);
 		it++;
 	}
 

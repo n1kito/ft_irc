@@ -1,0 +1,26 @@
+==381291== Memcheck, a memory error detector
+==381291== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==381291== Using Valgrind-3.18.1 and LibVEX; rerun with -h for copyright info
+==381291== Command: ./ircserv 6667 pwd
+==381291== Parent PID: 381255
+==381291== 
+==381291== 
+==381291== Process terminating with default action of signal 2 (SIGINT)
+==381291==    at 0x4CCAF9A: epoll_wait (epoll_wait.c:30)
+==381291==    by 0x405E4A: Server::Server(int const&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) (Server.cpp:68)
+==381291==    by 0x404D5D: main (main.cpp:26)
+==381291== 
+==381291== HEAP SUMMARY:
+==381291==     in use at exit: 80,522 bytes in 30 blocks
+==381291==   total heap usage: 201 allocs, 171 frees, 93,042 bytes allocated
+==381291== 
+==381291== LEAK SUMMARY:
+==381291==    definitely lost: 0 bytes in 0 blocks
+==381291==    indirectly lost: 0 bytes in 0 blocks
+==381291==      possibly lost: 0 bytes in 0 blocks
+==381291==    still reachable: 80,522 bytes in 30 blocks
+==381291==         suppressed: 0 bytes in 0 blocks
+==381291== Rerun with --leak-check=full to see details of leaked memory
+==381291== 
+==381291== For lists of detected and suppressed errors, rerun with: -s
+==381291== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)

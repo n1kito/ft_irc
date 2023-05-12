@@ -60,7 +60,7 @@ class Channel
 		void					setInviteOnly(const bool& status);
 		void					addConnectedClient(const Client& clientRef);
 		void					removeConnectedClient(const std::string& clientNickname);
-		void					addOperator(Client& clientRef);
+		void					addOperator(const Client& clientRef);
 		void					removeOperator(const std::string& clientNickname);
 
 		// setters -> channel modes

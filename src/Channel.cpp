@@ -26,6 +26,7 @@ Channel::Channel( std::string name, const Client& client ) :
 	_channelIsProtected(false)
 {
 	addConnectedClient(client);
+	addOperator(client);
 }
 
 Channel::Channel(const Channel &copyMe)
@@ -136,14 +137,16 @@ void							Channel::removeConnectedClient(const std::string& clientNickname)
 	if (_connectedClients.find(clientNickname) != _connectedClients.end())
 		_connectedClients.erase(clientNickname);
 }
-void							Channel::addOperator(Client& clientRef)
+void							Channel::addOperator(const Client& clientRef)
 { 
+	std::cout << "[add operator]\n";
 	if (_operators.find(clientRef.getNickname()) == _operators.end())
 		_operators[clientRef.getNickname( )] = &clientRef;
 	// TODO: send numeric reply ?
 }
 void							Channel::removeOperator(const std::string& clientNickname)
 {
+	std::cout << "[remove operator]\n";
 	if (_operators.find(clientNickname) != _operators.end())
 		_operators.erase(clientNickname);
 	// TODO: send numeric reply ?
