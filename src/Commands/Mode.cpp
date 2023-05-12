@@ -51,13 +51,13 @@ void		Mode::parseArgument(std::string& arg, std::string& target, std::string& mo
 }
 
 void		Mode::action() {}
-// std::string	Mode::action(Client &client, std::string nickname)
-// {
-// 	std::string message;
-// 	message = NICK_SUCCESS(client.getModename(), nickname);
-// 	client.setModename(nickname);
-// 	return message;
-// }
+void		Mode::action(Client& client, Channel& channel, std::string modes, std::vector<std::string> arguments)
+{
+	(void)client;
+	(void)channel;
+	(void)modes;
+	(void)arguments;
+}
 
 void	Mode::handleRequest(Client &client, std::string arg)
 {
@@ -77,10 +77,36 @@ void	Mode::handleRequest(Client &client, std::string arg)
 		if (_channelMap->find(target) == _channelMap->end())
 			sendNumericReplies(1, client.getClientSocket(), \
 			ERR_NOSUCHCHANNEL(client.getServerName(), client.getNickname(), target).c_str());
-		// If there are no modes given, return the current modes of the channel and channel creation time
-		// else if (modes.empty())
-		// 	sendNumericReplies(1, client.getClientSocket(), \
-		// 	ERR)
+		else
+		{
+			Channel*	channel = &(*_channelMap)[target];
+			// If there are no modes given, return the current modes of the channel and channel creation time
+			if (modes.empty())
+				sendNumericReplies(2, client.getClientSocket(), \
+					RPL_CHANNELMODEIS(client.getServerName(), client.getNickname(), channel->getName(), channel->getModes(), channel->getModeParameters()).c_str(),
+					RPL_CREATIONTIME(client.getServerName(), client.getNickname(), channel->getName(), channel->getCreationTime()).c_str());
+			// If there are modes supplied
+			else
+			{
+				// If user cannot update modes on the channel
+				if (channel->isClientOperator(client) == false)
+					sendNumericReplies(1, client.getClientSocket(), \
+						ERR_CHANOPRIVSNEEDED(client.getServerName(), client.getNickname(), channel->getName()).c_str());
+				// Handle the requests
+				else
+				{
+					action(client, *channel, modes, arguments);
+						// else if (modeStr == "invite-only" )
+						// 	mode = 'i';
+						// else if (modeStr == "topic-protected")
+						// 	mode = 't';
+						// else if (modeStr == "key")
+						// 	mode = 'k';
+						// else if (modeStr == "client-limit")
+						// 	mode = 'l';
+				}
+			}
+		}
 	}
 	else
 	{

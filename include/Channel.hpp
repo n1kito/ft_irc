@@ -39,6 +39,7 @@ class Channel
 		const clientNickMap&	getClientMap() const;
 		const clientNickMap&	getOperators() const;
 		std::string				getNicknameOfTopicSetter() const;
+		std::string				getCreationTime() const;
 		std::string				getTimeTopicWasSet() const;
 		
 		// getters -> channel modes
@@ -46,6 +47,8 @@ class Channel
 		bool					removeChannelMode(const char& mode);
 		bool					modeIs(const char& Str);
 		bool					modeIs(const std::string& Str);
+		std::string				getModes() const;
+		std::string				getModeParameters() const;
 
 		// checkers
 		bool					isClientOperator(const Client& clientRef) const;
@@ -88,7 +91,7 @@ class Channel
 		std::string				_topic;
 		std::string				_nicknameOfTopicSetter;
 		std::string				_timeTopicWasSet;
-		const std::string		_timeChannelWasCreated;
+		std::string				_timeChannelWasCreated;
 		
 		std::string				_key;
 

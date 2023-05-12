@@ -49,11 +49,14 @@ Channel::~Channel()
 
 Channel& Channel::operator = (const Channel &copyMe)
 {
+	// TODO: check that all the elements needed are here, because otherwise it breaks stuff
 	_connectedClients = copyMe.getClientMap();;
 	_operators = copyMe.getOperators();;
 	_name = copyMe.getName();
 	_key = copyMe.getKey();
 	_topic = copyMe.getTopic();
+	_timeChannelWasCreated = copyMe.getCreationTime();
+	_timeTopicWasSet = copyMe.getTimeTopicWasSet();
 	// std::cout << "Copy assignment operator called" << std::endl;
 	return *this;
 }
@@ -76,6 +79,7 @@ std::string						Channel::getTopic() const { return _topic; }
 const Channel::clientNickMap&	Channel::getClientMap() const { return _connectedClients; }
 const Channel::clientNickMap&	Channel::getOperators() const { return _operators; }
 std::string						Channel::getNicknameOfTopicSetter() const { return _nicknameOfTopicSetter; }
+std::string						Channel::getCreationTime() const { return _timeChannelWasCreated; }
 std::string						Channel::getTimeTopicWasSet() const { return _timeTopicWasSet; }
 
 // getters -> channel modes
@@ -121,6 +125,30 @@ bool							Channel::modeIs(const std::string& modeStr)
 	else if (modeStr == "client-limit")
 		mode = 'l';
 	return _channelModes.find(mode) != _channelModes.end();
+}
+std::string						Channel::getModes() const
+{
+	std::stringstream		returnStream;
+
+	for (modeMap::const_iterator it = _channelModes.begin(); it != _channelModes.end(); ++it)
+	{
+		returnStream << (*it).first;
+		if (it != --_channelModes.end())
+			returnStream << ' ';
+	}
+	return returnStream.str();
+}
+std::string						Channel::getModeParameters() const
+{
+	std::string				returnString = "";
+
+	for (modeMap::const_iterator it = _channelModes.begin(); it != _channelModes.end(); ++it)
+	{
+		returnString += (*it).second;
+		if (it != --_channelModes.end())
+			returnString += " ";
+	}
+	return returnString;
 }
 
 // checkers

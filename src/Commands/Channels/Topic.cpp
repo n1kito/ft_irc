@@ -95,7 +95,7 @@ void	Topic::action(std::string& topic, Channel& targetChannel, const Client& cli
 		{
 			// Update channel properties
 			targetChannel.setTimeTopicWasSet(getCurrentDate());
-			std::cout << "Time topic was set: " << targetChannel.getTimeTopicWasSet() << std::endl;
+			// std::cout << "Time topic was set: " << targetChannel.getTimeTopicWasSet() << std::endl;
 			targetChannel.setNicknameOfTopicSetter(client.getNickname());
 			targetChannel.setTopic(topic);
 			// Broadcast new topic to all users in the channel, followd by a RPL_TOPICWHOTIME

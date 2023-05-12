@@ -21,6 +21,7 @@ class Mode : public ACommand
     	void		parseArgument();
     	void		parseArgument(std::string& arg, std::string& target, std::string& modes, std::vector<std::string>& arguments);
     	void		action();
+		void		action(Client& client, Channel& channel, std::string modes, std::vector<std::string> arguments);
 		void		applyModes(Client& client, const std::string& target, std::string modes);
     	// std::string	action(Client &client, std::string nickname);
 
