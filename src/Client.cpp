@@ -103,6 +103,18 @@ void			Client::addChannel(Channel& channelRef)
 
 }
 
+void			Client::removeChannel(const std::string& channelName)
+{
+	channelsMap::iterator it = _connectedToChannels.find(channelName);
+	if (it == _connectedToChannels.end())
+		return;
+	it->second->broadcastNumericReply(PART_MSG(_serverName, _nickname, it->first));
+	it->second->removeConnectedClient(_nickname);
+	it->second->removeOperator(_nickname);
+	_connectedToChannels.erase(channelName);
+}
+
+
 void			Client::leaveAllChannels()
 {
 	std::cout << "\n[leaveAllChannels]\n";

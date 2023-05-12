@@ -45,6 +45,7 @@ class Client
 		void			setPasswordStatus(const bool& status);
 		void			setInvitationStatus(const bool& status);
 		void			addChannel(Channel& channelRef);
+		void			removeChannel(const std::string& channelName);
 		void			leaveAllChannels();
 	protected:
 		// add protected elements here
