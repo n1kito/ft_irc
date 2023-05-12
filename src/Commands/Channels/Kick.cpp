@@ -133,10 +133,11 @@ std::string Kick::action(Client &client)
 			message += ERR_NOSUCHCHANNEL(client.getServerName(), client.getNickname(), *chanIt);
 		else
 		{
+			Channel* channel = &posInChannelMap->second;
 			// get the client map of the channel found and check if the client that wants to kick someone exists
-			if (!posInChannelMap->second.isClientConnected(client))
+			if (!channel->isClientConnected(client))
 				message += ERR_NOTONCHANNEL(client.getServerName(), client.getNickname(), *chanIt);
-			// else if (!posInChannelMap->second.isClientOperator(client))
+			// else if (!channel->isClientOperator(client))
 			// 	message += ERR_CHANOPRIVSNEEDED(client.getServerName(), client.getNickname(), *chanIt);
 			else
 			{
@@ -144,22 +145,26 @@ std::string Kick::action(Client &client)
 				for (std::vector< std::string >::iterator itUser = _userList.begin(); itUser != _userList.end(); ++itUser)
 				{
 					// get the client information of the user to kick
-					std::map< std::string, const Client* >::const_iterator	posInClientMap;
-					posInClientMap =  posInChannelMap->second.getClientMap().find(*itUser);
+					std::map< std::string, const Client* >::const_iterator	userTargetted;
+					userTargetted =  channel->getClientMap().find(*itUser);
 					// check if the user to kick is connected in the channel
-					if (posInClientMap == posInChannelMap->second.getClientMap().end())
-						message += ERR_USERNOTINCHANNEL(client.getServerName(), client.getNickname(), *itUser, posInChannelMap->first);
+					if (userTargetted == channel->getClientMap().end())
+						message += ERR_USERNOTINCHANNEL(client.getServerName(), client.getNickname(), *itUser, channel->getName());
 					else
 					{
-						posInChannelMap->second.broadcastNumericReply(KICK_MSG(client.getServerName(),\
+						channel->broadcastNumericReply(KICK_MSG(client.getServerName(),\
 																		client.getNickname(),\
-																		posInChannelMap->first,\
-																		posInClientMap->first,\
+																		channel->getName(),\
+																		userTargetted->first,\
 																		_kickReason));
-						posInChannelMap->second.removeConnectedClient(*itUser);
-						// if (kickee was operator => remove from operator too)
-						// if (no one in channel anymore)
-						// 	delete channel from server
+						// if kickee was operator => remove from operator
+						if (channel->isClientOperator(*userTargetted->second))
+							channel->removeOperator(*itUser);
+						channel->removeConnectedClient(*itUser);
+
+						// if there is no client in the channel anymore, delete it
+						if (channel->getClientMap().empty())
+							_channelMap->erase(posInChannelMap);
 					}
 				}
 			}
