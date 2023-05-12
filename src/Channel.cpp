@@ -29,6 +29,7 @@ Channel::Channel( std::string name, const Client& client ) :
 	_clientLimit(0),
 	_channelIsProtected(false)
 {
+	addOperator(client);
 	addConnectedClient(client);
 }
 
@@ -126,7 +127,13 @@ bool							Channel::modeIs(const std::string& modeStr)
 		mode = 'l';
 	return _channelModes.find(mode) != _channelModes.end();
 }
-std::string						Channel::getModes() const
+std::string						Channel::getModeParameter(const char& mode)
+{
+	if (_channelModes.find(mode) != _channelModes.end())
+		return _channelModes[mode];
+	return "";
+}
+std::string						Channel::listModes() const
 {
 	std::stringstream		returnStream;
 
@@ -138,7 +145,7 @@ std::string						Channel::getModes() const
 	}
 	return returnStream.str();
 }
-std::string						Channel::getModeParameters() const
+std::string						Channel::listModeParameters() const
 {
 	std::string				returnString = "";
 
@@ -202,7 +209,7 @@ void							Channel::removeConnectedClient(const std::string& clientNickname)
 	if (_connectedClients.find(clientNickname) != _connectedClients.end())
 		_connectedClients.erase(clientNickname);
 }
-void							Channel::addOperator(Client& clientRef)
+void							Channel::addOperator(const Client& clientRef)
 { 
 	if (_operators.find(clientRef.getNickname()) == _operators.end())
 		_operators[clientRef.getNickname( )] = &clientRef;
@@ -272,11 +279,8 @@ std::string						Channel::getUsersList()
 
 	while (it != ite)
 	{
-		// TODO: handle prefixes
-		// if (client is operator)
-		// usersList += "@";
-		// else if (client is founder)
-		// userList += "-";
+		if (isClientOperator(*(it->second)))
+			usersList += "@";
 		usersList += it->second->getNickname();
 		if (it != --_connectedClients.end())
 			usersList += " ";

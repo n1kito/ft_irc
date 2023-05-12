@@ -45,10 +45,11 @@ class Channel
 		// getters -> channel modes
 		bool					addChannelMode(const char& mode, const std::string& parameter = "");
 		bool					removeChannelMode(const char& mode);
-		bool					modeIs(const char& Str);
-		bool					modeIs(const std::string& Str);
-		std::string				getModes() const;
-		std::string				getModeParameters() const;
+		bool					modeIs(const char& mode);
+		bool					modeIs(const std::string& mode);
+		std::string				getModeParameter(const char& modeStr);
+		std::string				listModes() const;
+		std::string				listModeParameters() const;
 
 		// checkers
 		bool					isClientOperator(const Client& clientRef) const;
@@ -65,7 +66,7 @@ class Channel
 		void					setInviteOnly(const bool& status);
 		void					addConnectedClient(const Client& clientRef);
 		void					removeConnectedClient(const std::string& clientNickname);
-		void					addOperator(Client& clientRef);
+		void					addOperator(const Client& clientRef);
 		void					removeOperator(const std::string& clientNickname);
 
 		// setters -> channel modes

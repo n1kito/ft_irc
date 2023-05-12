@@ -50,14 +50,7 @@ void		Mode::parseArgument(std::string& arg, std::string& target, std::string& mo
 	}
 }
 
-void		Mode::action() {}
-void		Mode::action(Client& client, Channel& channel, std::string modes, std::vector<std::string> arguments)
-{
-	(void)client;
-	(void)channel;
-	(void)modes;
-	(void)arguments;
-}
+void	Mode::action() {}
 
 void	Mode::handleRequest(Client &client, std::string arg)
 {
@@ -83,7 +76,7 @@ void	Mode::handleRequest(Client &client, std::string arg)
 			// If there are no modes given, return the current modes of the channel and channel creation time
 			if (modes.empty())
 				sendNumericReplies(2, client.getClientSocket(), \
-					RPL_CHANNELMODEIS(client.getServerName(), client.getNickname(), channel->getName(), channel->getModes(), channel->getModeParameters()).c_str(),
+					RPL_CHANNELMODEIS(client.getServerName(), client.getNickname(), channel->getName(), channel->listModes(), channel->listModeParameters()).c_str(),
 					RPL_CREATIONTIME(client.getServerName(), client.getNickname(), channel->getName(), channel->getCreationTime()).c_str());
 			// If there are modes supplied
 			else
@@ -92,19 +85,12 @@ void	Mode::handleRequest(Client &client, std::string arg)
 				if (channel->isClientOperator(client) == false)
 					sendNumericReplies(1, client.getClientSocket(), \
 						ERR_CHANOPRIVSNEEDED(client.getServerName(), client.getNickname(), channel->getName()).c_str());
+				// If modes parameter does not start with + or -, do nothing
+				else if (modes[0] != '+' && modes[0] != '-')
+					return ;
 				// Handle the requests
 				else
-				{
-					action(client, *channel, modes, arguments);
-						// else if (modeStr == "invite-only" )
-						// 	mode = 'i';
-						// else if (modeStr == "topic-protected")
-						// 	mode = 't';
-						// else if (modeStr == "key")
-						// 	mode = 'k';
-						// else if (modeStr == "client-limit")
-						// 	mode = 'l';
-				}
+					applyChannelModes(client, *channel, modes, arguments);
 			}
 		}
 	}
@@ -119,11 +105,15 @@ void	Mode::handleRequest(Client &client, std::string arg)
 		else if (target != client.getNickname())
 			sendNumericReplies(1, client.getClientSocket(), \
 				ERR_USERSDONTMATCH(client.getServerName(), client.getNickname()).c_str());
+		// If there are no modes required, send back list of current modes
 		else if (modes.empty())
 			sendNumericReplies(1, client.getClientSocket(), \
 				RPL_UMODEIS(client.getServerName(), client.getNickname(), client.getUserModes()).c_str());
+		// If modes parameter does not start with + or -, do nothing
+		else if (modes[0] != '+' && modes[0] != '-')
+			return ;
 		else
-			applyModes(client, target, modes);
+			applyUserModes(client, target, modes);
 	}
 	// // This is useful to check what was actually parsed
 	// std::cout	<< "Target: <" << target << ">" << std::endl
@@ -137,14 +127,12 @@ void	Mode::handleRequest(Client &client, std::string arg)
 	// std::cout << std::endl;
 }
 
-void	Mode::applyModes(Client& client, const std::string& target, std::string modes)
+void	Mode::applyUserModes(Client& client, const std::string& target, std::string modes)
 {
-	// If the modes string does not start with + or -, do nothing
-	if (modes[0] != '+' && modes[0] != '-')
-		return ;
 	char changeMode = modes[0];
 	std::string successfullyChanged(1, changeMode);
-	std::string	failedToChange = "";
+	// std::string	failedToChange = "";
+
 	for (size_t i = 1; i < modes.length(); ++i)
 	{
 		if (changeMode == '+')
@@ -154,7 +142,9 @@ void	Mode::applyModes(Client& client, const std::string& target, std::string mod
 			if (client.addUserMode(modes[i]) == true)
 				successfullyChanged.push_back(modes[i]);
 			else
-				failedToChange.push_back(modes[i]);
+				// failedToChange.push_back(modes[i]);
+				sendNumericReplies(1, client.getClientSocket(), \
+					ERR_UMODEUNKNOWNFLAG(client.getServerName(), client.getNickname(), std::string(1,  modes[i])).c_str());
 		}
 		else
 		{
@@ -163,13 +153,68 @@ void	Mode::applyModes(Client& client, const std::string& target, std::string mod
 			if (client.removeUserMode(modes[i]) == true)
 				successfullyChanged.push_back(modes[i]);
 			else
-				failedToChange.push_back(modes[i]);
+				// failedToChange.push_back(modes[i]);
+				sendNumericReplies(1, client.getClientSocket(), \
+					ERR_UMODEUNKNOWNFLAG(client.getServerName(), client.getNickname(), std::string(1, modes[i])).c_str());
 		}
 	}
 	if (successfullyChanged.length() > 1)
 		sendNumericReplies(1, client.getClientSocket(), \
 			MODE_MSG(client.getServerName(), client.getNickname(), target, successfullyChanged).c_str());
-	for (size_t i = 0; i < failedToChange.length(); ++i)
-		sendNumericReplies(1, client.getClientSocket(), \
-			ERR_UMODEUNKNOWNFLAG(client.getServerName(), client.getNickname(), std::string(1, failedToChange[i])).c_str());
+	// for (size_t i = 0; i < failedToChange.length(); ++i)
+	// 	sendNumericReplies(1, client.getClientSocket(), \
+	// 		ERR_UMODEUNKNOWNFLAG(client.getServerName(), client.getNickname(), std::string(1, failedToChange[i])).c_str());
+}
+
+void		Mode::applyChannelModes(Client& client, Channel& channel, std::string modes, std::vector<std::string> arguments)
+{
+	(void)arguments;
+	char changeMode = modes[0];
+	std::string	successfullyChanged(1, changeMode);
+	std::string	changedParameters = "";
+
+	// size_t	parametersIndex = 0;
+	for (size_t modesIndex = 1; modesIndex < modes.length(); ++modesIndex)
+	{
+		if (modes[modesIndex] == 'i') // invite-only
+		{
+			if (changeMode == '+')
+			{
+				if (channel.modeIs('i') == false)
+				{
+					channel.addChannelMode('i');
+					successfullyChanged += "i";
+				}
+			}
+			else
+			{
+				if (channel.modeIs('i') == true)
+				{
+					channel.removeChannelMode('i');
+					successfullyChanged += "i";
+				}
+			}
+		}
+		else if (modes[modesIndex] == 't') // topic-protected
+		{
+			
+		}
+		else if (modes[modesIndex] == 'k') // key
+		{
+
+		}
+		else if (modes[modesIndex] == 'l') // client-limit
+		{
+			
+		}
+		else
+			sendNumericReplies(1, client.getClientSocket(), \
+				ERR_UNKNOWNMODE(client.getServerName(), client.getNickname(), std::string(1, modes[modesIndex])).c_str());
+	}
+	std::cout << "Changed parameters: " << successfullyChanged << std::endl;
+	// TODO: this sends wrong message that attributes changed to sercer name and not cliet Nickname
+	// TODO: Also there is a lag ?
+	// if (successfullyChanged.length() > 1)
+	// 	sendNumericReplies(1, client.getClientSocket(), \
+	// 		MODE_MSG(client.getServerName(), client.getNickname(), channel.getName(), successfullyChanged).c_str());
 }

@@ -65,6 +65,7 @@
 #define MODE_MSG(server, client, target, modes) (std::string(":") + server + "!" + client + " MODE " + target + " " + modes + "\r\n")
 #define RPL_CHANNELMODEIS(server, client, channel, modes, modeArguments) (std::string(":") + server + " 324 " + client + " " + channel + " " + modes + " " + modeArguments + "\r\n")
 #define RPL_CREATIONTIME(server, client, channel, creationTime) (std::string(":") + server + " 329 " + client + " " + channel + " " + creationTime + "\r\n")
+#define ERR_UNKNOWNMODE(server, client, modeChar) (std::string(":") + server + " 472 " + client + " " + modeChar + " :is unknown mode char to me\r\n") 
 
 // TODO: check custom message codes and whether we need them at all or not
 // Custom Messages
