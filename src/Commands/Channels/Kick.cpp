@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   Kick.cpp                                           :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: cgosseli <cgosseli@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/05/09 17:02:15 by mjallada          #+#    #+#             */
-/*   Updated: 2023/05/11 15:29:23 by cgosseli         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "Kick.hpp"
 
 /* CONSTRUCTORS ***************************************************************/
@@ -150,30 +138,29 @@ std::string Kick::action(Client &client)
 			// get the client map of the channel found and check if the client that wants to kick someone exists
 			if (!posInChannelMap->second.isClientConnected(client))
 				message += ERR_NOTONCHANNEL(client.getServerName(), client.getNickname(), *it);
-			// else if (client not privilege)
-			// 	message += ERR_CHANOPRIVSNEEDED(client.getServerName(), client.getNickname(), *it);
+			else if (!posInChannelMap->second.isClientOperator(client))
+				message += ERR_CHANOPRIVSNEEDED(client.getServerName(), client.getNickname(), *it);
 			else
 			{
 				std::cout << RED << "The print debugger was here: " << RESET << "Kick.cpp:157" << std::endl;
-				for (std::vector< std::string >::iterator it = _userList.begin(); it != _userList.end(); ++it)
+				for (std::vector< std::string >::iterator itUser = _userList.begin(); itUser != _userList.end(); ++itUser)
 				{
 					// get the client information of the user to kick
-					std::map< std::string, const Client* >::const_iterator	posInClientMap	=  posInChannelMap->second.getClientMap().find(*it);
+					std::map< std::string, const Client* >::const_iterator	posInClientMap	=  posInChannelMap->second.getClientMap().find(*itUser);
 					// check if the user to kick is connected in the channel
 					if (posInClientMap == posInChannelMap->second.getClientMap().end())
-						message += ERR_USERNOTINCHANNEL(client.getServerName(), client.getNickname(), *it, posInChannelMap->first);
+						// message += ERR_USERNOTINCHANNEL(client.getServerName(), client.getNickname(), *itUser);
+						message += ERR_USERNOTINCHANNEL(client.getServerName(), client.getNickname(), *itUser, posInChannelMap->first);
 					else
 					{
-						std::cout << RED << "The print debugger was here: " << RESET << "Kick.cpp:167" << std::endl;
-						std::cout	<< BLUE << "Size of client map before erasing: "
-									<< RESET << posInChannelMap->second.getClientMap().size() << std::endl;
-						posInChannelMap->second.broadcastNumericReply(KICK_MSG(client.getNickname(), \
+						posInChannelMap->second.broadcastNumericReply(KICK_MSG(client.getServerName(),\
+																		client.getNickname(),\
 																		posInChannelMap->first,\
 																		posInClientMap->first,\
 																		_kickReason));
 						posInChannelMap->second.removeConnectedClient(*it);
-						std::cout	<< BLUE << "Size of client map after erasing: "
-									<< RESET << posInChannelMap->second.getClientMap().size() << std::endl;
+						// if (no one in channel anymore)
+						// 	delete channel
 					}
 				}
 			}
