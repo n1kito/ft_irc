@@ -1,0 +1,179 @@
+:pouetMania 001 nickname :Welcome to the pouetMania Network, nickname
+
+Constructing client with socket 6
+ADDING CLIENT :6
+TOTAL CLIENTS :1
+Constructing client with socket 7
+ADDING CLIENT :7
+TOTAL CLIENTS :2
+
+             [2m#0[0m
+************ Received from client **********
+
+[1m[[0m[2mRequest[0m[1m][0m
+[35mCAP LS
+PASS pwd
+NICK jee
+USER cgosseli cgosseli localhost :Charlotte GOSSELIN
+[0m
+[1m[[0m[2mHandling[0m[1m][0m
+[34mCAP LS[0m
+command: CAP
+request: LS
+[34mPASS pwd[0m
+command: PASS
+request: pwd
+[30;43mPassword sent[0mpwd
+[34mNICK jee[0m
+command: NICK
+request: jee
+[34mUSER cgosseli cgosseli localhost :Charlotte GOSSELIN[0m
+command: USER
+request: cgosseli cgosseli localhost :Charlotte GOSSELIN
+[31mUsername : [0mcgosseli | Realname : Charlotte GOSSELIN
+[34m[0m
+client no.0: jee[2m	[6][0m
+client no.1: [2m	[7][0m
+********************************************
+
+             [2m#1[0m
+************ Received from client **********
+
+[1m[[0m[2mRequest[0m[1m][0m
+[35mMODE jee +i
+MODE jee +i
+[0m
+[1m[[0m[2mHandling[0m[1m][0m
+[34mMODE jee +i[0m
+command: MODE
+request: jee +i
+[34mMODE jee +i[0m
+command: MODE
+request: jee +i
+[34m[0m
+client no.0: jee[2m	[6][0m
+client no.1: [2m	[7][0m
+********************************************
+
+             [2m#2[0m
+************ Received from client **********
+
+[1m[[0m[2mRequest[0m[1m][0m
+[35mCAP LS
+PASS pwd
+NICK chacha
+USER cgosseli cgosseli localhost :Charlotte GOSSELIN
+[0m
+[1m[[0m[2mHandling[0m[1m][0m
+[34mCAP LS[0m
+command: CAP
+request: LS
+[34mPASS pwd[0m
+command: PASS
+request: pwd
+[30;43mPassword sent[0mpwd
+[34mNICK chacha[0m
+command: NICK
+request: chacha
+[34mUSER cgosseli cgosseli localhost :Charlotte GOSSELIN[0m
+command: USER
+request: cgosseli cgosseli localhost :Charlotte GOSSELIN
+[31mUsername : [0mcgosseli | Realname : Charlotte GOSSELIN
+[34m[0m
+client no.0: jee[2m	[6][0m
+client no.1: chacha[2m	[7][0m
+********************************************
+
+             [2m#3[0m
+************ Received from client **********
+
+[1m[[0m[2mRequest[0m[1m][0m
+[35mMODE chacha +i
+MODE chacha +i
+[0m
+[1m[[0m[2mHandling[0m[1m][0m
+[34mMODE chacha +i[0m
+command: MODE
+request: chacha +i
+[34mMODE chacha +i[0m
+command: MODE
+request: chacha +i
+[34m[0m
+client no.0: jee[2m	[6][0m
+client no.1: chacha[2m	[7][0m
+********************************************
+
+             [2m#4[0m
+************ Received from client **********
+
+[1m[[0m[2mRequest[0m[1m][0m
+[35mPING pouetMania
+[0m
+[1m[[0m[2mHandling[0m[1m][0m
+[34mPING pouetMania[0m
+command: PING
+request: pouetMania
+[34m[0m
+client no.0: jee[2m	[6][0m
+client no.1: chacha[2m	[7][0m
+********************************************
+
+             [2m#5[0m
+************ Received from client **********
+
+[1m[[0m[2mRequest[0m[1m][0m
+[35mPING pouetMania
+[0m
+[1m[[0m[2mHandling[0m[1m][0m
+[34mPING pouetMania[0m
+command: PING
+request: pouetMania
+[34m[0m
+client no.0: jee[2m	[6][0m
+client no.1: chacha[2m	[7][0m
+********************************************
+
+             [2m#6[0m
+************ Received from client **********
+
+[1m[[0m[2mRequest[0m[1m][0m
+[35mPRIVMSG jee :coucou
+[0m
+[1m[[0m[2mHandling[0m[1m][0m
+[34mPRIVMSG jee :coucou[0m
+command: PRIVMSG
+request: jee :coucou
+[34m[0m
+client no.0: jee[2m	[6][0m
+client no.1: chacha[2m	[7][0m
+********************************************
+
+             [2m#7[0m
+************ Received from client **********
+
+[1m[[0m[2mRequest[0m[1m][0m
+[35mPING pouetMania
+[0m
+[1m[[0m[2mHandling[0m[1m][0m
+[34mPING pouetMania[0m
+command: PING
+request: pouetMania
+[34m[0m
+client no.0: jee[2m	[6][0m
+client no.1: chacha[2m	[7][0m
+********************************************
+
+             [2m#8[0m
+************ Received from client **********
+
+[1m[[0m[2mRequest[0m[1m][0m
+[35mPING pouetMania
+[0m
+[1m[[0m[2mHandling[0m[1m][0m
+[34mPING pouetMania[0m
+command: PING
+request: pouetMania
+[34m[0m
+client no.0: jee[2m	[6][0m
+client no.1: chacha[2m	[7][0m
+********************************************
