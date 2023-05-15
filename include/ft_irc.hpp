@@ -34,7 +34,8 @@
 #define USERLEN 10
 #define REALNAMELEN 50
 #define NICKLEN 10
-#define MAXCHANNELS 20
+#define CHANLEN 10
+#define MAXCHANNELS 2
 #define MAXCLIENTS 100
 
 #include <iostream>
@@ -50,6 +51,7 @@
 #include <cstdarg>
 #include <ctime>
 
+#include <algorithm>
 // #include "ACommand.hpp"
 // #include "Nick.hpp"
 #include "Client.hpp"

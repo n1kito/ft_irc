@@ -251,6 +251,7 @@ void								Server::initCommands()
 	_commands["JOIN"] = new Join(&_clients, &_channels);
 	_commands["TOPIC"] = new Topic(&_clients, &_channels);
 	_commands["INVITE"] = new Invite(&_clients, &_channels);
+	_commands["PART"] = new Part(&_clients, &_channels);
 }
 
 void								Server::handleRequest(Client& client, const std::string& request)
@@ -305,9 +306,6 @@ void								Server::handleRequest(Client& client, const std::string& request)
 		// else, if command is found
 		if (_commands.find(command) != _commands.end())
 		{
-			// const std::string reply = _commands[command]->handleRequest(client, request); 
-			// TODO
-			// send(client.getClientSocket(), reply.c_str(), reply.length(), 0);
 			
 			// if the password is not set, accept only pass command
 			if ( command != "PASS" && client.getPassword().empty())

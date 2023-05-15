@@ -18,6 +18,8 @@
 #include "Invite.hpp"
 #include "Channel.hpp"
 #include "Join.hpp"
+#include "Part.hpp"
+
 #include <ctime>
 #include <unistd.h>
 

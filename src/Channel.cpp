@@ -26,6 +26,7 @@ Channel::Channel( std::string name, const Client& client ) :
 	_channelIsProtected(false)
 {
 	addConnectedClient(client);
+	addOperator(client);
 }
 
 Channel::Channel(const Channel &copyMe)
@@ -45,8 +46,8 @@ Channel::~Channel()
 
 Channel& Channel::operator = (const Channel &copyMe)
 {
-	_connectedClients = copyMe.getClientMap();;
-	_operators = copyMe.getOperators();;
+	_connectedClients = copyMe.getClientMap();
+	_operators = copyMe.getOperators();
 	_name = copyMe.getName();
 	_key = copyMe.getKey();
 	_topic = copyMe.getTopic();
@@ -78,6 +79,7 @@ const Channel::clientNickMap&	Channel::getClientMap() const { return _connectedC
 const Channel::clientNickMap&	Channel::getOperators() const { return _operators; }
 std::string						Channel::getNicknameOfTopicSetter() const { return _nicknameOfTopicSetter; }
 std::string						Channel::getTimeTopicWasSet() const { return _timeTopicWasSet; }
+size_t							Channel::getClientLimit() const { return _clientLimit; }
 
 // getters -> channel modes
 bool							Channel::isClientLimitMode() const { return _clientLimit > 0; }
@@ -115,7 +117,7 @@ void							Channel::addConnectedClient(const Client& clientRef)
 	//TODO: what is this condition for, is it necessary ?    
 	if (_connectedClients.find(clientRef.getNickname()) == _connectedClients.end())
 		_connectedClients[clientRef.getNickname()] = &clientRef;
-
+	
 	std::string nickname = clientRef.getNickname();
 	std::string server = clientRef.getServerName();
 	std::string	channel = _name;
@@ -136,14 +138,16 @@ void							Channel::removeConnectedClient(const std::string& clientNickname)
 	if (_connectedClients.find(clientNickname) != _connectedClients.end())
 		_connectedClients.erase(clientNickname);
 }
-void							Channel::addOperator(Client& clientRef)
+void							Channel::addOperator(const Client& clientRef)
 { 
+	std::cout << "[add operator]\n";
 	if (_operators.find(clientRef.getNickname()) == _operators.end())
 		_operators[clientRef.getNickname( )] = &clientRef;
 	// TODO: send numeric reply ?
 }
 void							Channel::removeOperator(const std::string& clientNickname)
 {
+	std::cout << "[remove operator]\n";
 	if (_operators.find(clientNickname) != _operators.end())
 		_operators.erase(clientNickname);
 	// TODO: send numeric reply ?
