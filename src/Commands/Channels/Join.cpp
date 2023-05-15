@@ -65,14 +65,6 @@ std::string		Join::action(Client &client)
 		{
 			Channel newChannel(_channelList[i], client);
 			(*_channels)[_channelList[i]] = newChannel;
-			// (*_channels)[_channelList[i]].addOperator(client);
-			// if a key is associated to channel, set Protection mode to channel and add key
-			// if (i < _keyList.size() && _keyList[i] != "x")
-			// {
-			// 	(*_channels)[_channelList[i]].setChannelProtection(true);
-			// 	if (!_keyList[i].empty())
-			// 		(*_channels)[_channelList[i]].setKey(_keyList[i]);
-			// }
 			client.addChannel((*_channels)[_channelList[i]]);
 		}
 		// else add client to existing channel

@@ -19,7 +19,7 @@
 #include "Channel.hpp"
 #include "Join.hpp"
 #include "Part.hpp"
-
+#include "Quit.hpp"
 #include "Kick.hpp"
 #include <ctime>
 #include <unistd.h>
