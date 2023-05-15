@@ -140,8 +140,8 @@ std::string						Channel::listModes() const
 	for (modeMap::const_iterator it = _channelModes.begin(); it != _channelModes.end(); ++it)
 	{
 		returnStream << (*it).first;
-		if (it != --_channelModes.end())
-			returnStream << ' ';
+		// if (it != --_channelModes.end())
+			// returnStream << ' ';
 	}
 	return returnStream.str();
 }
@@ -174,11 +174,11 @@ bool							Channel::isClientConnected(const Client& clientRef) const
 
 // setters
 void							Channel::setTopic(const std::string& newTopic) { _topic = newTopic;}
-void							Channel::setKey(const std::string& newKey) { _key = newKey;}
+// void							Channel::setKey(const std::string& newKey) { _key = newKey;}
 
 
 void							Channel::setName(const std::string& newName) { _name = newName; }
-void							Channel::setClientLimit(const size_t& limit) { _clientLimit = limit; }
+// void							Channel::setClientLimit(const size_t& limit) { _clientLimit = limit; }
 void							Channel::setTopicProtection(const bool& status) { _topicIsProtected = status; }
 void							Channel::setChannelProtection(const bool& status) { _channelIsProtected = status; }
 

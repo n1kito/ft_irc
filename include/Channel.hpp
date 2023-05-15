@@ -57,13 +57,13 @@ class Channel
 		bool					isInvited(const std::string& clientNick) const;
 
 		// setters
-		void					setKey(const std::string& newKey);
+		// void					setKey(const std::string& newKey);
 		void					setChannelProtection(const bool& status);
 		void					setName(const std::string& newName);
 		void					setTopic(const std::string& newTopic);
-		void					setClientLimit(const size_t& limit);
+		// void					setClientLimit(const size_t& limit);
 		void					setTopicProtection(const bool& status);
-		void					setInviteOnly(const bool& status);
+		// void					setInviteOnly(const bool& status);
 		void					addConnectedClient(const Client& clientRef);
 		void					removeConnectedClient(const std::string& clientNickname);
 		void					addOperator(const Client& clientRef);
