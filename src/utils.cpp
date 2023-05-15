@@ -92,3 +92,22 @@ void	sendCustomNumericReply(const std::string& message, const int& code, const C
 	std::string returnMessage = messageStream.str();
 	send(client.getClientSocket(), returnMessage.c_str(), returnMessage.size(), 0);
 }
+
+// trim functions
+void	leftTrim(std::string& str, std::string trimmer)
+{
+	size_t pos = str.find_first_not_of(trimmer);
+	str.erase(0, pos);
+}
+
+void	rightTrim(std::string& str, std::string trimmer)
+{
+	size_t pos = str.find_first_of(trimmer);
+	str.erase(pos);
+}
+
+void	rlTrim(std::string& str, std::string trimmer)
+{
+	leftTrim(str, trimmer);
+	rightTrim(str, trimmer);
+}

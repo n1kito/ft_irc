@@ -35,7 +35,7 @@
 #define REALNAMELEN 50
 #define NICKLEN 10
 #define CHANLEN 10
-#define MAXCHANNELS 2
+#define MAXCHANNELS 20
 #define MAXCLIENTS 100
 
 #include <iostream>
@@ -58,10 +58,13 @@
 class Client;
 
 // Prototypes
-void 			checkArguments(const int &argc, char **arguments, int &port, std::string &password);
-bool 			isSpecialCharacter(char checkMe);
-void 			sendNumericReplies(const size_t &numberOfReplies, const size_t clientFd, ...);
-void 			sendCustomNumericReply(const std::string &message, const int &code, const Client &client);
-std::string		getCurrentDate();
+void 		checkArguments(const int &argc, char **arguments, int &port, std::string &password);
+bool 		isSpecialCharacter(char checkMe);
+void 		sendNumericReplies(const size_t &numberOfReplies, const size_t clientFd, ...);
+void 		sendCustomNumericReply(const std::string &message, const int &code, const Client &client);
+std::string getCurrentDate();
+void		leftTrim(std::string& str, std::string trimmer);
+void		rightTrim(std::string& str, std::string trimmer);
+void		rlTrim(std::string& str, std::string trimmer);
 
 #endif // FT_IRC_HPP

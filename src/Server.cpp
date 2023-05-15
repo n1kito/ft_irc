@@ -252,6 +252,7 @@ void								Server::initCommands()
 	_commands["TOPIC"] = new Topic(&_clients, &_channels);
 	_commands["INVITE"] = new Invite(&_clients, &_channels);
 	_commands["PART"] = new Part(&_clients, &_channels);
+	_commands["KICK"] = new Kick(&_clients, &_channels);
 }
 
 void								Server::handleRequest(Client& client, const std::string& request)
@@ -286,18 +287,21 @@ void								Server::handleRequest(Client& client, const std::string& request)
 		size_t		firstSpace;
 		std::string	line;
 		std::string	command;
-		std::string	request;
+		std::string	request = "";
 
 		std::getline(requestStream, line);
-		std::cout << line << "\n";
+		std::cout << BLUE << line << RESET << "\n";
 		if (line.empty())
 			continue ;
 		firstSpace = line.find(' ', 0);
 		if (firstSpace == std::string::npos)
-			break ;
-		// PRINT("extracting command", "");
-		command = line.substr(0, firstSpace);
-		request = line.substr(firstSpace + 1, std::string::npos);
+			command = line;
+		else
+		{
+			// PRINT("extracting command", "");
+			command = line.substr(0, firstSpace);
+			request = line.substr(firstSpace + 1, std::string::npos);
+		}
 		PRINT("command", command);
 		PRINT("request", request);
 		// if client has been disconnected

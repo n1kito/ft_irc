@@ -20,6 +20,7 @@
 #include "Join.hpp"
 #include "Part.hpp"
 
+#include "Kick.hpp"
 #include <ctime>
 #include <unistd.h>
 
