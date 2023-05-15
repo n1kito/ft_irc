@@ -70,6 +70,25 @@ void							Channel::broadcastNumericReply(const std::string message) const
 		send((*it).second->getClientSocket(), message.c_str(), message.size(), 0);
 }
 
+
+void							Channel::sendMessageToChannel(const std::string message, Client& client) const
+{
+	if (_connectedClients.empty())
+		return;
+	for (Channel::clientNickMap::const_iterator it = _connectedClients.begin(); it != _connectedClients.end(); ++it)
+		if ((*it).second->getClientSocket() != client.getClientSocket())
+			send((*it).second->getClientSocket(), message.c_str(), message.size(), 0);
+}
+
+void							Channel::sendMessageToOperators(const std::string message, Client& client) const
+{
+	if (_operators.empty())
+		return;
+	for (Channel::clientNickMap::const_iterator it = _operators.begin(); it != _operators.end(); ++it)
+		if ((*it).second->getClientSocket() != client.getClientSocket())
+			send((*it).second->getClientSocket(), message.c_str(), message.size(), 0);
+}
+
 // getters
 std::string						Channel::getName() const { return _name; }
 std::string						Channel::getKey() const { return _key; }

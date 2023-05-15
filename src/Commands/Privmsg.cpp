@@ -48,8 +48,8 @@ void	Privmsg::handleRequest(Client &client, std::string arg)
 		std::string parseResult = parseArgument(client, arg);
 		if (!parseResult.empty())
 			message = parseResult;
-		// else
-		// 	message = action(client);
+		else
+			message = action(client);
 	}
 	send(client.getClientSocket(), message.c_str(), message.length(), 0);
 
@@ -69,13 +69,14 @@ std::string	Privmsg::parseArgument(Client &client, std::string& arg)
 	std::string			buffer		=	"";
 
 	std::getline(argStream, targets, ' ');
-	std::getline(argStream, _message, ' ');
+	std::getline(argStream, _message);
 
 	if (targets.empty())
-		return ERR_NEEDMOREPARAMS(client.getServerName(), client.getNickname(), "PRIVMSG");
-
-	// if (!_kickReason.empty() && _kickReason.at(0) == ':') // can it throw an exception  ?
-	// 	_kickReason.erase(0, 1);
+		return ERR_NORECIPIENT(client.getServerName(), client.getNickname());
+	if (_message.empty())
+		return ERR_NOTEXTTOSEND(client.getServerName(), client.getNickname());
+	if (!_message.empty() && _message.at(0) == ':') // can it throw an exception  ?
+		_message.erase(0, 1);
 	
 	// init vector of targets
 	std::stringstream	targetsStream(targets);
@@ -100,9 +101,58 @@ std::string	Privmsg::parseArgument(Client &client, std::string& arg)
 
 std::string Privmsg::action(Client &client)
 {
-	(void)_channelMap;
-	(void)client;
-	return "";
+	std::cout << GREEN << "[PRIVMSG - action]\n" << RESET;
+
+	std::string	message = "";
+
+	for (std::vector< std::string >::iterator targetIt = _targetVector.begin(); targetIt != _targetVector.end(); ++targetIt)
+	{
+		// check if it is a channel
+		std::cout << RED << "Target name: " << RESET << *targetIt << std::endl;
+		if (!targetIt->empty() && targetIt->at(0) == '#')
+		{
+			// check if the channel exists and if it does, keep its pos in the channel map
+			channelMap::iterator posInChannelMap	= _channelMap->find(*targetIt);
+			if (posInChannelMap == _channelMap->end())
+				return ERR_NOSUCHCHANNEL(client.getServerName(), client.getNickname(), *targetIt);
+			
+			message = sendToChannel(client, posInChannelMap->second, *targetIt);
+		}
+		else
+		{
+			Client* targetClient = getClientByNickname(*targetIt);
+			if (!targetClient)
+				return ERR_NOSUCHCHANNEL(client.getServerName(), client.getNickname(), *targetIt);
+			
+			sendNumericReplies(1, targetClient->getClientSocket(),\
+								PRIVMSG(client.getServerName(),\
+										client.getNickname(), \
+										targetClient->getNickname(),\
+										_message).c_str());
+			std::cout << RED << "Targetted client :" << RESET << targetClient->getNickname() << std::endl;
+			// getClientByNickname
+		}
+
+	}
+	std::cout << RED << message << RESET << std::endl;
+	return message;
+}
+	// (void)_channelMap;
+	// (void)client;
+
+std::string			Privmsg::sendToChannel(Client& client, Channel& channel, std::string& target)
+{
+	std::string message = "";
+
+	// check if the user is on the channel (we didn't implement the +n mode so if the user is not on channel
+	// we send ERR_NOTONCHANNEL)
+	if (!channel.isClientConnected(client))
+		return ERR_CANNOTSENDTOCHAN(client.getServerName(), client.getNickname(), channel.getName());
+	if (target.size() > 1 && target.at(1) == '%')
+		channel.sendMessageToOperators(PRIVMSG(client.getServerName(), client.getNickname(), channel.getName(), _message), client);
+	else
+		channel.sendMessageToChannel(PRIVMSG(client.getServerName(), client.getNickname(), channel.getName(), _message), client);
+	return message;
 }
 
 

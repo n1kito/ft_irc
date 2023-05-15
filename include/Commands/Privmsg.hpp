@@ -19,6 +19,7 @@ class Privmsg : public ACommand
 		void				handleRequest(Client &client, std::string arg);
 		std::string			parseArgument(Client &client, std::string& arg);
 		std::string			action(Client &client);
+		std::string			sendToChannel(Client& client, Channel& channel, std::string& target);
 
 	protected:
 		// add protected elements here
@@ -27,6 +28,7 @@ class Privmsg : public ACommand
 		std::string					_message;
 		std::vector< std::string >	_targetVector;
 		channelMap*					_channelMap;
+		
 
 		void		parseArgument();
     	void		action();
