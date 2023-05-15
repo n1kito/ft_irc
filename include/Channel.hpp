@@ -48,6 +48,7 @@ class Channel
 		bool					modeIs(const char& mode);
 		bool					modeIs(const std::string& mode);
 		std::string				getModeParameter(const char& modeStr);
+		void					updateMode(const char& mode, const std::string& param);
 		std::string				listModes() const;
 		std::string				listModeParameters() const;
 

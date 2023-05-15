@@ -25,6 +25,7 @@ class Mode : public ACommand
 		void		applyChannelModes(Client& client, Channel& channel, std::string modes, std::vector<std::string>& arguments);
 		bool		toggleKeyMode(Channel& channel, const char& changeMode, std::vector<std::string>& arguments, std::vector<std::string>& parametersSet);
 		bool		toggleClientLimitMode(Channel& channel, const char& changeMode, std::vector<std::string>& arguments, std::vector<std::string>& parametersSet);
+		bool		updateChannelOperator(Client& client, Channel& channel, const char& changeMode, std::vector<std::string>& arguments, std::vector<std::string>& parametersSet);
 
 	protected:
 		// add protected elements here

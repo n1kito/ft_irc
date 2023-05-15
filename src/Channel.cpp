@@ -133,6 +133,7 @@ std::string						Channel::getModeParameter(const char& mode)
 		return _channelModes[mode];
 	return "";
 }
+void							Channel::updateMode(const char& mode, const std::string& param) { _channelModes[mode] = param; }
 std::string						Channel::listModes() const
 {
 	std::stringstream		returnStream;
@@ -151,9 +152,12 @@ std::string						Channel::listModeParameters() const
 
 	for (modeMap::const_iterator it = _channelModes.begin(); it != _channelModes.end(); ++it)
 	{
-		returnString += (*it).second;
-		if (it != --_channelModes.end())
-			returnString += " ";
+		if ((*it).second.empty() == false)
+		{
+			returnString += (*it).second;
+			if (it != --_channelModes.end())
+				returnString += " ";
+		}
 	}
 	return returnString;
 }
