@@ -182,7 +182,7 @@ void							Channel::setClientLimit(const size_t& limit) { _clientLimit = limit; 
 void							Channel::setTopicProtection(const bool& status) { _topicIsProtected = status; }
 void							Channel::setChannelProtection(const bool& status) { _channelIsProtected = status; }
 
-void							Channel::setInviteOnly(const bool& status) { _inviteOnly = status; }
+// void							Channel::setInviteOnly(const bool& status) { _inviteOnly = status; }
 void							Channel::addConnectedClient(const Client& clientRef)
 { 
 	//TODO: what is this condition for, is it necessary ?    

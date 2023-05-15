@@ -58,7 +58,6 @@ void	Mode::handleRequest(Client &client, std::string arg)
 	std::string					modes;
 	std::vector<std::string>	arguments;
 
-	(void)_channelMap;
 	parseArgument(arg, target, modes, arguments);
 	if (target.empty())
 		sendNumericReplies(1, client.getClientSocket(), \
@@ -129,8 +128,9 @@ void	Mode::handleRequest(Client &client, std::string arg)
 
 void	Mode::applyUserModes(Client& client, const std::string& target, std::string modes)
 {
-	char changeMode = modes[0];
+	char 		changeMode = modes[0];
 	std::string successfullyChanged(1, changeMode);
+	std::string	parametersSet;
 	// std::string	failedToChange = "";
 
 	for (size_t i = 1; i < modes.length(); ++i)
@@ -166,47 +166,33 @@ void	Mode::applyUserModes(Client& client, const std::string& target, std::string
 	// 		ERR_UMODEUNKNOWNFLAG(client.getServerName(), client.getNickname(), std::string(1, failedToChange[i])).c_str());
 }
 
-void		Mode::applyChannelModes(Client& client, Channel& channel, std::string modes, std::vector<std::string> arguments)
+void		Mode::applyChannelModes(Client& client, Channel& channel, std::string modes, std::vector<std::string>& arguments)
 {
-	(void)arguments;
-	char changeMode = modes[0];
-	std::string	successfullyChanged(1, changeMode);
-	std::string	changedParameters = "";
+	char 						changeMode = modes[0];
+	std::string					successfullyChanged(1, changeMode);
+	std::vector<std::string>	changedParameters = "";
 
-	// size_t	parametersIndex = 0;
 	for (size_t modesIndex = 1; modesIndex < modes.length(); ++modesIndex)
 	{
-		if (modes[modesIndex] == 'i') // invite-only
+		if (modes[modesIndex] == 'i' || modes[modesIndex] == 't')
 		{
-			if (changeMode == '+')
+			if (changeMode == '+' && channel.modeIs(modes[modesIndex]) == false)
 			{
-				if (channel.modeIs('i') == false)
-				{
-					channel.addChannelMode('i');
-					successfullyChanged += "i";
-				}
+				channel.addChannelMode(modes[modesIndex]);
+				successfullyChanged += std::string(modes[modesIndex], 1);
 			}
-			else
+			else if (changeMode == '-' && channel.modeIs(modes[modesIndex] == true))
 			{
-				if (channel.modeIs('i') == true)
-				{
-					channel.removeChannelMode('i');
-					successfullyChanged += "i";
-				}
+				channel.removeChannelMode(modes[modesIndex]);
+				successfullyChanged += std::string(modes[modesIndex], 1);
 			}
 		}
-		else if (modes[modesIndex] == 't') // topic-protected
-		{
-			
-		}
-		else if (modes[modesIndex] == 'k') // key
-		{
-
-		}
-		else if (modes[modesIndex] == 'l') // client-limit
-		{
-			
-		}
+		else if (modes[modesIndex] == 'k')
+			if (toggleKeyMode(channel, changeMode, arguments, changedParameters) == true)
+				successfullyChanged += std::string('k', 1);
+		else if (modes[modesIndex] == 'l')
+			if (toggleClientLimitMode(channel, changeMode, arguments, changedParameters) == true)
+				successfullyChanged += std::string('l', 1);
 		else
 			sendNumericReplies(1, client.getClientSocket(), \
 				ERR_UNKNOWNMODE(client.getServerName(), client.getNickname(), std::string(1, modes[modesIndex])).c_str());
@@ -214,7 +200,64 @@ void		Mode::applyChannelModes(Client& client, Channel& channel, std::string mode
 	std::cout << "Changed parameters: " << successfullyChanged << std::endl;
 	// TODO: this sends wrong message that attributes changed to sercer name and not cliet Nickname
 	// TODO: Also there is a lag ?
+	//  TODO: this also needs to send the actual parameters
+	// TODO: Also, this should be broadcast not just sent
 	// if (successfullyChanged.length() > 1)
 	// 	sendNumericReplies(1, client.getClientSocket(), \
 	// 		MODE_MSG(client.getServerName(), client.getNickname(), channel.getName(), successfullyChanged).c_str());
+}
+
+bool	Mode::toggleKeyMode(Channel& channel, const char& changeMode, std::vector<std::string>& arguments, std::vector<std::string>& parametersSet)
+{
+	if (changeMode == '+' && channel.modeIs('k') == false)
+	{
+		// This mode needs an argument, if there is none we ignore it
+		if (arguments.size())
+		{
+			// Store the argument and remove it from the vector, so we don't use it twice
+			std::string	password(arguments[0]);
+			// Update the channel settings accordingly
+			channel.addChannelMode('k');
+			channel.setKey(password);
+			// Store the argument we just set in the corresponding vector, so we can output it later
+			parametersSet.push_back(password);
+			// And remove it from the arguments vector so we don't use it twice
+			arguments.erase(arguments.begin());
+		}
+	}
+	else if (changeMode == '-' && channel.modeIs('k') == true)
+	{
+		channel.removeChannelMode('k');
+		channel.setKey("");
+	}
+}
+
+bool	Mode::toggleClientLimitMode(Channel& channel, const char& changeMode, std::vector<std::string>& arguments, std::vector<std::string>& parametersSet)
+{
+	if (changeMode == '+' && channel.modeIs('l') == false)
+	{
+		// This mode needs an argument, if there is none we ignore it
+		if (arguments.size())
+		{
+			size_t				clientLimit;
+			// Store the argument
+			std::stringstream	parameter(arguments[0]);
+			// Check that it's actually a number.
+			parameter >> clientLimit;
+			if (parameter.failbit)
+				return false;
+			// Update the channel setting accordingly
+			channel.addChannelMode('l');
+			channel.setClientLimit(clientLimit);
+			// Store the argument we just set in the corresponding vector, so we can output it later
+			parametersSet.push_back(arguments[0]);
+			// And remove that argument from the arguments vector, so we never use it twice
+			arguments.erase(arguments.begin());
+		}
+	}
+	else if (changeMode == '-' && channel.modeIs('l') == true)
+	{
+		channel.removeChannelMode('l');	
+		channel.setClientLimit(0);
+	}
 }

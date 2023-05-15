@@ -22,7 +22,9 @@ class Mode : public ACommand
     	void		parseArgument(std::string& arg, std::string& target, std::string& modes, std::vector<std::string>& arguments);
     	void		action();
 		void		applyUserModes(Client& client, const std::string& target, std::string modes);
-		void		applyChannelModes(Client& client, Channel& channel, std::string modes, std::vector<std::string> arguments);
+		void		applyChannelModes(Client& client, Channel& channel, std::string modes, std::vector<std::string>& arguments);
+		bool		toggleKeyMode(Channel& channel, const char& changeMode, std::vector<std::string>& arguments, std::vector<std::string>& parametersSet);
+		bool		toggleClientLimitMode(Channel& channel, const char& changeMode, std::vector<std::string>& arguments, std::vector<std::string>& parametersSet);
 
 	protected:
 		// add protected elements here
