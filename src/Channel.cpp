@@ -114,7 +114,6 @@ void							Channel::setChannelProtection(const bool& status) { _channelIsProtect
 void							Channel::setInviteOnly(const bool& status) { _inviteOnly = status; }
 void							Channel::addConnectedClient(const Client& clientRef)
 {
-	std::cout << GREEN << "\n[CHANNEL - addConnectedClient]\n" << RESET ;
 	//TODO: what is this condition for, is it necessary ?    
 	if (_connectedClients.find(clientRef.getNickname()) == _connectedClients.end())
 		_connectedClients[clientRef.getNickname()] = &clientRef;
@@ -123,7 +122,6 @@ void							Channel::addConnectedClient(const Client& clientRef)
 	std::string server = clientRef.getServerName();
 	std::string	channel = _name;
 	
-	std::cout << "\nchannel:<" << channel << ">\n";
 	// Let everyone on the Channel know that user has joined
 	broadcastNumericReplies(1, JOIN_MSG(server, _name, nickname).c_str());
 	if (_topic.empty() == false)
