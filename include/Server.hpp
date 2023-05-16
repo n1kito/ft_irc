@@ -19,8 +19,9 @@
 #include "Channel.hpp"
 #include "Join.hpp"
 #include "Part.hpp"
-
 #include "Kick.hpp"
+#include "Mode.hpp"
+
 #include <ctime>
 #include <unistd.h>
 

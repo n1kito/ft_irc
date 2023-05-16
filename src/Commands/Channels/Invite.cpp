@@ -69,7 +69,7 @@ void	Invite::action(const Client& client, const std::string& channel, const std:
 		sendNumericReplies(1, client.getClientSocket(), \
 			ERR_NOTONCHANNEL(client.getServerName(), client.getNickname(), channel).c_str());
 	// If channel is invite only and user inviting is not an operator
-	else if (targetChannel.isInviteOnly() && targetChannel.isClientOperator(client) == false)
+	else if (targetChannel.modeIs("invite-only") && targetChannel.isClientOperator(client) == false)
 		sendNumericReplies(1, client.getClientSocket(), \
 			ERR_CHANOPRIVSNEEDED(client.getServerName(), client.getNickname(), channel).c_str());
 	// If user is already on the channel
@@ -79,7 +79,7 @@ void	Invite::action(const Client& client, const std::string& channel, const std:
 	// Invite is successful, yay !
 	else
 	{
-		if (targetChannel.isInviteOnly())
+		if (targetChannel.modeIs("invite-only"))
 			targetChannel.addInvitedClient(invitedUserNick);
 		sendNumericReplies(1, client.getClientSocket(), \
 			RPL_INVITING(client.getServerName(), client.getNickname(), invitedUserNick, channel).c_str());

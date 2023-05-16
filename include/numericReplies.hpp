@@ -44,10 +44,8 @@
 #define ERR_NICKNAMEINUSE(server, nickname) (std::string(":") + server + " 433 " + nickname + " " + nickname + " :Nickname is already in use\r\n")
 // 436
 #define ERR_NICKCOLLISION(server, nickname) (std::string(":") + server + " 436 " + nickname + " :Nickname collision KILL \r\n")
-
-
 // 441
-# define ERR_USERNOTINCHANNEL(server, clientNick, userNick, channel) (std::string(":"  + server + " 441 " + clientNick + " " + userNick + " " + channel + " :They aren't on that channel\r\n"))
+#define ERR_USERNOTINCHANNEL(server, client, nickname, channel) (std::string(":") + server + " 441 " + client + " " + nickname + " " + channel + " :They aren't on that channel\r\n")
 // 442
 #define ERR_NOTONCHANNEL(server, client, channel) (std::string(":") + server + " 442 " + client + " " + channel + " :You're not on that channel\r\n") 
 // 443
@@ -60,6 +58,17 @@
 #define ERR_PASSWDMISMATCH(server, nickname) (std::string(":") + server + " 464 " + nickname + " :Password incorrect\r\n")
 // 482
 #define ERR_CHANOPRIVSNEEDED(server, client, channel) (std::string(":") + server + " 482 " + client + " " + channel + " :You're not channel operator\r\n")
+
+// MODE
+// 502
+#define ERR_USERSDONTMATCH(server, client) (std::string(":") + server + " 502 " + client + " :Cannot change mode for other users\r\n")
+#define RPL_UMODEIS(server, client, modes) (std::string(":") + server + " 221 " + client + " " + modes + "\r\n")
+#define ERR_UMODEUNKNOWNFLAG(server, client, modeCharacter) (std::string(":") + server + " 501 " + client + " :Unknown mode flag " + modeCharacter + "\r\n") 
+// #define MODE_MSG(server, client, target, modes) (std::string(":") + server + "!" + client + " MODE " + target + " " + modes + "\r\n")
+#define MODE_MSG(server, client, target, modes) (std::string(":") + client + "!" + client + "@" + server + " MODE " + target + " " + modes + "\r\n")
+#define RPL_CHANNELMODEIS(server, client, channel, modes, modeArguments) (std::string(":") + server + " 324 " + client + " " + channel + " " + modes + " " + modeArguments + "\r\n")
+#define RPL_CREATIONTIME(server, client, channel, creationTime) (std::string(":") + server + " 329 " + client + " " + channel + " " + creationTime + "\r\n")
+#define ERR_UNKNOWNMODE(server, client, modeChar) (std::string(":") + server + " 472 " + client + " " + modeChar + " :is unknown mode char to me\r\n") 
 
 // TODO: check custom message codes and whether we need them at all or not
 // Custom Messages

@@ -133,4 +133,3 @@ void	Nick::handleRequest(Client &client, std::string arg)
 	They MUST NOT start with a character listed as a channel type prefix.
 	They SHOULD NOT contain any dot character ('.', 0x2E).
 */
-

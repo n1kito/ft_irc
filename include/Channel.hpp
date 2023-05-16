@@ -19,8 +19,10 @@ class Channel
 	public:
 		typedef std::map< std::string, const Client* >	clientNickMap;
 		typedef std::vector< std::string >				nickVector;
+		typedef std::map< char, std::string >			modeMap;
 
 		Channel( std::string name, const Client& client );
+		// TODO: should the copy constructors and default constructor be made private ?
 		Channel(const Channel &copyMe);
 		Channel&				operator = (const Channel &copyMe);
 		Channel();
@@ -37,13 +39,19 @@ class Channel
 		const clientNickMap&	getClientMap() const;
 		const clientNickMap&	getOperators() const;
 		std::string				getNicknameOfTopicSetter() const;
+		std::string				getCreationTime() const;
 		std::string				getTimeTopicWasSet() const;
 		size_t					getClientLimit() const;
+		const nickVector&		getInvitedClients() const;
 		// getters -> channel modes
-		bool					isClientLimitMode() const;
-		bool					isTopicProtectedMode() const;
-		bool					isChannelProtectedMode() const;
-		bool					isInviteOnly() const;
+		bool					addChannelMode(const char& mode, const std::string& parameter = "");
+		bool					removeChannelMode(const char& mode);
+		bool					modeIs(const char& mode);
+		bool					modeIs(const std::string& mode);
+		std::string				getModeParameter(const char& modeStr);
+		void					updateMode(const char& mode, const std::string& param);
+		std::string				listModes() const;
+		std::string				listModeParameters() const;
 
 		// checkers
 		bool					isClientOperator(const Client& clientRef) const;
@@ -51,13 +59,13 @@ class Channel
 		bool					isInvited(const std::string& clientNick) const;
 
 		// setters
-		void					setKey(const std::string& newKey);
+		// void					setKey(const std::string& newKey);
 		void					setChannelProtection(const bool& status);
 		void					setName(const std::string& newName);
 		void					setTopic(const std::string& newTopic);
-		void					setClientLimit(const size_t& limit);
+		// void					setClientLimit(const size_t& limit);
 		void					setTopicProtection(const bool& status);
-		void					setInviteOnly(const bool& status);
+		// void					setInviteOnly(const bool& status);
 		void					addConnectedClient(const Client& clientRef);
 		void					removeConnectedClient(const std::string& clientNickname);
 		void					addOperator(const Client& clientRef);
@@ -86,13 +94,17 @@ class Channel
 		std::string				_topic;
 		std::string				_nicknameOfTopicSetter;
 		std::string				_timeTopicWasSet;
+		std::string				_timeChannelWasCreated;
 		
 		std::string				_key;
+
 		// Channel modes
+		modeMap					_channelModes;
 		size_t					_clientLimit;
 		bool					_inviteOnly;
 		bool					_topicIsProtected;
 		bool					_channelIsProtected;
+
 		// Channel&		operator = (const Channel &copyMe);
 
 };

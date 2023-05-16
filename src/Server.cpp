@@ -160,11 +160,10 @@ Server::Server(const Server &copyMe)
 Server::~Server()
 {
 	// std::cout << "Destructor called" << std::endl;
-	// while(_commands.size() != 0)
-	// {
-	// 	delete _commands[0].first;
-
-	// }
+	while(_commands.size() != 0)
+	{
+		delete _commands[0];
+	}
 }
 
 /* OVERLOADS ******************************************************************/
@@ -253,6 +252,7 @@ void								Server::initCommands()
 	_commands["INVITE"] = new Invite(&_clients, &_channels);
 	_commands["PART"] = new Part(&_clients, &_channels);
 	_commands["KICK"] = new Kick(&_clients, &_channels);
+	_commands["MODE"]	= new Mode(&_clients, &_channels);
 }
 
 void								Server::handleRequest(Client& client, const std::string& request)

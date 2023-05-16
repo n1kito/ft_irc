@@ -15,6 +15,7 @@ SRC_FILES		:=	main\
 					Client\
 					Channel\
 					Commands/ACommand\
+					Commands/Mode\
 					Commands/Authentification/Nick\
 					Commands/Authentification/Pass\
 					Commands/Authentification/User\

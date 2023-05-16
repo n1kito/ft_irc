@@ -69,9 +69,43 @@ int				Client::getClientSocket() const { return _clientSocket; }
 bool			Client::getWelcomeState() const { return _welcomeState; }
 std::string		Client::getServerName() const { return _serverName; }
 bool			Client::getPasswordStatus() const { return _passwordStatus; }
-bool			Client::getInvitationStatus() const { return _invitationStatus; }
 Channel*		Client::getCurrentChannel() const { return _currentChannel; }
 const Client::channelsMap&	Client::getChannelsMap() const { return _connectedToChannels; }
+std::string		Client::getUserModes() const { return _userModes.empty() ? _userModes : "+" + _userModes; }
+
+// getters -> channel modes
+// TODO: do we want these methods to take a char instead of a string ? Easier
+bool			Client::addUserMode(const char& mode)
+{
+	if (mode == 'i')
+	{
+		if ((*this).modeIs('i') == false)
+			_userModes.push_back('i');
+		return true;
+	}
+	return false;
+}
+bool			Client::removeUserMode(const char& mode)
+{
+	size_t	modePositionInString = 0;
+
+	if (mode == 'i')
+	{
+		modePositionInString = _userModes.find('i');
+		if (modePositionInString != std::string::npos)
+		{
+			_userModes.erase(modePositionInString, 1);
+			return true;
+		}
+	}
+	return false;
+}
+bool			Client::modeIs(const char &mode)
+{
+	if (mode == 'i')
+		return _userModes.find('i') != std::string::npos;
+	return false;
+}
 
 void			Client::setRegisterState(bool state) { _isRegistered = state; }
 void			Client::setUsername(std::string username) { _username = username; }

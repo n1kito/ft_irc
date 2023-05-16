@@ -80,14 +80,15 @@ std::string		Join::action(Client &client)
 		{
 			// TODO: MODE
 			// check if channel has set limit for nb users 
-			// if (it->second.getClientMap().size() >= it->second.getClientLimit())
-			// 	return (ERR_CHANNELISFULL(client.getServerName(), client.getNickname(), it->second.getName()));
-			// if (it->second.isInviteOnly == true && client->getInvitationstatus == false)
-			//	return (ERR_INVITEONLYCHAN(client.getServerName(), client.getNickname(), it->second.getName()));
-			if (!it->second.getKey().empty())
+			if (it->second.modeIs("client-limit") && it->second.getClientMap().size() >= static_cast< size_t >(std::atoi(it->second.getModeParameter('l').c_str())))
+				return (ERR_CHANNELISFULL(client.getServerName(), client.getNickname(), it->second.getName()));
+			if (it->second.modeIs("invite-only") && !it->second.isInvited(client.getNickname()))
+				return (ERR_INVITEONLYCHAN(client.getServerName(), client.getNickname(), it->second.getName()));
+			if (it->second.modeIs("key"))
+			// if (!it->second.getKey().empty())
 			{
 				// if key is incorrect, cannot join channel and send error
-                if (_keyList.empty() || (i < _keyList.size() && it->second.getKey() != _keyList[i]))
+                if (_keyList.empty() || (i < _keyList.size() && it->second.getModeParameter('k') != _keyList[i]))
 					return (ERR_BADCHANNELKEY(client.getServerName(), client.getNickname(), it->second.getName()));
 			}
 			it->second.addConnectedClient(client);
