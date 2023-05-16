@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Part.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jeepark <jeepark@student.42.fr>            +#+  +:+       +#+        */
+/*   By: jeepark <jeepark@student42.fr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 14:09:42 by jeepark           #+#    #+#             */
-/*   Updated: 2023/05/12 17:31:44 by jeepark          ###   ########.fr       */
+/*   Updated: 2023/05/16 16:10:42 by jeepark          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,17 @@ void	Part::parseArgument() {}
 void	Part::action() {}
 void	Part::action(Client &client)
 {
+	// check is reason message is valid
+	if ( !_reason.empty() && _reason[0] != ':')
+	{
+		sendNumericReplies(1, client.getClientSocket(), (ERR_NOSUCHCHANNEL(client.getServerName(), client.getNickname(), _reason)).c_str());
+		return;
+	}
+	// erase ':' to display message
+	std::size_t colonMarkFinder = _reason.find(':');
+	if (colonMarkFinder != std::string::npos)
+		_reason.erase(colonMarkFinder, colonMarkFinder + 1);
+	
 	std::map< std::string, Channel >::iterator it;
 	for (size_t i = 0; i < _channelList.size(); i++)
 	{
@@ -79,11 +90,7 @@ void Part::parseArgument(std::string& arg)
 	// std::string message;
 	std::getline(argStream, channelArg, ' ');
 	std::getline(argStream, this->_reason);
-	
-	std::cout << "message:<" <<  _reason << ">\n";
-	std::size_t colonMarkFinder = _reason.find(':');
-	if (colonMarkFinder != std::string::npos)
-		_reason.erase(colonMarkFinder, colonMarkFinder + 1);
+
 	// split channelArg with ',' and check if valid 
 	std::string buffer;
 	std::stringstream channelStream(channelArg);

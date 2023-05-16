@@ -94,6 +94,8 @@
 #define JOIN_MSG(server, channel, nickname) (std::string(":") + nickname + "!" + server + " JOIN " + channel + " " +  nickname + "\r\n")
 #define PART_MSG(server, channel, nickname, message) (std::string(":") + channel + "!" + server + " PART " + nickname +" :" + message+ "\r\n")
 
+
+
 // 476 
 #define ERR_BADCHANMASK(channel) (std::string(":") + channel + " 476 " + ":Bad Channel Mask\r\n")
 // 475
@@ -106,5 +108,10 @@
 #define ERR_INVITEONLYCHAN(server, nickname, channel) (std::string(":") + server + " 473 " + nickname + " " + channel + " :Cannot join channel (+i)\r\n")
 
 #define PRIVMSG(server, sender, channel, message) (std::string(":") + sender + "!" + server + "@localhost" + " PRIVMSG " + channel + " :" + message + "\r\n")
+
+
+#define QUIT_MSG(server, nickname, channel, message) (std::string(":") + nickname + "!" +nickname +"@"+ server + " QUIT " + message + "\r\n")
+
+
 
 #endif

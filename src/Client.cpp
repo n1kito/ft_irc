@@ -151,7 +151,7 @@ void			Client::removeChannel(const std::string& channelName)
 
 void			Client::leaveAllChannels()
 {
-	std::cout << "\n[leaveAllChannels]\n";
+	std::cout << GREEN << "\n[leaveAllChannels]\n";
 	channelsMap::iterator itChannel = _connectedToChannels.begin();
 	while (itChannel != _connectedToChannels.end())
 	{
@@ -161,10 +161,28 @@ void			Client::leaveAllChannels()
 		itChannel->second->removeOperator(_nickname);
 		itChannel++;
 	}
-
 	_connectedToChannels.clear();
 	
 	std::cout << RESET << "\n";
 
 }
+
+void			Client::QuitServer(const std::string& message)
+{
+	std::cout << GREEN << "\n[quitServer]\n";
+	channelsMap::iterator itChannel = _connectedToChannels.begin();
+	while (itChannel != _connectedToChannels.end())
+	{
+		std::cout << YELLOW << itChannel->first << "\n";
+		itChannel->second->broadcastNumericReply(QUIT_MSG(_serverName, _nickname, itChannel->first, message));
+		itChannel->second->removeConnectedClient(_nickname);
+		itChannel->second->removeOperator(_nickname);
+		itChannel++;
+	}
+	_connectedToChannels.clear();
+	
+	std::cout << RESET << "\n";
+
+}
+
 

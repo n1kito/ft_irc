@@ -220,7 +220,7 @@ void							Channel::setChannelProtection(const bool& status) { _channelIsProtect
 
 // void							Channel::setInviteOnly(const bool& status) { _inviteOnly = status; }
 void							Channel::addConnectedClient(const Client& clientRef)
-{ 
+{
 	//TODO: what is this condition for, is it necessary ?    
 	if (_connectedClients.find(clientRef.getNickname()) == _connectedClients.end())
 		_connectedClients[clientRef.getNickname()] = &clientRef;

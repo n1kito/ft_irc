@@ -21,6 +21,7 @@
 #include "Part.hpp"
 #include "Mode.hpp"
 #include "Privmsg.hpp"
+#include "Quit.hpp"
 #include "Kick.hpp"
 
 #include <ctime>
