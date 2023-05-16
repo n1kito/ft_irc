@@ -44,6 +44,8 @@
 #define ERR_NICKNAMEINUSE(server, nickname) (std::string(":") + server + " 433 " + nickname + " " + nickname + " :Nickname is already in use\r\n")
 // 436
 #define ERR_NICKCOLLISION(server, nickname) (std::string(":") + server + " 436 " + nickname + " :Nickname collision KILL \r\n")
+// 441
+#define ERR_USERNOTINCHANNEL(server, client, nickname, channel) (std::string(":") + server + " 441 " + client + " " + nickname + " " + channel + " :They aren't on that channel\r\n")
 // 442
 #define ERR_NOTONCHANNEL(server, client, channel) (std::string(":") + server + " 442 " + client + " " + channel + " :You're not on that channel\r\n") 
 // 443

@@ -184,27 +184,36 @@ void		Mode::applyChannelModes(Client& client, Channel& channel, std::string mode
 				successfullyChanged.push_back(modes[modesIndex]);
 			}
 		}
-		else if (modes[modesIndex] == 'k' && toggleKeyMode(channel, changeMode, arguments, changedParameters) == true)
+		else if (modes[modesIndex] == 'k')
+		{
+			if (toggleKeyMode(channel, changeMode, arguments, changedParameters) == true)
 				successfullyChanged += "k";
-		else if (modes[modesIndex] == 'l' && toggleClientLimitMode(channel, changeMode, arguments, changedParameters) == true)
+		}
+		else if (modes[modesIndex] == 'l')
+		{
+			if (toggleClientLimitMode(channel, changeMode, arguments, changedParameters) == true)
 				successfullyChanged += "l";
-		else if (modes[modesIndex] == 'o' && updateChannelOperator(client, channel, changeMode, arguments, changedParameters) == true)
+		}
+		else if (modes[modesIndex] == 'o')
+		{
+			if (updateChannelOperator(client, channel, changeMode, arguments, changedParameters) == true)
 				successfullyChanged += 'o';
+		}
 		else
 			sendNumericReplies(1, client.getClientSocket(), \
 				ERR_UNKNOWNMODE(client.getServerName(), client.getNickname(), std::string(1, modes[modesIndex])).c_str());
 	}
-	std::cout << "Changed parameters: ";
-	for (std::vector<std::string>::iterator it = changedParameters.begin(); it != changedParameters.end(); ++it)
-	{
-		std::cout << *it;
-		if (it != ++changedParameters.end())
-			std::cout << " ";
-		else
-			std::cout << std::endl;
-	}
+	// std::cout << "Changed parameters: ";
+	// for (std::vector<std::string>::iterator it = changedParameters.begin(); it != changedParameters.end(); ++it)
+	// {
+	// 	std::cout << *it;
+	// 	if (it != ++changedParameters.end())
+	// 		std::cout << " ";
+	// 	else
+	// 		std::cout << std::endl;
+	// }
 	std::string changedParametersStr = "";
-	if (successfullyChanged.length() > 1 && changedParameters.empty() == false)
+	if (/*successfullyChanged.length() > 1 && */changedParameters.empty() == false)
 	{
 		for (std::vector<std::string>::iterator it = changedParameters.begin(); it != changedParameters.end(); ++it)
 		{
@@ -290,6 +299,7 @@ bool	Mode::updateChannelOperator(Client& client, Channel& channel, const char& c
 	std::vector< std::string >	usernames;
 	std::string					tmpToken;
 	std::stringstream			parametersStream(arguments[0]);
+	bool						updatedOperators = false;
 
 	while (std::getline(parametersStream, tmpToken, ','))
 		usernames.push_back(tmpToken);
@@ -299,17 +309,29 @@ bool	Mode::updateChannelOperator(Client& client, Channel& channel, const char& c
 		if (targetClient == NULL)
 			sendNumericReplies(1, client.getClientSocket(), \
 					ERR_NOSUCHNICK(client.getServerName(), client.getNickname(), arguments[0]).c_str());
+		else if (channel.isClientConnected(*targetClient) == false)
+			sendNumericReplies(1, client.getClientSocket(), \
+					ERR_USERNOTINCHANNEL(client.getServerName(), client.getNickname(), targetClient->getNickname(), channel.getName()).c_str());
 		else if (changeMode == '+')
 		{
-			channel.addOperator(*targetClient);
-			parametersSet.push_back(*it);
+			if (channel.isClientOperator(*targetClient) == false)
+			{
+				channel.addOperator(*targetClient);
+				parametersSet.push_back(*it);
+				updatedOperators = true;
+			}
 		}
 		else if (changeMode == '-')
 		{
-			channel.removeOperator((*targetClient).getNickname());
-			parametersSet.push_back(*it);
+			if (channel.isClientOperator(*targetClient))
+			{
+				channel.removeOperator((*targetClient).getNickname());
+				parametersSet.push_back(*it);
+				updatedOperators = true;
+			}
 		}
 	}
-	arguments.erase(arguments.begin());
-	return true;
+	if (arguments.empty() == false)
+		arguments.erase(arguments.begin());
+	return updatedOperators;
 }
