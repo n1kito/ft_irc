@@ -24,7 +24,7 @@ Part::Part(std::map<int, Client>* clients, std::map< std::string, Channel >* cha
 	
 }
 
-Part::Part(const Part &copyMe)
+Part::Part(const Part &copyMe) : ACommand(copyMe)
 {
 	// std::cout << "Copy constructor called" << std::endl;
 	*this = copyMe;

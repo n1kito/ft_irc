@@ -82,6 +82,15 @@ launch: all $(LOG_DIR) stop-irssi
 # @if tmux has-session -t $(TMUX_SESSION) 2>/dev/null; then tmux kill-session -t $(TMUX_SESSION); fi
 	@clear -x && make && clear -x && valgrind --log-file="$(LOG_DIR)/leaks.log" ./${NAME} 6667 pwd | tee $(LOG_DIR)/serverOutput.log
 
+launch-docker: stop-irssi   
+	@clear -x
+	@make
+	tmux new-session -d -s $(TMUX_SESSION) 'valgrind --log-file="$(LOG_DIR)/leaks.log" ./${NAME} 6667 pwd | tee $(LOG_DIR)/serverOutput.log'
+	tmux split-window -v -t $(TMUX_SESSION) 'sleep 3 && irssi -c localhost -p 6667 -w pwd -n chacha'
+	tmux split-window -v -t $(TMUX_SESSION) 'sleep 3 && irssi -c localhost -p 6667 -w pwd -n jee'
+	tmux select-pane -t	$(TMUX_SESSION):.1
+	tmux attach -t $(TMUX_SESSION)
+
 valgrind: all
 	@clear -x && make && clear -x && valgrind ./${NAME} 6667 coucou
 
@@ -106,7 +115,7 @@ stop-irssi:
 
 -include $(OBJ_FILES:%.o=%.d)
 
-.PHONY: all clean fclean re title launch valgrind irssi stop-irssi
+.PHONY: all clean fclean re title launch valgrind irssi stop-irssi launch-docker
 
 #░░░░█░█░▀█▀░▀█▀░█░░░▀█▀░▀█▀░▀█▀░█▀▀░█▀▀░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
 #░░░░█░█░░█░░░█░░█░░░░█░░░█░░░█░░█▀▀░▀▀█░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
