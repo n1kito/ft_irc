@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Quit.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jeepark <jeepark@student.42.fr>            +#+  +:+       +#+        */
+/*   By: jeepark <jeepark@student42.fr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/15 17:17:03 by jeepark           #+#    #+#             */
-/*   Updated: 2023/05/15 19:37:43 by jeepark          ###   ########.fr       */
+/*   Updated: 2023/05/16 14:03:21 by jeepark          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ Quit::Quit(std::map< int, Client >* clients) : ACommand(clients) {}
 // {
 // }
 
-Quit::Quit(const Quit &copyMe)
+Quit::Quit(const Quit &copyMe) : ACommand()
 {
 	// std::cout << "Copy constructor called" << std::endl;
 	*this = copyMe;
