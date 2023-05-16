@@ -36,6 +36,12 @@
 #define ERR_NOSUCHNICK(server, client, nickname) (std::string(":") + server + " 401 " + client + " " + nickname + " :No such nick/channel\r\n")
 // 403
 #define ERR_NOSUCHCHANNEL(server, nickname, channel) (std::string(":") + server + " 403 " + nickname + " " + channel + " :No such channel\r\n")
+// 404
+#define ERR_CANNOTSENDTOCHAN(server, nickname, channel) (std::string(":") + server + " 404 " + nickname + " " + channel + " :Cannot send to channel\r\n")
+// 411
+#define ERR_NORECIPIENT(server, nickname) (std::string(":") + server + " 411 " + nickname + " :No recipient given\r\n")
+// 412
+#define ERR_NOTEXTTOSEND(server, nickname) (std::string(":") + server, + " 412 " + nickname + " :No text to send\r\n")
 // 431
 #define ERR_NONICKNAMEGIVEN(server) (std::string(":") + server + " 431 " + " :No nickname given\r\n")
 // 432
@@ -99,6 +105,6 @@
 // 473
 #define ERR_INVITEONLYCHAN(server, nickname, channel) (std::string(":") + server + " 473 " + nickname + " " + channel + " :Cannot join channel (+i)\r\n")
 
-#define PRIVMSG(server, channel, message) (std::string(":") + server + " PRIVMSG " + channel + " :" + message)
+#define PRIVMSG(server, sender, channel, message) (std::string(":") + sender + "!" + server + "@localhost" + " PRIVMSG " + channel + " :" + message + "\r\n")
 
 #endif

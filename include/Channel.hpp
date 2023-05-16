@@ -31,6 +31,8 @@ class Channel
 
 		// methods
 		void					broadcastNumericReply(const std::string message) const;
+		void					sendMessageToChannel(const std::string message, Client& client) const;
+		void					sendMessageToOperators(const std::string message, Client& client) const;
 
 		// getters
 		std::string				getName() const;

@@ -62,6 +62,7 @@ void	Kick::handleRequest(Client &client, std::string arg)
 	_channelList.clear();
 	std::fill(_userList.begin(), _userList.end(), "");
 	_userList.clear();
+	_kickReason = "";
 }
 
 std::string	Kick::parseArgument(Client &client, std::string& arg)
@@ -137,8 +138,8 @@ std::string Kick::action(Client &client)
 			// get the client map of the channel found and check if the client that wants to kick someone exists
 			if (!channel->isClientConnected(client))
 				message += ERR_NOTONCHANNEL(client.getServerName(), client.getNickname(), *chanIt);
-			// else if (!channel->isClientOperator(client))
-			// 	message += ERR_CHANOPRIVSNEEDED(client.getServerName(), client.getNickname(), *chanIt);
+			else if (!channel->isClientOperator(client))
+				message += ERR_CHANOPRIVSNEEDED(client.getServerName(), client.getNickname(), *chanIt);
 			else
 			{
 				for (std::vector< std::string >::iterator itUser = _userList.begin(); itUser != _userList.end(); ++itUser)

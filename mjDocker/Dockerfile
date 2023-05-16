@@ -8,7 +8,7 @@ FROM	ubuntu:latest
 # rm -rf any lists that are no longer needed after åinstalling the packages
 
 RUN		apt-get update && \
-        apt-get install -y build-essential vim git curl zsh toilet valgrind && \
+        apt-get install -y build-essential vim git curl zsh toilet valgrind tmux irssi && \
 		apt-get clean && \
 		rm -rf /var/lib/apt/lists/*
 
@@ -17,6 +17,9 @@ RUN		sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/ins
 
 # Change the zsh prompt so I can identify the container easily
 RUN 	echo 'export PS1="\033[1;93m🌞 🌓 🌙 [ft_irc] \033[0;39m"' > ~/.zshrc
+
+# Copy tmux config file
+COPY	tmux.conf /root/.tmux.config
 
 # Create the directory we will be working from
 RUN		mkdir /ft_irc

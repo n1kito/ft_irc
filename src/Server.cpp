@@ -253,6 +253,7 @@ void								Server::initCommands()
 	_commands["PART"] = new Part(&_clients, &_channels);
 	_commands["KICK"] = new Kick(&_clients, &_channels);
 	_commands["MODE"]	= new Mode(&_clients, &_channels);
+	_commands["PRIVMSG"] = new Privmsg(&_clients, &_channels);
 }
 
 void								Server::handleRequest(Client& client, const std::string& request)

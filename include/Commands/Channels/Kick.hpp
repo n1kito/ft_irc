@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Kick.hpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mjallada <mjallada@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cgosseli <cgosseli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/09 17:02:15 by mjallada          #+#    #+#             */
-/*   Updated: 2023/05/09 17:02:15 by mjallada         ###   ########.fr       */
+/*   Updated: 2023/05/15 16:12:12 by cgosseli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ class Kick   : public ACommand
 		// add protected elements here
 
 	private:
-		channelMap*		_channelMap;
+		channelMap*								_channelMap;
 		std::string								_kickReason;
 		std::vector< std::string >				_channelList;
 		std::vector< std::string >				_userList;
