@@ -91,7 +91,7 @@ void	Topic::action(std::string& topic, Channel& targetChannel, const Client& cli
 		if (topic == "\"\"")
 			topic = "";
 		// Can only update if channel topic is not protected or user is an Operator
-		if (targetChannel.modeIs("protected-topic") == false || targetChannel.isClientOperator(client))
+		if (targetChannel.modeIs("topic-protected") == false || targetChannel.isClientOperator(client))
 		{
 			// Update channel properties
 			targetChannel.setTimeTopicWasSet(getCurrentDate());
@@ -99,7 +99,6 @@ void	Topic::action(std::string& topic, Channel& targetChannel, const Client& cli
 			targetChannel.setNicknameOfTopicSetter(client.getNickname());
 			targetChannel.setTopic(topic);
 			// Broadcast new topic to all users in the channel, followd by a RPL_TOPICWHOTIME
-			std::cout << "message broadcasted: <" << TOPIC_SUCCESS(client.getServerName(), client.getNickname(), targetChannel.getName(), targetChannel.getTopic()) << ">" << std::endl;
 			targetChannel.broadcastNumericReply(TOPIC_SUCCESS(client.getServerName(), client.getNickname(), targetChannel.getName(), targetChannel.getTopic()));
 		}
 		else
