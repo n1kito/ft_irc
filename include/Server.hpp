@@ -53,6 +53,7 @@ class Server
 
 		void								addClient( int fd, Client client );
 		void								removeClient( int fd );
+		void								removeEmptyChannels();
 		void								initCommands();
 		void								handleRequest(Client& client, const std::string& request);
 		std::string							cleanBuffer(std::string buffer) const;
