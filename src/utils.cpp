@@ -90,7 +90,7 @@ void	sendCustomNumericReply(const std::string& message, const int& code, const C
 	std::stringstream messageStream;
 	messageStream << ":" << client.getServerName() << " " << code << " " << client.getNickname() << " :" << message << "\r\n";
 	std::string returnMessage = messageStream.str();
-	send(client.getClientSocket(), returnMessage.c_str(), returnMessage.size(), 0);
+	sendNumericReplies(1, client.getClientSocket(), returnMessage.c_str());
 }
 
 // trim functions
