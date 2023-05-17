@@ -95,8 +95,10 @@
 #define JOIN_MSG(server, channel, nickname) (std::string(":") + nickname + "!" + nickname + "@" + server + " JOIN :" + channel + "\r\n")
 #define PART_MSG(server, channel, nickname, message) (std::string(":") + channel + "!" + server + " PART " + nickname +" :" + message+ "\r\n")
 
+// 448
+#define ERR_BADCHANAME(server, nickname, channel) (std::string(":") + server + " 448 " + nickname + " :Cannot join channel " + channel + ": Channel name must start with a hash mark (#)\r\n")
 // 476 
-#define ERR_BADCHANMASK(channel) (std::string(":") + channel + " 476 " + ":Bad Channel Mask\r\n")
+#define ERR_BADCHANMASK(server, channel) (std::string(":") + server + " 476 " + channel + " :Bad Channel Mask\r\n")
 // 475
 #define ERR_BADCHANNELKEY(server, nickname, channel) (std::string(":") + server +  " 475 " + nickname + " " + channel + " :Cannot join channel (+k)\r\n")
 // 405

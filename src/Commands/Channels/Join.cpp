@@ -88,7 +88,7 @@ std::string		Join::action(Client &client)
 }
 
 
-std::string	Join::parseArgument(std::string& arg)
+std::string	Join::parseArgument(Client& client, std::string& arg)
 {
 	// split the channel list and the key list with a space
 	std::stringstream argStream(arg);
@@ -102,9 +102,11 @@ std::string	Join::parseArgument(std::string& arg)
 	std::stringstream channelStream(channelArg);
 	while (std::getline(channelStream, buffer, ','))
 	{
-		// check if channel channel name's length is at least 1
-		if (buffer.size() <= 1 || buffer.size() > CHANLEN)
-			return (ERR_BADCHANMASK(buffer));
+		// check if channel channel name's length is at least 2 (including #)
+		if (buffer.size() < 2 || buffer.size() > CHANLEN)
+			return (ERR_BADCHANMASK(client.getServerName(), buffer));
+		else if (buffer[0] != '#')
+			return (ERR_BADCHANAME(client.getServerName(), client.getNickname(), buffer));
 		_channelList.push_back(buffer);
 	}
 
@@ -136,7 +138,7 @@ void	Join::handleRequest(Client &client, std::string arg)
 	}
 	else
 	{
-		std::string parseResults = parseArgument(arg);
+		std::string parseResults = parseArgument(client, arg);
 		if (!parseResults.empty())
 			message = parseResults;
 		else
