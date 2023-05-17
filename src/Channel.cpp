@@ -88,7 +88,7 @@ void							Channel::sendMessageToOperators(const std::string message, Client& cl
 // getters
 std::string						Channel::getName() const { return _name; }
 std::string						Channel::getKey() const { return getModeParameter("key"); }
-std::string						Channel::getTopic() const { return getModeParameter("topic-protected"); }
+std::string						Channel::getTopic() const { return _topic; }
 const Channel::clientNickMap&	Channel::getClientMap() const { return _connectedClients; }
 const Channel::clientNickMap&	Channel::getOperators() const { return _operators; }
 std::string						Channel::getNicknameOfTopicSetter() const { return _nicknameOfTopicSetter; }

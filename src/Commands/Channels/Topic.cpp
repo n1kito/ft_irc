@@ -99,7 +99,8 @@ void	Topic::action(std::string& topic, Channel& targetChannel, const Client& cli
 			targetChannel.setNicknameOfTopicSetter(client.getNickname());
 			targetChannel.setTopic(topic);
 			// Broadcast new topic to all users in the channel, followd by a RPL_TOPICWHOTIME
-			targetChannel.broadcastNumericReply(RPL_TOPIC(client.getServerName(), client.getNickname(), targetChannel.getName(), targetChannel.getTopic()));
+			std::cout << "message broadcasted: <" << TOPIC_SUCCESS(client.getServerName(), client.getNickname(), targetChannel.getName(), targetChannel.getTopic()) << ">" << std::endl;
+			targetChannel.broadcastNumericReply(TOPIC_SUCCESS(client.getServerName(), client.getNickname(), targetChannel.getName(), targetChannel.getTopic()));
 		}
 		else
 		{

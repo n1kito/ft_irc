@@ -12,6 +12,8 @@
 #define RPL_MYINFO(server, nickname, serverName, version, userModes, channelModes) (std::string(":") + server + " 004 " + nickname + " :" + serverName + " " + version + " " + userModes + " " + channelModes + "\r\n")
 
 // TOPIC
+// Custom
+#define TOPIC_SUCCESS(server, nickname, channel, topic) (std::string(":") + nickname + "!" + server + " TOPIC " + channel + " :" + topic + "\r\n")
 // 331
 #define RPL_NOTOPIC(server, nickname, channel) ( std::string(":") + server + " 331 " + nickname + " " + channel + " :No topic is set\r\n")
 // 332
