@@ -10,28 +10,22 @@ Join::Join(std::map< int, Client >* clients) : ACommand(clients) {}
 Join::Join(std::map<int, Client>* clients, std::map< std::string, Channel >* channels) :
 	ACommand(clients),
 	_channels(channels)
-{
-	
-}
+{}
 
 Join::Join(const Join &copyMe) : ACommand(copyMe)
 {
-	// std::cout << "Copy constructor called" << std::endl;
 	*this = copyMe;
 }
 
 /* DESTRUCTORS ****************************************************************/
 
 Join::~Join()
-{
-	// std::cout << "Destructor called" << std::endl;
-}
+{}
 
 /* OVERLOADS ******************************************************************/
 
 Join& Join::operator = (const Join &copyMe)
 {
-	// std::cout << "Copy assignment operator called" << std::endl;
 	(void)copyMe;
 	return *this;
 }
@@ -70,14 +64,17 @@ std::string		Join::action(Client &client)
 		// else add client to existing channel
 		else
 		{
-			// TODO: MODE
-			// check if channel has set limit for nb users 
+			// check if channel is already full
+			if (it->second.getClientMap().size() >= MAXCLIENTS)
+				return (ERR_CHANNELISFULL(client.getServerName(), client.getNickname(), it->second.getName()));
+			// check if channel has set limit for nb of users 
 			if (it->second.modeIs("client-limit") && it->second.getClientMap().size() >= it->second.getClientLimit())
 				return (ERR_CHANNELISFULL(client.getServerName(), client.getNickname(), it->second.getName()));
+			// check if channel has set invite-only mode
 			if (it->second.modeIs("invite-only") && !it->second.isInvited(client.getNickname()))
 				return (ERR_INVITEONLYCHAN(client.getServerName(), client.getNickname(), it->second.getName()));
+			// check if channel is in protected mode 
 			if (it->second.modeIs("key"))
-			// if (!it->second.getKey().empty())
 			{
 				// if key is incorrect, cannot join channel and send error
                 if (_keyList.empty() || (i < _keyList.size() && it->second.getKey() != _keyList[i]))
@@ -145,7 +142,6 @@ void	Join::handleRequest(Client &client, std::string arg)
 		else
 			message = action(client);
 	}
-	std::cout << GREEN << "Join - handleRequest message:" << message << RESET << "\n";
 	send(client.getClientSocket(), message.c_str(), message.length(), 0);
 	// clear data for next JOIN command 
 	std::fill(_channelList.begin(), _channelList.end(), "");
