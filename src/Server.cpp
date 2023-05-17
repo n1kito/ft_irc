@@ -135,6 +135,11 @@ Server::Server(const int& port, const std::string& password, const std::string& 
 					{
 						std::cout	<< "client no." << i++ << ": " << it->second.getNickname() << DIM << "\t[" << it->first << "]" << RESET << std::endl;
 					}
+					i = 0;
+					for (std::map<std::string, Channel>::iterator it = _channels.begin(); it != _channels.end(); ++it)
+					{
+						std::cout	<< "channel no." << i++ << ": " << it->second.getName() << DIM << "\t[" << it->first << "]" << RESET << std::endl;
+					}
 					std::cout	<< "********************************************"
 								<< std::endl;
 					// send(clientSocket, handleRequest(_clients[clientSocket], buffer), response.length(), 0);
@@ -223,21 +228,18 @@ void								Server::removeClient( int fd )
 	std::cout << RED_BLOC << "Map size after erasing: " << RESET << _clients.size() << std::endl;
 }
 
-// This cannot work since numeric replies require specific arguments
-// void								Server::sendNumericReplies(const Client& target, const int count, ...)
-// {
-// 	va_list	codesToSend;
-// 	va_start(codesToSend, count);
-// 	for (int i = 0; i < count; ++i)
-// 	{
-// 		std::string replyName = va_arg(codesToSend, char*);
-// 		// TODO:
-// 		// Get the correct message that corresponds to the name
-// 		// Send it to the client
-// 		(void)target;
-// 	}
-// 	va_end(codesToSend);
-// }
+// after handling each request, check is any channel in _channels is empty. If so, erase it
+void								Server::removeEmptyChannels()
+{
+	channelMap::iterator it = _channels.begin();
+	while (it != _channels.end())
+	{
+    	if (it->second.getClientMap().empty())
+    	    _channels.erase(it++);
+		else
+    	    it++;
+	}
+}
 
 // Add all command instances to the server's _commands map
 void								Server::initCommands()
@@ -316,6 +318,7 @@ void								Server::handleRequest(Client& client, const std::string& request)
 			if ( command != "PASS" && client.getPassword().empty())
 				continue ;
 			_commands[command]->handleRequest(client, request);
+			removeEmptyChannels();
 		}
 	}
 }
