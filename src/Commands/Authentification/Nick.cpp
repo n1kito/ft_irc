@@ -35,6 +35,8 @@ Nick& Nick::operator = (const Nick &copyMe)
 }
 
 /* METHODS ********************************************************************/
+void		Nick::parseArgument() {}
+void		Nick::action() {}
 
 bool	Nick::isValidNickname(std::string nickname)
 {
@@ -44,7 +46,6 @@ bool	Nick::isValidNickname(std::string nickname)
 	// check if nickname contains any forbbiden character
 	if(nickname.find_first_of(".,*?!@ ") != std::string::npos)
 	{
-		// std::cout << "forbidden character\n";
 		return false;
 	}
 	// check if nickname starts with any forbidden character
@@ -52,8 +53,6 @@ bool	Nick::isValidNickname(std::string nickname)
 		return false;
 	return true;
 }
-
-void		Nick::parseArgument() {}
 
 
 std::string	Nick::parseArgument(Client &client, std::string& arg)
@@ -66,12 +65,11 @@ std::string	Nick::parseArgument(Client &client, std::string& arg)
 		return(ERR_ERRONEUSNICKNAME(client.getServerName(), "nickname", arg));
 
 	// check if nickname already exists
-	std::map<int, Client>::const_iterator it = _clients->begin();
-	std::map<int, Client>::const_iterator ite = _clients->end();
+	std::map<int, Client>::const_iterator ClientIt = _clients->begin();
 
-	while(it != ite)
+	while(ClientIt != _clients->end())
 	{
-		if (it->second.getNickname() == arg && it->second.getClientSocket() != client.getClientSocket() )
+		if (ClientIt->second.getNickname() == arg && ClientIt->second.getClientSocket() != client.getClientSocket() )
 		{
 			std::string msg; 
 			if (!client.getWelcomeState())
@@ -83,17 +81,16 @@ std::string	Nick::parseArgument(Client &client, std::string& arg)
 			msg = ERR_NICKNAMEINUSE(client.getServerName(), arg);
 			return(msg);
 		}
-		it++;
+		ClientIt++;
 	}
 	return ("Nickname is valid");
 }
-void		Nick::action() {}
+
 std::string	Nick::action(Client &client, std::string nickname)
 {
-	std::string message;
-	message = NICK_SUCCESS(client.getNickname(), nickname);
+	std::string message = NICK_SUCCESS(client.getNickname(), nickname);
 	client.setNickname(nickname);
-	return message;
+	return (message);
 }
 
 void	Nick::handleRequest(Client &client, std::string arg)
@@ -104,32 +101,13 @@ void	Nick::handleRequest(Client &client, std::string arg)
 	else if (message == "Nickname is valid")
 	{
 		message = action(client, arg);
-		// std::cout << BLUE << "\n\nHANDLE REQUEST\n" << message << "\n" ;
-		send(client.getClientSocket(), message.c_str(), message.length(), 0);
-		// std::cout << "nickname is:" << client.getNickname() << "message:" << message << "|\n" << RESET;
+		std::map< std::string, Channel* >::const_iterator chanIt = client.getChannelsMap().begin();
+		if (chanIt != client.getChannelsMap().end())
+			chanIt->second->broadcastNumericReplies(1, message.c_str());
+		else
+			sendNumericReplies(1, client.getClientSocket(), message.c_str());
 		return;
-
 	}
 	else
-	{
-		send(client.getClientSocket(), message.c_str(), message.length(), 0);
-	}
-
+		sendNumericReplies(1, client.getClientSocket(), message.c_str());
 }
-
-/*
-	question : le nombre d'arguments est-il deja parse
-	RFC documentation: 
-	nickname   =  ( letter / special ) *8( letter / digit / special / "-" )
-	- nickname begins with letter or special character
-	- nickname len <= 9 
-	- authorized characters : letter/digit/[]
-	
-	ModernIRC doc:
-	Nicknames are non-empty strings with the following restrictions:
-
-	They MUST NOT contain any of the following characters: space (' ', 0x20), comma (',', 0x2C), asterisk ('*', 0x2A), question mark ('?', 0x3F), exclamation mark ('!', 0x21), at sign ('@', 0x40).
-	They MUST NOT start with any of the following characters: dollar ('$', 0x24), colon (':', 0x3A).
-	They MUST NOT start with a character listed as a channel type prefix.
-	They SHOULD NOT contain any dot character ('.', 0x2E).
-*/
