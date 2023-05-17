@@ -105,7 +105,7 @@
 // 405
 #define ERR_TOOMANYCHANNELS(server, nickname, channel) (std::string(":") + server +  " 405 " + nickname + " " + channel + " :You have joined too many channels\r\n") 
 // 353
-#define ERR_CHANNELISFULL(server, nickname, channel) (std::string(":") + server + " 353 " + nickname + " " + channel + " :Cannot join channel (+l)\r\n")
+#define ERR_CHANNELISFULL(server, nickname, channel) (std::string(":") + server + " 471 " + nickname + " " + channel + " :Cannot join channel (+l)\r\n")
 // 473
 #define ERR_INVITEONLYCHAN(server, nickname, channel) (std::string(":") + server + " 473 " + nickname + " " + channel + " :Cannot join channel (+i)\r\n")
 
