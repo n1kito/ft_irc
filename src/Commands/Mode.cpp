@@ -270,7 +270,7 @@ bool	Mode::toggleClientLimitMode(Channel& channel, const char& changeMode, std::
 				arguments.erase(arguments.begin());
 				return false;
 			}
-			else if (clientLimit > MAXCLIENTS)
+			else if (clientLimit == 0 || clientLimit > MAXCLIENTS)
 			{
 				arguments.erase(arguments.begin());
 				// TODO: add a message to the client here saying the mac number of clients in a channel is MAXCLIENTS
