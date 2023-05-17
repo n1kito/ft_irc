@@ -24,6 +24,7 @@ Channel::Channel( std::string name, const Client& client ) :
 	addOperator(client);
 	addConnectedClient(client);
 	addOperator(client);
+	addChannelMode('t');
 }
 
 Channel::Channel(const Channel &copyMe)
@@ -51,6 +52,7 @@ Channel& Channel::operator = (const Channel &copyMe)
 	_topic = copyMe.getTopic();
 	_timeChannelWasCreated = copyMe.getCreationTime();
 	_timeTopicWasSet = copyMe.getTimeTopicWasSet();
+	_channelModes = copyMe.getChannelModes();
 	// std::cout << "Copy assignment operator called" << std::endl;
 	return *this;
 }
@@ -101,7 +103,7 @@ size_t							Channel::getClientLimit() const
 	return 0;
 }
 const Channel::nickVector&		Channel::getInvitedClients() const { return  _invitedClients; }
-
+const Channel::modeMap&			Channel::getChannelModes() const { return _channelModes; }
 
 // getters -> channel modes
 bool							Channel::addChannelMode(const char& mode, const std::string& parameter)
@@ -179,6 +181,8 @@ std::string						Channel::listModes() const
 
 	for (modeMap::const_iterator it = _channelModes.begin(); it != _channelModes.end(); ++it)
 	{
+		if (it == _channelModes.begin())
+			returnStream << "+";
 		returnStream << (*it).first;
 		// if (it != --_channelModes.end())
 			// returnStream << ' ';
@@ -188,11 +192,17 @@ std::string						Channel::listModes() const
 std::string						Channel::listModeParameters() const
 {
 	std::string				returnString = "";
+	bool					includingParameters = false;
 
 	for (modeMap::const_iterator it = _channelModes.begin(); it != _channelModes.end(); ++it)
 	{
 		if ((*it).second.empty() == false)
 		{
+			if (includingParameters == false)
+			{
+				returnString += " ";
+				includingParameters = true;
+			}
 			returnString += (*it).second;
 			if (it != --_channelModes.end())
 				returnString += " ";
@@ -242,13 +252,16 @@ void							Channel::addConnectedClient(const Client& clientRef)
 	std::string nickname = clientRef.getNickname();
 	std::string server = clientRef.getServerName();
 	std::string	channel = _name;
-	
+
+	// std::cout << "JOIN_MSG: " << JOIN_MSG(server, _name, nickname) << std::endl;;
 	// Let everyone on the Channel know that user has joined
 	broadcastNumericReplies(1, JOIN_MSG(server, _name, nickname).c_str());
 	if (_topic.empty() == false)
 		sendNumericReplies(2, clientRef.getClientSocket(), \
 							RPL_TOPIC(server, nickname, channel, _topic).c_str(), \
 							RPL_TOPICWHOTIME(server, nickname, channel, _nicknameOfTopicSetter, _timeTopicWasSet).c_str());
+	// std::cout << "RPL_NAMREPLY: " << RPL_NAMREPLY(server, nickname, channel, getUsersList()) << std::endl;
+	// std::cout << "RPL_ENDOFNAMES: " << RPL_ENDOFNAMES(server, nickname, channel) << std::endl;
 	sendNumericReplies(2, clientRef.getClientSocket(), \
 					RPL_NAMREPLY(server, nickname, channel, getUsersList()).c_str(), \
 					RPL_ENDOFNAMES(server, nickname, channel).c_str());

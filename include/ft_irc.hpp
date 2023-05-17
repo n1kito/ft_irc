@@ -27,6 +27,7 @@
 #define ITALIC "\033[3m"
 #define BOLD "\033[1m"
 #define DIM "\033[2m"
+#define HIGHLIGHT "\033[7;37m"
 #define RESET "\033[0m"
 
 #define PRINT(x, y) std::cout << x << ": " << y << std::endl
