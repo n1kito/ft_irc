@@ -62,7 +62,7 @@ void	Invite::action(const Client& client, const std::string& channel, const std:
 {
 	// If channel name is empty, targetChannel is the user inviting's current channel
 	// Otherwise, find channel object in _channelMap
-	Channel& targetChannel = channel.empty() ? *client.getCurrentChannel() : (*_channelMap).at(channel);
+	Channel& targetChannel = (*_channelMap).at(channel);
 
 	// If client inviting is not part of the channel
 	if (targetChannel.isClientConnected(client) == false)

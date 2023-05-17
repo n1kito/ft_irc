@@ -30,7 +30,6 @@ class Client
 		bool			getWelcomeState() const;
 		std::string		getServerName() const;
 		bool			getPasswordStatus() const;
-		Channel*		getCurrentChannel() const;
 		const channelsMap&	getChannelsMap() const;
 	
 		std::string		getUserModes() const;
@@ -70,7 +69,6 @@ class Client
 		int				_clientSocket;
 		bool			_welcomeState;
 
-		Channel*		_currentChannel;
 		std::string		_userModes;
 
 		std::string		_serverName;

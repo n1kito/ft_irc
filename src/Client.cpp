@@ -69,7 +69,6 @@ int				Client::getClientSocket() const { return _clientSocket; }
 bool			Client::getWelcomeState() const { return _welcomeState; }
 std::string		Client::getServerName() const { return _serverName; }
 bool			Client::getPasswordStatus() const { return _passwordStatus; }
-Channel*		Client::getCurrentChannel() const { return _currentChannel; }
 const Client::channelsMap&	Client::getChannelsMap() const { return _connectedToChannels; }
 std::string		Client::getUserModes() const { return _userModes.empty() ? _userModes : "+" + _userModes; }
 
