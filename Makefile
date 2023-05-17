@@ -65,6 +65,7 @@ $(LOG_DIR):
 
 clean: title
 	@echo "\t🧹 clean"
+	@if tmux has-session -t $(TMUX_SESSION) 2>/dev/null; then tmux kill-session -t $(TMUX_SESSION) && echo "\t[✔] $(YELLOW)successfully ended tmux session$(END_COLOR)"; else echo "\t[ ] $(DIM)no tmux session currently running$(END_COLOR)"; fi
 	@[ -d $(BIN_DIR) ] && rm -rf $(BIN_DIR) && echo "\t[✔] $(YELLOW).o files cleaned$(END_COLOR) "\
 	|| echo "\t[ ] $(DIM).o files were already cleaned$(END_COLOR)"
 	@[ -d $(LOG_DIR) ] && rm -rf $(LOG_DIR) && echo "\t[✔] $(YELLOW).log files cleaned$(END_COLOR)"\
@@ -75,23 +76,23 @@ fclean: clean
 	@echo "\t💣 fclean"
 	@[ -f $(NAME) ] && rm -f $(NAME) && echo "\t[✔] $(YELLOW)$(NAME) executable cleaned$(END_COLOR)"\
 	|| echo "\t[ ] $(DIM)$(NAME) executable was already cleaned$(END_COLOR)"
-	@if tmux has-session -t $(TMUX_SESSION) 2>/dev/null; then tmux kill-session -t $(TMUX_SESSION) && echo "\t[✔] $(YELLOW)successfully ended tmux session$(END_COLOR)"; else echo "\t[ ] $(DIM)no tmux session currently running$(END_COLOR)"; fi
 	@echo
 
 re: fclean all
 
-launch: all $(LOG_DIR) stop-irssi
+launch: all $(LOG_DIR)
 # @if tmux has-session -t $(TMUX_SESSION) 2>/dev/null; then tmux kill-session -t $(TMUX_SESSION); fi
 	@clear -x && make && clear -x && valgrind --log-file="$(LOG_DIR)/leaks.log" ./${NAME} 6667 pwd | tee $(LOG_DIR)/serverOutput.log
 
-launch-docker: stop-irssi   
-	@clear -x
-	@make
-	tmux new-session -d -s $(TMUX_SESSION) 'valgrind --log-file="$(LOG_DIR)/leaks.log" ./${NAME} 6667 pwd | tee $(LOG_DIR)/serverOutput.log'
-	tmux split-window -v -t $(TMUX_SESSION) 'sleep 3 && irssi -c localhost -p 6667 -w pwd -n chacha'
-	tmux split-window -v -t $(TMUX_SESSION) 'sleep 3 && irssi -c localhost -p 6667 -w pwd -n jee'
-	tmux select-pane -t	$(TMUX_SESSION):.1
-	tmux attach -t $(TMUX_SESSION)
+docker:
+	@make -C mjDocker
+
+launch-linux: clear $(LOG_DIR) all stop-irssi 
+	@tmux new-session -d -s $(TMUX_SESSION) 'valgrind --log-file="$(LOG_DIR)/leaks.log" ./${NAME} 6667 pwd | tee $(LOG_DIR)/serverOutput.log'
+	@tmux split-window -v -t $(TMUX_SESSION) 'sleep 2 && irssi -c localhost -p 6667 -w pwd -n chacha'
+	@tmux split-window -v -t $(TMUX_SESSION) 'sleep 2 && irssi -c localhost -p 6667 -w pwd -n jee'
+	@tmux select-pane -t $(TMUX_SESSION):.1
+	@tmux attach -t $(TMUX_SESSION)
 
 valgrind: all
 	@clear -x && make && clear -x && valgrind ./${NAME} 6667 coucou
@@ -112,12 +113,15 @@ irssi: stop-irssi
 	tmux select-pane -t $(TMUX_SESSION):.0
 	tmux attach -t $(TMUX_SESSION)
 
+clear:
+	@clear -x
+
 stop-irssi:
 	@if tmux has-session -t $(TMUX_SESSION) 2>/dev/null; then tmux kill-session -t $(TMUX_SESSION) && echo "$(DIM)Successfully closed irssi session.$(END_COLOR)"; else echo "$(DIM)No running irssi sessions.$(END_COLOR)"; fi
 
 -include $(OBJ_FILES:%.o=%.d)
 
-.PHONY: all clean fclean re title launch valgrind irssi stop-irssi launch-docker
+.PHONY: all clean fclean re title launch valgrind irssi stop-irssi launch-linux clear
 
 #░░░░█░█░▀█▀░▀█▀░█░░░▀█▀░▀█▀░▀█▀░█▀▀░█▀▀░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
 #░░░░█░█░░█░░░█░░█░░░░█░░░█░░░█░░█▀▀░▀▀█░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░

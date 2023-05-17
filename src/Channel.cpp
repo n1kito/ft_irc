@@ -9,12 +9,7 @@ Channel::Channel() :
 	_topic(""),
 	_nicknameOfTopicSetter(""),
 	_timeTopicWasSet(""),
-	_timeChannelWasCreated(getCurrentDate()),
-	_key(""),
-	_clientLimit(0),
-	_inviteOnly(false),
-	_topicIsProtected(false),
-	_channelIsProtected(false)
+	_timeChannelWasCreated(getCurrentDate())
 {
 	// std::cout << "Default constructor called" << std::endl;
 }
@@ -24,10 +19,7 @@ Channel::Channel( std::string name, const Client& client ) :
 	_topic(""),
 	_nicknameOfTopicSetter(""),
 	_timeTopicWasSet(""),
-	_timeChannelWasCreated(getCurrentDate()),
-	_key(""),
-	_clientLimit(0),
-	_channelIsProtected(false)
+	_timeChannelWasCreated(getCurrentDate())
 {
 	addOperator(client);
 	addConnectedClient(client);
@@ -56,7 +48,6 @@ Channel& Channel::operator = (const Channel &copyMe)
 	_invitedClients = copyMe.getInvitedClients();
 	_operators = copyMe.getOperators();
 	_name = copyMe.getName();
-	_key = copyMe.getKey();
 	_topic = copyMe.getTopic();
 	_timeChannelWasCreated = copyMe.getCreationTime();
 	_timeTopicWasSet = copyMe.getTimeTopicWasSet();
@@ -96,15 +87,19 @@ void							Channel::sendMessageToOperators(const std::string message, Client& cl
 
 // getters
 std::string						Channel::getName() const { return _name; }
-std::string						Channel::getKey() const { return _key; }
-
-std::string						Channel::getTopic() const { return _topic; }
+std::string						Channel::getKey() const { return getModeParameter("key"); }
+std::string						Channel::getTopic() const { return getModeParameter("topic-protected"); }
 const Channel::clientNickMap&	Channel::getClientMap() const { return _connectedClients; }
 const Channel::clientNickMap&	Channel::getOperators() const { return _operators; }
 std::string						Channel::getNicknameOfTopicSetter() const { return _nicknameOfTopicSetter; }
 std::string						Channel::getCreationTime() const { return _timeChannelWasCreated; }
 std::string						Channel::getTimeTopicWasSet() const { return _timeTopicWasSet; }
-size_t							Channel::getClientLimit() const { return _clientLimit; }
+size_t							Channel::getClientLimit() const
+{
+	if (modeIs("client-limit"))
+		return static_cast< size_t >(std::atoi(getModeParameter("client-limit").c_str()));
+	return 0;
+}
 const Channel::nickVector&		Channel::getInvitedClients() const { return  _invitedClients; }
 
 
@@ -133,13 +128,14 @@ bool							Channel::removeChannelMode(const char& mode)
 	}
 	return false;
 }
-bool							Channel::modeIs(const char& mode)
+bool							Channel::modeIs(const char& mode) const
 {
 	return _channelModes.find(mode) != _channelModes.end();
 }
-bool							Channel::modeIs(const std::string& modeStr)
+bool							Channel::modeIs(const std::string& modeStr) const
 {
 	char mode;
+
 	if (modeStr.length() == 1)
 		mode = modeStr[0];
 	else if (modeStr == "invite-only" )
@@ -152,10 +148,28 @@ bool							Channel::modeIs(const std::string& modeStr)
 		mode = 'l';
 	return _channelModes.find(mode) != _channelModes.end();
 }
-std::string						Channel::getModeParameter(const char& mode)
+std::string						Channel::getModeParameter(const char& modeChar) const
 {
+	if (_channelModes.find(modeChar) != _channelModes.end())
+		return _channelModes.at(modeChar);
+	return "";
+}
+std::string						Channel::getModeParameter(const std::string& modeStr) const
+{
+	char mode;
+
+	if (modeStr.length() == 1)
+		return _channelModes.at(modeStr[0]);
+	else if (modeStr == "invite-only")
+		mode = 'i';
+	else if (modeStr == "topic_protected")
+		mode = 't';
+	else if (modeStr == "key")
+		mode = 'k';
+	else if (modeStr == "client-limit")
+		mode = 'l';
 	if (_channelModes.find(mode) != _channelModes.end())
-		return _channelModes[mode];
+		return _channelModes.at(mode);
 	return "";
 }
 void							Channel::updateMode(const char& mode, const std::string& param) { _channelModes[mode] = param; }
@@ -215,8 +229,8 @@ void							Channel::setTopic(const std::string& newTopic) { _topic = newTopic;}
 
 void							Channel::setName(const std::string& newName) { _name = newName; }
 // void							Channel::setClientLimit(const size_t& limit) { _clientLimit = limit; }
-void							Channel::setTopicProtection(const bool& status) { _topicIsProtected = status; }
-void							Channel::setChannelProtection(const bool& status) { _channelIsProtected = status; }
+// void							Channel::setTopicProtection(const bool& status) { _topicIsProtected = status; }
+// void							Channel::setChannelProtection(const bool& status) { _channelIsProtected = status; }
 
 // void							Channel::setInviteOnly(const bool& status) { _inviteOnly = status; }
 void							Channel::addConnectedClient(const Client& clientRef)
