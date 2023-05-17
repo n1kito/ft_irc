@@ -74,9 +74,14 @@ void	Mode::handleRequest(Client &client, std::string arg)
 			Channel*	channel = &(*_channelMap)[target];
 			// If there are no modes given, return the current modes of the channel and channel creation time
 			if (modes.empty())
+			{
+				// std::cout << HIGHLIGHT << "SENDING CURRENT MODES" << RESET << std::endl;
+				// std::cout << HIGHLIGHT << RPL_CHANNELMODEIS(client.getServerName(), client.getNickname(), channel->getName(), channel->listModes(), channel->listModeParameters()) << RESET << std::endl;
+				// std::cout << HIGHLIGHT << RPL_CREATIONTIME(client.getServerName(), client.getNickname(), channel->getName(), channel->getCreationTime()) << RESET << std::endl;
 				sendNumericReplies(2, client.getClientSocket(), \
-					RPL_CHANNELMODEIS(client.getServerName(), client.getNickname(), channel->getName(), "+" + channel->listModes(), channel->listModeParameters()).c_str(),
+					RPL_CHANNELMODEIS(client.getServerName(), client.getNickname(), channel->getName(), channel->listModes(), channel->listModeParameters()).c_str(),
 					RPL_CREATIONTIME(client.getServerName(), client.getNickname(), channel->getName(), channel->getCreationTime()).c_str());
+			}
 			// If there are modes supplied
 			else
 			{

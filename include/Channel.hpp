@@ -45,6 +45,8 @@ class Channel
 		std::string				getTimeTopicWasSet() const;
 		size_t					getClientLimit() const;
 		const nickVector&		getInvitedClients() const;
+		const modeMap&			getChannelModes() const;
+
 		// getters -> channel modes
 		bool					addChannelMode(const char& mode, const std::string& parameter = "");
 		bool					removeChannelMode(const char& mode);
