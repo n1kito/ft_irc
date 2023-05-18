@@ -102,7 +102,10 @@
 #define KILL(server, nickname, reason ) (std::string(":") + server + " KILL " + nickname + " :" + server + "\r\n")
 
 // JOIN
-#define JOIN_MSG(server, channel, nickname) (std::string(":") + nickname + "!" + nickname + "@" + server + " JOIN :" + channel + "\r\n")
+// new JOIN message based on Charlotte's message for KICK_MSG
+// old JOIN message
+#define JOIN_MSG(nickname, username, channel) (std::string(":") + nickname + "!~" + username + "@localhost" + " JOIN :" + channel + "\r\n")
+// #define JOIN_MSG(server, channel, nickname) (std::string(":") + nickname + "!" + nickname + "@" + server + " JOIN :" + channel + "\r\n")
 #define PART_MSG(server, channel, nickname, message) (std::string(":") + channel + "!" + server + " PART " + nickname +" :" + message+ "\r\n")
 
 // 448

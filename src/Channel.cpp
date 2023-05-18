@@ -250,18 +250,19 @@ void							Channel::addConnectedClient(const Client& clientRef)
 		_connectedClients[clientRef.getNickname()] = &clientRef;
 	
 	std::string nickname = clientRef.getNickname();
+	std::string	username = clientRef.getUsername();
 	std::string server = clientRef.getServerName();
 	std::string	channel = _name;
 
-	// std::cout << "JOIN_MSG: " << JOIN_MSG(server, _name, nickname) << std::endl;;
+	std::cout << "JOIN_MSG: " << JOIN_MSG(nickname, username, channel) << std::endl;;
 	// Let everyone on the Channel know that user has joined
-	broadcastNumericReplies(1, JOIN_MSG(server, _name, nickname).c_str());
+	broadcastNumericReplies(1, JOIN_MSG(nickname, username, channel).c_str());
 	if (_topic.empty() == false)
 		sendNumericReplies(2, clientRef.getClientSocket(), \
 							RPL_TOPIC(server, nickname, channel, _topic).c_str(), \
 							RPL_TOPICWHOTIME(server, nickname, channel, _nicknameOfTopicSetter, _timeTopicWasSet).c_str());
-	// std::cout << "RPL_NAMREPLY: " << RPL_NAMREPLY(server, nickname, channel, getUsersList()) << std::endl;
-	// std::cout << "RPL_ENDOFNAMES: " << RPL_ENDOFNAMES(server, nickname, channel) << std::endl;
+	std::cout << "RPL_NAMREPLY: " << RPL_NAMREPLY(server, nickname, channel, getUsersList()) << std::endl;
+	std::cout << "RPL_ENDOFNAMES: " << RPL_ENDOFNAMES(server, nickname, channel) << std::endl;
 	sendNumericReplies(2, clientRef.getClientSocket(), \
 					RPL_NAMREPLY(server, nickname, channel, getUsersList()).c_str(), \
 					RPL_ENDOFNAMES(server, nickname, channel).c_str());
