@@ -274,14 +274,14 @@ void							Channel::removeConnectedClient(const std::string& clientNickname)
 }
 void							Channel::addOperator(const Client& clientRef)
 { 
-	std::cout << "[add operator]\n";
+	// std::cout << "[add operator]\n";
 	if (_operators.find(clientRef.getNickname()) == _operators.end())
 		_operators[clientRef.getNickname( )] = &clientRef;
 	// TODO: send numeric reply ?
 }
 void							Channel::removeOperator(const std::string& clientNickname)
 {
-	std::cout << "[remove operator]\n";
+	// std::cout << "[remove operator]\n";
 	if (_operators.find(clientNickname) != _operators.end())
 		_operators.erase(clientNickname);
 	// TODO: send numeric reply ?

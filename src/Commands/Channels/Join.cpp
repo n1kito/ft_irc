@@ -115,13 +115,13 @@ std::string	Join::parseArgument(Client& client, std::string& arg)
 	while (std::getline(keyStream, buffer, ','))
 		_keyList.push_back(buffer);
 
-	/* DEBUG */
-	for (size_t i = 0; i < _channelList.size(); i++)
-		std::cout << YELLOW << _channelList[i] << " ";
-	std::cout << RESET << "\n";
-	for (size_t i=0; i < _keyList.size(); i++)
-		std::cout << GREEN << _keyList[i] << " ";
-	std::cout << RESET << "\n";
+	// /* DEBUG */
+	// for (size_t i = 0; i < _channelList.size(); i++)
+	// 	std::cout << YELLOW << _channelList[i] << " ";
+	// std::cout << RESET << "\n";
+	// for (size_t i=0; i < _keyList.size(); i++)
+	// 	std::cout << GREEN << _keyList[i] << " ";
+	// std::cout << RESET << "\n";
 	
 	return "";
 }

@@ -75,6 +75,7 @@
 		"variant": "cpp",
 		"__nullptr": "cpp",
 		"chrono": "cpp",
-		"__functional_base": "cpp"
+		"__functional_base": "cpp",
+		"iomanip": "cpp"
 	}
 }

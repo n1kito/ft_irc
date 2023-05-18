@@ -26,10 +26,12 @@
 #define RED_BLOC "\033[30;41m"
 #define ITALIC "\033[3m"
 #define BOLD "\033[1m"
+#define UNDERLINE "\033[4m"
 #define DIM "\033[2m"
 #define HIGHLIGHT "\033[7;37m"
 #define RESET "\033[0m"
 
+#define SEPARATOR std::cout << std::endl << DIM << "****************************************" << RESET << std::endl << std::endl
 #define PRINT(x, y) std::cout << x << ": " << y << std::endl
 
 #define USERLEN 10
@@ -56,7 +58,9 @@
 // #include "ACommand.hpp"
 // #include "Nick.hpp"
 #include "Client.hpp"
+#include "Channel.hpp"
 class Client;
+class Channel;
 
 // Prototypes
 void 		checkArguments(const int &argc, char **arguments, int &port, std::string &password);
@@ -67,5 +71,7 @@ std::string getCurrentDate();
 void		leftTrim(std::string& str, std::string trimmer);
 void		rightTrim(std::string& str, std::string trimmer);
 void		rlTrim(std::string& str, std::string trimmer);
-
+void		sendWelcomeMessage(const Client& client);
+void		outputUsersChannels(std::map<int, Client>& clients, std::map<std::string, Channel>& channels);
+void		printServerTitle();
 #endif // FT_IRC_HPP

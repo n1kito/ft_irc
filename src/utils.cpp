@@ -111,3 +111,51 @@ void	rlTrim(std::string& str, std::string trimmer)
 	leftTrim(str, trimmer);
 	rightTrim(str, trimmer);
 }
+
+// Send welcome message
+void	sendWelcomeMessage(const Client& client)
+{
+	sendCustomNumericReply(" ", 999, client);
+	sendCustomNumericReply("  ░█░█░█▀▀░█░░░█▀▀░█▀█░█▄█░█▀▀░", 999, client);
+	sendCustomNumericReply("  ░█▄█░█▀▀░█░░░█░░░█░█░█░█░█▀▀░", 999, client);
+	sendCustomNumericReply("  ░▀░▀░▀▀▀░▀▀▀░▀▀▀░▀▀▀░▀░▀░▀▀▀░", 999, client);
+	sendCustomNumericReply("  ░▀█▀░█▀█░", 999, client);
+	sendCustomNumericReply("  ░░█░░█░█░", 999, client);
+	sendCustomNumericReply("  ░░▀░░▀▀▀░", 999, client);
+	sendCustomNumericReply("  ░▀█▀░█░█░█▀▀░", 999, client);
+	sendCustomNumericReply("  ░░█░░█▀█░█▀▀░", 999, client);
+	sendCustomNumericReply("  ░░▀░░▀░▀░▀▀▀░", 999, client);
+	sendCustomNumericReply("  ░█▀█░█▀█░█░█░█▀▀░▀█▀░", 999, client);
+	sendCustomNumericReply("  ░█▀▀░█░█░█░█░█▀▀░░█░░ 💜", 999, client);
+	sendCustomNumericReply("  ░▀░░░▀▀▀░▀▀▀░▀▀▀░░▀░░", 999, client);
+	sendCustomNumericReply(" ", 999, client);
+}
+
+// Output users and channels
+void	outputUsersChannels(std::map<int, Client>& clients, std::map<std::string, Channel>& channels)
+{
+	int i = 0;
+	for (std::map<int, Client>::iterator it = clients.begin(); it != clients.end(); ++it)
+	{
+		if (it == clients.begin())
+			std::cout << UNDERLINE << "Connected clients:" << RESET << " ";
+		std::cout << "[" << DIM << i++ << RESET << " " << it->second.getNickname() << "]" << ((it != --clients.end()) ? ", " : "\n");
+	}
+	std::cout << std::endl;
+	i = 0;
+	for (std::map<std::string, Channel>::iterator it = channels.begin(); it != channels.end(); ++it)
+	{
+		if (it == channels.begin())
+			std::cout << UNDERLINE << "Available channels:" << RESET << " ";
+		std::cout << "[" << DIM << i++ << RESET << " " << it->second.getName() << "]" << ((it != --channels.end()) ? ", " : "\n");
+	}
+}
+
+void	printServerTitle()
+{
+	std::cout << std::endl;
+	std::cout << "░█░░░█▀▀░░░█▀█░█▀█░█░█░█▀▀░▀█▀░░░█▀▀░█▀▀░█▀▄░█░█░█▀▀░█▀▄░" << std::endl;
+	std::cout << "░█░░░█▀▀░░░█▀▀░█░█░█░█░█▀▀░░█░░░░▀▀█░█▀▀░█▀▄░▀▄▀░█▀▀░█▀▄░" << std::endl;
+	std::cout << "░▀▀▀░▀▀▀░░░▀░░░▀▀▀░▀▀▀░▀▀▀░░▀░░░░▀▀▀░▀▀▀░▀░▀░░▀░░▀▀▀░▀░▀░" << std::endl;
+	std::cout << std::endl;
+}
