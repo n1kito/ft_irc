@@ -105,10 +105,5 @@ std::string	User::action( Client& client, std::string username, std::string real
 		return (ERR_ALREADYREGISTERED(client.getServerName(), client.getNickname()));
 	client.setUsername(username);
 	client.setRealname(realname);
-
-	std::cout	<< RED << "Username : " << RESET
-				<< client.getUsername() << " | "
-				<< "Realname : " << client.getRealname() << std::endl;
-
 	return "";
 }

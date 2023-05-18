@@ -2,19 +2,13 @@
 #include "Server.hpp"
 #include <cerrno>
 #include "ACommand.hpp"
-/*
-Classes:
-	- server
-	- client
-	- command
-	- channel
-*/
 
 int	main(int argc, char* argv[])
 {
 	try
 	{
 		errno = 0;
+		// TODO: uncomment this before push
 		// branch mj-fixing-password-parsing
 		// int			port = 0;
 		// std::string	password;

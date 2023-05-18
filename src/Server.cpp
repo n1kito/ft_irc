@@ -12,9 +12,9 @@ Server::Server(const int& port, const std::string& password, const std::string& 
 	_creationDate(getCurrentDate()),
 	_serverName(serverName)
 {
-	int requestIndex = 0; // TODO: remove this, only for development purposes
+	int requestIndex = 0;
 	initCommands();
-	std::cout << RPL_WELCOME(_serverName, "nickname") << std::endl;
+	printServerTitle();
 	// 1) SERVER SOCKET
 	// create ServerSocket
 	int serverSocket = socket(AF_INET, SOCK_STREAM, 0);
@@ -109,40 +109,29 @@ Server::Server(const int& port, const std::string& password, const std::string& 
       			}
 				else
 				{
-					// process the data
-        			std::cout	<< std::endl
-								<< "             " << DIM << "#" << requestIndex++ << RESET << std::endl
-								<< "************ Received from client **********" << std::endl << std::endl
-								<< BOLD << "[" << RESET << DIM << "Request" << RESET << BOLD << "]" << RESET << std::endl
-								<< MAGENTA << buffer << RESET << std::endl;
-								std::cout << BOLD << "[" RESET << DIM << "Handling" << RESET << BOLD << "]" << RESET << std::endl;
+					SEPARATOR;
+					std::cout	<< HIGHLIGHT << BOLD << " #" << ++requestIndex << " " << RESET
+								<< DIM << " Request received " << RESET << std::endl << std::endl;
+					std::cout << BOLD << buffer << RESET << std::endl;
 					handleRequest(_clients.at(clientSocket), cleanBuffer(buffer));
 					// if the client is authentificated (PASS NICK USER) and not RPL_WELCOMEd
 					try
 					{
 						if (_clients.at(clientSocket).isAuthentificated() && _clients.at(clientSocket).getWelcomeState() == 0)
 						{
-							send(clientSocket, RPL_WELCOME(_serverName,_clients.at(clientSocket).getNickname()).c_str(), RPL_WELCOME(_serverName, _clients.at(clientSocket).getNickname()).length(), 0);
+							// TODO replace with sendNumericReplies
+							sendNumericReplies(1, clientSocket, \
+												RPL_WELCOME(_serverName, _clients.at(clientSocket).getNickname()).c_str());
+							sendWelcomeMessage(_clients.at(clientSocket));
 							_clients.at(clientSocket).setWelcomeState(true);
 						}
 					}
+					// TODO: not allowed to use std::cerr
 					catch(const std::exception& e)
 					{
 						std::cerr << e.what() << '\n';
 					}
-					int i = 0;
-					for (std::map<int, Client>::iterator it = _clients.begin(); it != _clients.end(); ++it)
-					{
-						std::cout	<< "client no." << i++ << ": " << it->second.getNickname() << DIM << "\t[" << it->first << "]" << RESET << std::endl;
-					}
-					i = 0;
-					for (std::map<std::string, Channel>::iterator it = _channels.begin(); it != _channels.end(); ++it)
-					{
-						std::cout	<< "channel no." << i++ << ": " << it->second.getName() << DIM << "\t[" << it->first << "]" << RESET << std::endl;
-					}
-					std::cout	<< "********************************************"
-								<< std::endl;
-					// send(clientSocket, handleRequest(_clients[clientSocket], buffer), response.length(), 0);
+					outputUsersChannels(_clients, _channels);
       			}
 				
 			}
@@ -150,8 +139,6 @@ Server::Server(const int& port, const std::string& password, const std::string& 
 	}
 	close(epollFd);
 }
-
-
 
 Server::Server(const Server &copyMe)
 {
@@ -203,11 +190,14 @@ void								Server::setCommands( std::map< std::string, ACommand* > commands ) {
 
 void								Server::addClient( int fd, Client client )
 {
+	SEPARATOR;
+	std::cout	<< YELLOW_BLOC << " Client connecting " << RESET << std::endl;
+	std::cout	<< BOLD << "Socket:\t\t" << RESET << client.getClientSocket() << std::endl;
 	// _clients[fd] = client;
-	std::cout << "ADDING CLIENT :" << fd << std::endl;
+	// std::cout << "ADDING CLIENT :" << fd << std::endl;
 	_clients[fd] = client;
 	// _clients.insert( std::make_pair( fd, client ));
-	std::cout << "TOTAL CLIENTS :" << _clients.size() << std::endl;
+	std::cout	<< BOLD << "Clients:\t" << RESET << _clients.size() << std::endl;
 }
 
 void								Server::removeClient( int fd )
@@ -219,13 +209,13 @@ void								Server::removeClient( int fd )
 	// if (send(fd, message.c_str(), message.size(), 0) == -1) {
         // std::cerr << "Failed to send quit message to client socket " << fd << std::endl;
     // }
-	std::cout << "\n[removeClient]\n _client.size:" << _clients.size() << "\n"; 
+	// std::cout << "\n[removeClient]\n _client.size:" << _clients.size() << "\n"; 
 	if( close( fd ) == -1 )
 		throw std::runtime_error("Error when closing fd");
 	// _clients[fd].leaveAllChannels();
-	std::cout << RED_BLOC << "Map size before erasing: " << RESET << _clients.size() << std::endl;
+	// std::cout << RED_BLOC << "Map size before erasing: " << RESET << _clients.size() << std::endl;
 	_clients.erase( fd );
-	std::cout << RED_BLOC << "Map size after erasing: " << RESET << _clients.size() << std::endl;
+	// std::cout << RED_BLOC << "Map size after erasing: " << RESET << _clients.size() << std::endl;
 }
 
 // after handling each request, check is any channel in _channels is empty. If so, erase it
@@ -293,7 +283,6 @@ void								Server::handleRequest(Client& client, const std::string& request)
 		std::string	request = "";
 
 		std::getline(requestStream, line);
-		std::cout << BLUE << line << RESET << "\n";
 		if (line.empty())
 			continue ;
 		firstSpace = line.find(' ', 0);
@@ -305,8 +294,6 @@ void								Server::handleRequest(Client& client, const std::string& request)
 			command = line.substr(0, firstSpace);
 			request = line.substr(firstSpace + 1, std::string::npos);
 		}
-		PRINT("command", command);
-		PRINT("request", request);
 		// if client has been disconnected
 		if (_clients.find(clientSocket) == _clients.end())
 			break ;

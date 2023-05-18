@@ -83,7 +83,7 @@ void	Part::action(Client &client)
 
 void Part::parseArgument(std::string& arg)
 {
-	std::cout << BLUE << "\n[PART - parseArgument()]\n" << RESET;
+	// std::cout << BLUE << "\n[PART - parseArgument()]\n" << RESET;
 	// split the channel list and the key list with a space
 	std::stringstream argStream(arg);
 	std::string channelArg;
@@ -97,15 +97,15 @@ void Part::parseArgument(std::string& arg)
 	while (std::getline(channelStream, buffer, ','))
 		_channelList.push_back(buffer);
 
-	/* DEBUG */
-	for (size_t i = 0; i < _channelList.size(); i++)
-		std::cout << YELLOW << "<" << _channelList[i] << "> ";
-	std::cout << RESET << "\n";
+	// /* DEBUG */
+	// for (size_t i = 0; i < _channelList.size(); i++)
+	// 	std::cout << YELLOW << "<" << _channelList[i] << "> ";
+	// std::cout << RESET << "\n";
 }
 
 void	Part::handleRequest(Client &client, std::string arg)
 {
-	std::cout << BLUE << "\n[PART - handleRequest()]\n" << RESET;
+	// std::cout << BLUE << "\n[PART - handleRequest()]\n" << RESET;
 	if (arg.empty())
 		sendNumericReplies(1, client.getClientSocket(), (ERR_NEEDMOREPARAMS(client.getServerName(), client.getNickname(), "PART")).c_str());
 	parseArgument(arg);

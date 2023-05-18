@@ -70,10 +70,9 @@ void		Quit::parseArgument(Client& client, std::string& arg)
 void	Quit::handleRequest(Client &client, std::string arg)
 {
 	(void)arg;
-	std::cout << GREEN << "[QUIT - handleRequest]\n" << RESET;
+	// std::cout << GREEN << "[QUIT - handleRequest]\n" << RESET;
 	client.QuitServer(arg);
-	if( close( client.getClientSocket() ) == -1 )
+	if (close( client.getClientSocket() ) == -1)
 		throw std::runtime_error("Error when closing fd");
-	_clients->erase( client.getClientSocket() );
-	
+	_clients->erase(client.getClientSocket());
 }

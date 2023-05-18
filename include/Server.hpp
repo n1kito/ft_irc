@@ -5,6 +5,7 @@
 #include "ACommand.hpp"
 #include "ft_irc.hpp"
 #include <map>
+#include <iomanip>
 #include <sys/epoll.h>
 #include <cstdarg> // for va_arg
 // #include <cerrno>
@@ -52,7 +53,7 @@ class Server
 		void								setCommands( commandMap commands );
 
 		void								addClient( int fd, Client client );
-		void								removeClient( int fd );
+		void								removeClient( int fd);
 		void								removeEmptyChannels();
 		void								initCommands();
 		void								handleRequest(Client& client, const std::string& request);

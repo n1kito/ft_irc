@@ -22,7 +22,7 @@ Client::Client(const int& clientSocket, const std::string& serverName ) :
 	_welcomeState(0),
 	_serverName(serverName)
 {
-	std::cout << "Constructing client with socket " << _clientSocket << std::endl;
+
 }
 
 // TODO: is this neede or should it be private ?
@@ -37,6 +37,7 @@ Client::Client(const Client &copyMe)
 // TODO: is this neede or should it be private ?
 Client::~Client()
 {
+	// std::cout	<< BOLD << "Clients:\t" << RESET << _clients.size() << std::endl;
 	// std::cout << "Destructor called" << std::endl;
 }
 
@@ -124,21 +125,20 @@ bool			Client::isAuthentificated() const
 
 void			Client::addChannel(Channel& channelRef)
 {
-	std::cout << "\n[Add Channel]\n";
+	// std::cout << "\n[Add Channel]\n";
 	_connectedToChannels[channelRef.getName()] = &channelRef;
 	
-    channelsMap::iterator it;
-    for (it = _connectedToChannels.begin(); it != _connectedToChannels.end(); ++it)
-    {
-        std::cout << YELLOW << it->second->getName() << "\n";
-    }
-    std::cout << RESET << "\n";
-
+    // channelsMap::iterator it;
+    // for (it = _connectedToChannels.begin(); it != _connectedToChannels.end(); ++it)
+    // {
+        // std::cout << YELLOW << it->second->getName() << "\n";
+    // }
+    // std::cout << RESET << "\n";
 }
 
 void			Client::removeChannel(const std::string& channelName)
 {
-	std::cout << "\n[removeChannel]\n";
+	// std::cout << "\n[removeChannel]\n";
 	channelsMap::iterator it = _connectedToChannels.find(channelName);
 	if (it == _connectedToChannels.end())
 		return;
@@ -150,11 +150,11 @@ void			Client::removeChannel(const std::string& channelName)
 
 void			Client::leaveAllChannels()
 {
-	std::cout << GREEN << "\n[leaveAllChannels]\n";
+	// std::cout << GREEN << "\n[leaveAllChannels]\n";
 	channelsMap::iterator itChannel = _connectedToChannels.begin();
 	while (itChannel != _connectedToChannels.end())
 	{
-		std::cout << YELLOW << itChannel->first << "\n";
+		// std::cout << YELLOW << itChannel->first << "\n";
 		itChannel->second->broadcastNumericReply(PART_MSG(_serverName, _nickname, itChannel->first, ""));
 		itChannel->second->removeConnectedClient(_nickname);
 		itChannel->second->removeOperator(_nickname);
@@ -162,17 +162,16 @@ void			Client::leaveAllChannels()
 	}
 	_connectedToChannels.clear();
 	
-	std::cout << RESET << "\n";
-
+	// std::cout << RESET << "\n";
 }
 
 void			Client::QuitServer(const std::string& message)
 {
-	std::cout << GREEN << "\n[quitServer]\n";
+	// std::cout << GREEN << "\n[quitServer]\n";
 	channelsMap::iterator itChannel = _connectedToChannels.begin();
 	while (itChannel != _connectedToChannels.end())
 	{
-		std::cout << YELLOW << itChannel->first << "\n";
+		// std::cout << YELLOW << itChannel->first << "\n";
 		itChannel->second->broadcastNumericReply(QUIT_MSG(_serverName, _nickname, itChannel->first, message));
 		itChannel->second->removeConnectedClient(_nickname);
 		itChannel->second->removeOperator(_nickname);
@@ -180,7 +179,7 @@ void			Client::QuitServer(const std::string& message)
 	}
 	_connectedToChannels.clear();
 	
-	std::cout << RESET << "\n";
+	// std::cout << RESET << "\n";
 
 }
 
