@@ -95,7 +95,10 @@
 #define INVITE(sourceNickname, targetNickname, channel) (std::string(":") + sourceNickname + " INVITE " + targetNickname + " " + channel + "\r\n")
 // :<inviter> INVITE <target> <channel>
 
-#define KICK_MSG(server, kicker, channel, nick, reason) (std::string(":") + kicker + " KICK " + channel + " " + nick + " " + reason + "\r\n")
+// :chacha!~coucou@C4118BBD.B270E442.5F584402.IP KICK #channel1 jee_ :chacha
+// :nickname!~username@hostname KICK channel kickedNickname :reason
+#define KICK_MSG(kickerNick, kickerUsername, channel, kickedNick, reason) (std::string(":") + kickerNick + "!~" + kickerUsername + "@localhost" + " KICK " + channel + " " + kickedNick + " :" + reason + "\r\n")
+// #define KICK_MSG(server, kicker, channel, nick, reason) (std::string(":") + kicker + " KICK " + channel + " " + nick + " " + reason + "\r\n")
 #define KILL(server, nickname, reason ) (std::string(":") + server + " KILL " + nickname + " :" + server + "\r\n")
 
 // JOIN
@@ -115,11 +118,13 @@
 // 473
 #define ERR_INVITEONLYCHAN(server, nickname, channel) (std::string(":") + server + " 473 " + nickname + " " + channel + " :Cannot join channel (+i)\r\n")
 
-#define PRIVMSG(server, sender, channel, message) (std::string(":") + sender + "!" + server + "@localhost" + " PRIVMSG " + channel + " :" + message + "\r\n")
-
-
 #define QUIT_MSG(server, nickname, channel, message) (std::string(":") + nickname + "!" +nickname +"@"+ server + " QUIT " + message + "\r\n")
 
+// #define PRIVMSG(server, channel, message) (std::string(":") + server + " PRIVMSG " + channel + " :" + message)
 
-
+// #define PRIVMSG(server, sender, channel, message) (std::string(":") + sender + "!" + server + "@localhost" + " PRIVMSG " + channel + " :" + message + "\r\n")
+#define PRIVMSG(senderNickname, senderUsername, receiver, message) (std::string(":") + senderNickname + "!~" + senderUsername + "@localhost" + " PRIVMSG " + receiver + " :" + message + "\r\n")
+// :jee_!~cgosseli@C4118BBD.B270E442.5F584402.IP PRIVMSG chacha :boooonjur
+// :jee_!~cgosseli@C4118BBD.B270E442.5F584402.IP PRIVMSG #newchan :salut
+// :sender!~username@host PRIVMSG receiver :message
 #endif

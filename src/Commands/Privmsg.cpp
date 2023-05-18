@@ -111,8 +111,14 @@ std::string Privmsg::action(Client &client)
 		std::cout << RED << "Target name: " << RESET << *targetIt << std::endl;
 		if (!targetIt->empty() && targetIt->at(0) == '#')
 		{
-			// check if the channel exists and if it does, keep its pos in the channel map
 			channelMap::iterator posInChannelMap	= _channelMap->find(*targetIt);
+			if (targetIt->at(1) == '%')
+			{
+				std::string channelName = *targetIt;
+				channelName.erase(1,1);
+				posInChannelMap = _channelMap->find(channelName);
+			}
+			// check if the channel exists and if it does, keep its pos in the channel map
 			if (posInChannelMap == _channelMap->end())
 				return ERR_NOSUCHCHANNEL(client.getServerName(), client.getNickname(), *targetIt);
 			
@@ -124,9 +130,14 @@ std::string Privmsg::action(Client &client)
 			if (!targetClient)
 				return ERR_NOSUCHCHANNEL(client.getServerName(), client.getNickname(), *targetIt);
 			
+			// sendNumericReplies(1, targetClient->getClientSocket(),\
+			// 					PRIVMSG(client.getServerName(),\
+			// 							client.getNickname(), \
+			// 							targetClient->getNickname(),\
+			// 							_message).c_str());
 			sendNumericReplies(1, targetClient->getClientSocket(),\
-								PRIVMSG(client.getServerName(),\
-										client.getNickname(), \
+								PRIVMSG(client.getNickname(),\
+										client.getUsername(), \
 										targetClient->getNickname(),\
 										_message).c_str());
 			std::cout << RED << "Targetted client :" << RESET << targetClient->getNickname() << std::endl;
@@ -149,9 +160,15 @@ std::string			Privmsg::sendToChannel(Client& client, Channel& channel, std::stri
 	if (!channel.isClientConnected(client))
 		return ERR_CANNOTSENDTOCHAN(client.getServerName(), client.getNickname(), channel.getName());
 	if (target.size() > 1 && target.at(1) == '%')
-		channel.sendMessageToOperators(PRIVMSG(client.getServerName(), client.getNickname(), channel.getName(), _message), client);
+	{
+		channel.sendMessageToOperators(PRIVMSG(client.getNickname(),\
+												client.getUsername(),\
+												channel.getName(),\
+												_message),\
+												client);
+	}
 	else
-		channel.sendMessageToChannel(PRIVMSG(client.getServerName(), client.getNickname(), channel.getName(), _message), client);
+		channel.sendMessageToChannel(PRIVMSG(client.getNickname(), client.getUsername(), channel.getName(), _message), client);
 	return message;
 }
 

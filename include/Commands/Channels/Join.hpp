@@ -14,13 +14,11 @@ class Join : public ACommand
 		~Join();
 
     	void		handleRequest(Client &client, std::string arg);
-    	std::string	parseArgument(Client &client, std::string& arg);
-    	std::string action(Client &client);
-
-		std::string createErrorTooManyChannels(Client const &client, size_t idx);
+    	void		parseArgument(Client &client, std::string& arg);
+    	void 		action(Client &client);
+		void 		createErrorTooManyChannels(Client const &client, size_t idx);
 
 	protected:
-		// add protected elements here
 
 	private:
 		// existing channels from Server
