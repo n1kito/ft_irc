@@ -152,8 +152,8 @@ std::string Kick::action(Client &client)
 						message += ERR_USERNOTINCHANNEL(client.getServerName(), client.getNickname(), *itUser, channel->getName());
 					else
 					{
-						channel->broadcastNumericReply(KICK_MSG(client.getServerName(),\
-																		client.getNickname(),\
+						channel->broadcastNumericReply(KICK_MSG(client.getNickname(),\
+																		client.getUsername(),\
 																		channel->getName(),\
 																		userTargetted->first,\
 																		_kickReason));
