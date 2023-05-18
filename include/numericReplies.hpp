@@ -120,11 +120,7 @@
 
 #define QUIT_MSG(server, nickname, channel, message) (std::string(":") + nickname + "!" +nickname +"@"+ server + " QUIT " + message + "\r\n")
 
-// #define PRIVMSG(server, channel, message) (std::string(":") + server + " PRIVMSG " + channel + " :" + message)
-
-// #define PRIVMSG(server, sender, channel, message) (std::string(":") + sender + "!" + server + "@localhost" + " PRIVMSG " + channel + " :" + message + "\r\n")
 #define PRIVMSG(senderNickname, senderUsername, receiver, message) (std::string(":") + senderNickname + "!~" + senderUsername + "@localhost" + " PRIVMSG " + receiver + " :" + message + "\r\n")
-// :jee_!~cgosseli@C4118BBD.B270E442.5F584402.IP PRIVMSG chacha :boooonjur
-// :jee_!~cgosseli@C4118BBD.B270E442.5F584402.IP PRIVMSG #newchan :salut
-// :sender!~username@host PRIVMSG receiver :message
+
+#define NOTICE(senderNickname, senderUsername, receiver, message) (std::string(":") + senderNickname + "!~" + senderUsername + "@localhost" + " NOTICE " + receiver + " :" + message + "\r\n")
 #endif
