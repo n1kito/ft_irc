@@ -196,7 +196,7 @@ void		Mode::applyChannelModes(Client& client, Channel& channel, std::string mode
 		}
 		else if (modes[modesIndex] == 'l')
 		{
-			if (toggleClientLimitMode(channel, changeMode, arguments, changedParameters) == true)
+			if (toggleClientLimitMode(client, channel, changeMode, arguments, changedParameters) == true)
 				successfullyChanged += "l";
 		}
 		else if (modes[modesIndex] == 'o')
@@ -258,7 +258,7 @@ bool	Mode::toggleKeyMode(Channel& channel, const char& changeMode, std::vector<s
 	return false;
 }
 
-bool	Mode::toggleClientLimitMode(Channel& channel, const char& changeMode, std::vector<std::string>& arguments, std::vector<std::string>& parametersSet)
+bool	Mode::toggleClientLimitMode(Client& client, Channel& channel, const char& changeMode, std::vector<std::string>& arguments, std::vector<std::string>& parametersSet)
 {
 	if (changeMode == '+')
 	{
@@ -278,8 +278,9 @@ bool	Mode::toggleClientLimitMode(Channel& channel, const char& changeMode, std::
 			else if (clientLimit == 0 || clientLimit > MAXCLIENTS)
 			{
 				arguments.erase(arguments.begin());
-				// TODO: add a message to the client here saying the mac number of clients in a channel is MAXCLIENTS
-				// sendNumericReply(// add message like "max number of users is");
+				if (clientLimit > MAXCLIENTS)
+					sendNumericReplies(1, client.getClientSocket(), \
+						CSTM_MAXCLIENTS(client.getServerName(), client.getNickname()).c_str());
 				return false;
 			}
 			// Update the channel setting accordingly

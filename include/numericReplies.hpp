@@ -69,13 +69,20 @@
 // MODE
 // 502
 #define ERR_USERSDONTMATCH(server, client) (std::string(":") + server + " 502 " + client + " :Cannot change mode for other users\r\n")
+// 221
 #define RPL_UMODEIS(server, client, modes) (std::string(":") + server + " 221 " + client + " " + modes + "\r\n")
+// 501
 #define ERR_UMODEUNKNOWNFLAG(server, client, modeCharacter) (std::string(":") + server + " 501 " + client + " :Unknown mode flag " + modeCharacter + "\r\n") 
 // #define MODE_MSG(server, client, target, modes) (std::string(":") + server + "!" + client + " MODE " + target + " " + modes + "\r\n")
 #define MODE_MSG(server, client, target, modes) (std::string(":") + client + "!" + client + "@" + server + " MODE " + target + " " + modes + "\r\n")
+// 324
 #define RPL_CHANNELMODEIS(server, client, channel, modes, modeArguments) (std::string(":") + server + " 324 " + client + " " + channel + " " + modes + modeArguments + "\r\n")
+// 329
 #define RPL_CREATIONTIME(server, client, channel, creationTime) (std::string(":") + server + " 329 " + client + " " + channel + " " + creationTime + "\r\n")
+// 472
 #define ERR_UNKNOWNMODE(server, client, modeChar) (std::string(":") + server + " 472 " + client + " " + modeChar + " :is unknown mode char to me\r\n") 
+// Custom
+#define CSTM_MAXCLIENTS(server, client) (std::string(":") + server + " 999 " + client + " :+l: channels can welcome up to 100 users\r\n")
 
 // TODO: check custom message codes and whether we need them at all or not
 // Custom Messages
