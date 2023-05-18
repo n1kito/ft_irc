@@ -110,9 +110,14 @@ Server::Server(const int& port, const std::string& password, const std::string& 
 				else
 				{
 					SEPARATOR;
-					std::cout	<< HIGHLIGHT << BOLD << " #" << ++requestIndex << " " << RESET
-								<< DIM << " Request received " << RESET << std::endl << std::endl;
-					std::cout << BOLD << buffer << RESET << std::endl;
+					if (std::string(buffer).find("PING") == std::string::npos)
+					{
+						std::cout	<< HIGHLIGHT << BOLD << " #" << ++requestIndex << " " << RESET
+									<< DIM << " Request received " << RESET << std::endl << std::endl;
+						std::cout << BOLD << buffer << RESET << std::endl;
+					}
+					else
+						std::cout << "📍" << DIM << " PING!" << RESET << std::endl;
 					handleRequest(_clients.at(clientSocket), cleanBuffer(buffer));
 					// if the client is authentificated (PASS NICK USER) and not RPL_WELCOMEd
 					try
@@ -131,7 +136,8 @@ Server::Server(const int& port, const std::string& password, const std::string& 
 					{
 						std::cerr << e.what() << '\n';
 					}
-					outputUsersChannels(_clients, _channels);
+					if (std::string(buffer).find("PING") == std::string::npos)
+						outputUsersChannels(_clients, _channels);
       			}
 				
 			}
