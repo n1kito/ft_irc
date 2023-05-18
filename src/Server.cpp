@@ -100,25 +100,30 @@ Server::Server(const int& port, const std::string& password, const std::string& 
 				// read data from the client socket
 				// process the data
 				char buffer[1024] = {};
-      			int received = recv(clientSocket, buffer, sizeof(buffer), 0);
-
-      			// Si la réception est inférieure ou égale à 0, le client s'est déconnecté.
-      			if (received <= 0) {
-        			std::cout << "Client disconnected" << std::endl;
-					removeClient( clientSocket ); // remove from the client map and close fd
-      			}
-				else
+				std::string bufferstr = "";
+				// If there is no \n, the command is not complete (ctrl+D)
+				while (bufferstr.find("\n") == std::string::npos)
 				{
-					SEPARATOR;
-					if (std::string(buffer).find("PING") == std::string::npos)
+					int received = recv(clientSocket, buffer, sizeof(buffer), 0);
+					bufferstr += buffer;
+					// Si la réception est inférieure ou égale à 0, le client s'est déconnecté.
+					if (received <= 0) {
+						std::cout << "Client disconnected" << std::endl;
+						removeClient( clientSocket ); // remove from the client map and close fd
+						break ;
+					}
+				}
+				if (bufferstr.find('\n') != std::string::npos)
+				{
+					if (bufferstr.find("PING") == std::string::npos)
 					{
 						std::cout	<< HIGHLIGHT << BOLD << " #" << ++requestIndex << " " << RESET
 									<< DIM << " Request received " << RESET << std::endl << std::endl;
-						std::cout << BOLD << buffer << RESET << std::endl;
+						std::cout << BOLD << bufferstr << RESET << std::endl;
 					}
 					else
 						std::cout << "📍" << DIM << " PING!" << RESET << std::endl;
-					handleRequest(_clients.at(clientSocket), cleanBuffer(buffer));
+					handleRequest(_clients.at(clientSocket), cleanBuffer(bufferstr));
 					// if the client is authentificated (PASS NICK USER) and not RPL_WELCOMEd
 					try
 					{
@@ -138,8 +143,8 @@ Server::Server(const int& port, const std::string& password, const std::string& 
 					}
 					if (std::string(buffer).find("PING") == std::string::npos)
 						outputUsersChannels(_clients, _channels);
-      			}
-				
+					SEPARATOR;
+				}
 			}
 		}
 	}
@@ -287,7 +292,7 @@ void								Server::handleRequest(Client& client, const std::string& request)
 		size_t		firstSpace;
 		std::string	line;
 		std::string	command;
-		std::string	request = "";
+		std::string	parameters = "";
 
 		std::getline(requestStream, line);
 		if (line.empty())
@@ -299,7 +304,7 @@ void								Server::handleRequest(Client& client, const std::string& request)
 		{
 			// PRINT("extracting command", "");
 			command = line.substr(0, firstSpace);
-			request = line.substr(firstSpace + 1, std::string::npos);
+			parameters = line.substr(firstSpace + 1, std::string::npos);
 		}
 		// if client has been disconnected
 		if (_clients.find(clientSocket) == _clients.end())
@@ -307,11 +312,10 @@ void								Server::handleRequest(Client& client, const std::string& request)
 		// else, if command is found
 		if (_commands.find(command) != _commands.end())
 		{
-			
 			// if the password is not set, accept only pass command
 			if ( command != "PASS" && client.getPassword().empty())
 				continue ;
-			_commands[command]->handleRequest(client, request);
+			_commands[command]->handleRequest(client, parameters);
 			removeEmptyChannels();
 		}
 	}
