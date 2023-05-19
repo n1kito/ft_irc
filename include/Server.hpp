@@ -5,6 +5,7 @@
 #include "ACommand.hpp"
 #include "ft_irc.hpp"
 #include <map>
+#include <iomanip>
 #include <sys/epoll.h>
 #include <cstdarg> // for va_arg
 // #include <cerrno>
@@ -12,34 +13,57 @@
 #include <limits>
 #include "Nick.hpp"
 #include "User.hpp"
+#include "Ping.hpp"
+#include "Pass.hpp"
+#include "Topic.hpp"
+#include "Invite.hpp"
+#include "Channel.hpp"
+#include "Join.hpp"
+#include "Part.hpp"
+#include "Mode.hpp"
+#include "Privmsg.hpp"
+#include "Notice.hpp"
+#include "Quit.hpp"
+#include "Kick.hpp"
+
 #include <ctime>
+#include <unistd.h>
 
 #define MAX_EVENTS 10
 
 class Server
 {
 	public:
-		Server(int port, std::string password);
+		typedef std::map< int, Client >				clientMap;
+		typedef std::map< std::string, Channel >	channelMap;
+		typedef std::map< std::string, ACommand* >	commandMap;
+		
+		Server(const int& port, const std::string& password, const std::string& serverName);
 		~Server();
 
 		int									getPort() const;
 		std::string							getPassword() const;
-		std::map< int, Client >				getClients() const;
-		const std::map< int, Client >*		getClientsPtr() const;
-		std::map< std::string, ACommand* >	getCommands() const;
+		clientMap							getClients() const;
+		const clientMap*					getClientsPtr() const;
+		commandMap							getCommands() const;
 		std::string							getCreationDate() const;
 
 		void								setPort( int port );
 		void								setPassword( std::string password );
-		void								setClients( std::map< int, Client > clients );
-		void								setCommands( std::map< std::string, ACommand* > commands );
+		void								setClients( clientMap clients );
+		void								setCommands( commandMap commands );
 
 		void								addClient( int fd, Client client );
-		void								removeClient( int fd );
+		void								removeClient( int fd);
+		void								removeEmptyChannels();
 		void								initCommands();
 		void								handleRequest(Client& client, const std::string& request);
+		std::string							cleanBuffer(std::string buffer) const;
+
 		// void								sendNumericReplies(const Client& target, const int count, ...);
 
+
+	
 	protected:
 		// add protected elements here
 
@@ -49,15 +73,19 @@ class Server
 		// int bindSocket(serverSocket); 	
 		Server(const Server &copyMe);
 		Server&		operator = (const Server &copyMe);
-		
-		std::string							_getCurrentDate() const;
-
+		Client&		operator [] (const int fd);
+	
 		int									_port;
 		std::string							_password;
-		std::map< int, Client >				_clients;
-		std::map< std::string, ACommand* >	_commands;
+		channelMap							_channels;
+		clientMap							_clients;
+		commandMap							_commands;
 		std::string							_creationDate;
+		std::string							_serverName;
 		Server();
 };
+
+// void	sendNumericReplies(const size_t& numberOfReplies, const size_t clientFd, ...);
+
 
 #endif

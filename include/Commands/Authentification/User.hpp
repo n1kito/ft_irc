@@ -11,7 +11,7 @@ class User : public ACommand
 {
 	public:
 		User(const User &copyMe);
-		User( const std::map< int, Client >* clients );
+		User(std::map< int, Client >* clients );
 
 		~User();
 		User&		operator = (const User &copyMe);
@@ -22,8 +22,7 @@ class User : public ACommand
 		std::string	getRealname() const;
 		void		setUsername( std::string username );
 		void		setRealname( std::string realname );
-		
-		std::string	handleRequest( Client& client, std::string argument );
+		void		handleRequest( Client& client, std::string argument );
 		void		parseArgument();
 		std::string	parseArgument( Client& client, std::string argument );
 		void		action();

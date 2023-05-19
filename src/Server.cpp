@@ -1,16 +1,20 @@
 #include "Server.hpp"
-
 /* CONSTRUCTORS ***************************************************************/
 
 #include <cerrno>
 #include "numericReplies.hpp"
+#include "ft_irc.hpp"
 
 Server::Server() {}
-Server::Server(int port, std::string password) : _port(port), _password(password), _creationDate(_getCurrentDate())
+Server::Server(const int& port, const std::string& password, const std::string& serverName) :
+	_port(port),
+	_password(password),
+	_creationDate(getCurrentDate()),
+	_serverName(serverName)
 {
-	PRINT("Time is", _creationDate);
+	int requestIndex = 0;
 	initCommands();
-	std::cout << RPL_WELCOME("serveur", "nickname", "network") << std::endl;
+	printServerTitle();
 	// 1) SERVER SOCKET
 	// create ServerSocket
 	int serverSocket = socket(AF_INET, SOCK_STREAM, 0);
@@ -50,6 +54,7 @@ Server::Server(int port, std::string password) : _port(port), _password(password
 	}
 	// add server socket to epoll instance
 	struct epoll_event event;
+	memset(&event, 0, sizeof(event));
 	event.events = EPOLLIN;
 	event.data.fd = serverSocket;
 	if (epoll_ctl(epollFd, EPOLL_CTL_ADD, serverSocket, &event) == -1) {
@@ -64,7 +69,6 @@ Server::Server(int port, std::string password) : _port(port), _password(password
 		if (numEvents == -1) {
 			throw std::runtime_error("Error epoll_wait");        
 		}
-		std::cout << "numEvents: " << numEvents << "\n";
 		for (int i = 0; i < numEvents; i++)
 		{
 			if (events[i].data.fd == serverSocket)
@@ -82,14 +86,12 @@ Server::Server(int port, std::string password) : _port(port), _password(password
 				}
 				// add the new client socket to the epoll instance
 				struct epoll_event event;
-				event.events = EPOLLIN | EPOLLET;
+				memset(&event, 0, sizeof(event));
+				event.events = EPOLLIN;
 				event.data.fd = clientSocket;
 				if (epoll_ctl(epollFd, EPOLL_CTL_ADD, clientSocket, &event) == -1)
 					throw std::runtime_error("Error adding client");
-				addClient(clientSocket, Client(clientSocket));
-				// Send RPL_WELCOME
-				// TODO: change values
-				send(clientSocket, RPL_WELCOME("pouet", "pouet", "pouet").c_str(), RPL_WELCOME("pouet", "pouet", "pouet").length(), 0);
+				addClient(clientSocket, Client(clientSocket, _serverName));
 			}
 			else
 			{
@@ -97,29 +99,52 @@ Server::Server(int port, std::string password) : _port(port), _password(password
 				int clientSocket = events[i].data.fd;
 				// read data from the client socket
 				// process the data
-				char buffer[1024];
+				char buffer[1024] = {};
       			int received = recv(clientSocket, buffer, sizeof(buffer), 0);
 
       			// Si la réception est inférieure ou égale à 0, le client s'est déconnecté.
       			if (received <= 0) {
         			std::cout << "Client disconnected" << std::endl;
-        			close(clientSocket);
-					// removeClient( clientSocket ); // remove from the client map and close fd
+					removeClient( clientSocket ); // remove from the client map and close fd
       			}
 				else
 				{
-					// process the data
-        			std::cout << "Received from client: " << "\"" << MAGENTA << buffer << RESET << "\"" << std::endl;
-        			// send(clientSocket, handleRequest(_clients[clientSocket], buffer), response.length(), 0);
-					handleRequest(_clients[clientSocket], buffer);
+					SEPARATOR;
+					if (std::string(buffer).find("PING") == std::string::npos)
+					{
+						std::cout	<< HIGHLIGHT << BOLD << " #" << ++requestIndex << " " << RESET
+									<< DIM << " Request received " << RESET << std::endl << std::endl;
+						std::cout << BOLD << buffer << RESET << std::endl;
+					}
+					else
+						std::cout << "📍" << DIM << " PING!" << RESET << std::endl;
+					handleRequest(_clients.at(clientSocket), cleanBuffer(buffer));
+					// if the client is authentificated (PASS NICK USER) and not RPL_WELCOMEd
+					try
+					{
+						if (_clients.at(clientSocket).isAuthentificated() && _clients.at(clientSocket).getWelcomeState() == 0)
+						{
+							// TODO replace with sendNumericReplies
+							sendNumericReplies(1, clientSocket, \
+												RPL_WELCOME(_serverName, _clients.at(clientSocket).getNickname()).c_str());
+							sendWelcomeMessage(_clients.at(clientSocket));
+							_clients.at(clientSocket).setWelcomeState(true);
+						}
+					}
+					// TODO: not allowed to use std::cerr
+					catch(const std::exception& e)
+					{
+						std::cerr << e.what() << '\n';
+					}
+					if (std::string(buffer).find("PING") == std::string::npos)
+						outputUsersChannels(_clients, _channels);
       			}
+				
 			}
 		}
 	}
 	close(epollFd);
 }
-
-
 
 Server::Server(const Server &copyMe)
 {
@@ -133,11 +158,10 @@ Server::Server(const Server &copyMe)
 Server::~Server()
 {
 	// std::cout << "Destructor called" << std::endl;
-	// while(_commands.size() != 0)
-	// {
-	// 	delete _commands[0].first;
-
-	// }
+	while(_commands.size() != 0)
+	{
+		delete _commands[0];
+	}
 }
 
 /* OVERLOADS ******************************************************************/
@@ -147,6 +171,10 @@ Server& Server::operator = (const Server &copyMe)
 	(void)copyMe;
 	// std::cout << "Copy assignment operator called" << std::endl;
 	return *this;
+}
+
+Client& Server::operator[](const int fd) {
+		return _clients[fd];
 }
 
 /* ACCESSORS ******************************************************************/
@@ -168,42 +196,68 @@ void								Server::setCommands( std::map< std::string, ACommand* > commands ) {
 
 void								Server::addClient( int fd, Client client )
 {
+	SEPARATOR;
+	std::cout	<< YELLOW_BLOC << " Client connecting " << RESET << std::endl;
+	std::cout	<< BOLD << "Socket:\t\t" << RESET << client.getClientSocket() << std::endl;
 	// _clients[fd] = client;
-	_clients.insert( std::make_pair( fd, client ));
+	// std::cout << "ADDING CLIENT :" << fd << std::endl;
+	_clients[fd] = client;
+	// _clients.insert( std::make_pair( fd, client ));
+	std::cout	<< BOLD << "Clients:\t" << RESET << _clients.size() << std::endl;
 }
 
 void								Server::removeClient( int fd )
 {
-	_clients.erase( fd );
+	// used to give the client enough time to print messages before closing the connection
+	// usleep(1000); //TODO: there has to be a better way to do this
+	// send a quit message to IRSSI
+	// std::string message = "QUIT :Goodbye\r\n";
+	// if (send(fd, message.c_str(), message.size(), 0) == -1) {
+        // std::cerr << "Failed to send quit message to client socket " << fd << std::endl;
+    // }
+	// std::cout << "\n[removeClient]\n _client.size:" << _clients.size() << "\n"; 
 	if( close( fd ) == -1 )
 		throw std::runtime_error("Error when closing fd");
+	// _clients[fd].leaveAllChannels();
+	// std::cout << RED_BLOC << "Map size before erasing: " << RESET << _clients.size() << std::endl;
+	_clients.erase( fd );
+	// std::cout << RED_BLOC << "Map size after erasing: " << RESET << _clients.size() << std::endl;
 }
 
-// This cannot work since numeric replies require specific arguments
-// void								Server::sendNumericReplies(const Client& target, const int count, ...)
-// {
-// 	va_list	codesToSend;
-// 	va_start(codesToSend, count);
-// 	for (int i = 0; i < count; ++i)
-// 	{
-// 		std::string replyName = va_arg(codesToSend, char*);
-// 		// TODO:
-// 		// Get the correct message that corresponds to the name
-// 		// Send it to the client
-// 		(void)target;
-// 	}
-// 	va_end(codesToSend);
-// }
+// after handling each request, check is any channel in _channels is empty. If so, erase it
+void								Server::removeEmptyChannels()
+{
+	channelMap::iterator it = _channels.begin();
+	while (it != _channels.end())
+	{
+    	if (it->second.getClientMap().empty())
+    	    _channels.erase(it++);
+		else
+    	    it++;
+	}
+}
 
 // Add all command instances to the server's _commands map
 void								Server::initCommands()
 {
 	_commands["NICK"] = new Nick(&_clients);
 	_commands["USER"] = new User(&_clients);
+	_commands["PING"] = new Ping(&_clients);
+	_commands["PASS"] = new Pass(&_clients, _password);
+	_commands["JOIN"] = new Join(&_clients, &_channels);
+	_commands["TOPIC"] = new Topic(&_clients, &_channels);
+	_commands["INVITE"] = new Invite(&_clients, &_channels);
+	_commands["PART"] = new Part(&_clients, &_channels);
+	_commands["KICK"] = new Kick(&_clients, &_channels);
+	_commands["MODE"]	= new Mode(&_clients, &_channels);
+	_commands["PRIVMSG"] = new Privmsg(&_clients, &_channels);
+	_commands["NOTICE"] = new Notice(&_clients, &_channels);
+	_commands["QUIT"] = new Quit(&_clients);
 }
 
-void						Server::handleRequest(Client& client, const std::string& request)
+void								Server::handleRequest(Client& client, const std::string& request)
 {
+	// static bool	firstRequest = true;
 	/*
 		We handle the following commands
 		-	CAP -> should not do anything
@@ -225,123 +279,55 @@ void						Server::handleRequest(Client& client, const std::string& request)
 		... ?
 	*/
 	// Parse the request
+	int	clientSocket = client.getClientSocket();
 	std::istringstream	requestStream(request);
-	while(!requestStream.eof())
+	// std::cout << YELLOW << "commands to run : " << RESET << requestStream.str() << std::endl;
+	while(!requestStream.eof() )
 	{
 		size_t		firstSpace;
 		std::string	line;
 		std::string	command;
-		std::string	request;
+		std::string	request = "";
 
 		std::getline(requestStream, line);
 		if (line.empty())
-			break ;
+			continue ;
 		firstSpace = line.find(' ', 0);
 		if (firstSpace == std::string::npos)
-			break ;
-		// PRINT("extracting command", "");
-		command = line.substr(0, firstSpace);
-		// PRINT("extracting request", "");
-		request = line.substr(firstSpace, std::string::npos);
-		// PRINT("line", line);
-		PRINT("command", command);
-		// PRINT("request", request);
-		if (_commands.count(command) != 0)
+			command = line;
+		else
 		{
-			std::cout << "Calling handleRequest() for " << command << std::endl;
-			const std::string reply = _commands[command]->handleRequest(client, request); 
-			send(client.getClientSocket(), reply.c_str(), reply.length(), 0);
+			// PRINT("extracting command", "");
+			command = line.substr(0, firstSpace);
+			request = line.substr(firstSpace + 1, std::string::npos);
+		}
+		// if client has been disconnected
+		if (_clients.find(clientSocket) == _clients.end())
+			break ;
+		// else, if command is found
+		if (_commands.find(command) != _commands.end())
+		{
+			
+			// if the password is not set, accept only pass command
+			if ( command != "PASS" && client.getPassword().empty())
+				continue ;
+			_commands[command]->handleRequest(client, request);
+			removeEmptyChannels();
 		}
 	}
 }
 
-// Returns a human readable string of the current date
-std::string				Server::_getCurrentDate() const
+// This function removes \r characters from the buffer.
+std::string						Server::cleanBuffer(std::string buffer) const 
 {
-	time_t		rawTime;
-	struct tm*	timeInfo;
-
-	time(&rawTime);
-	timeInfo = localtime(&rawTime);
-	std::string	returnValue(asctime(timeInfo));
-	return returnValue;
+	// std::cout << "[before cleanBuffer()]\n" << BLUE << buffer << RESET << std::endl;
+	while (true)
+	{
+		size_t pos = buffer.find('\r', 0);
+		if (pos == std::string::npos)
+			break;
+		buffer.erase(pos, 1);
+	}
+	// std::cout << "[after cleanBuffer()]\n" << YELLOW << buffer << RESET << std::endl;
+	return buffer;
 }
-
-
-// ChatGPT explains epoll():
-
-/*
-	Sure, I can give you a brief rundown on how to use `epoll()` to monitor sockets in the context of a C++ program that acts as an IRC server.
-
-	1. Create the epoll instance
-	You can create an epoll instance using the `epoll_create()` function. This function returns an epoll file descriptor that you will use in subsequent calls to `epoll_ctl()` and `epoll_wait()`.
-
-	```c++
-	int epoll_fd = epoll_create1(0);
-	if (epoll_fd == -1) {
-		// handle error
-	}
-	```
-
-	2. Add the server socket to the epoll instance
-	You should add the server socket to the epoll instance using the `epoll_ctl()` function with `EPOLL_CTL_ADD` as the operation. 
-
-	```c++
-	struct epoll_event event;
-	event.events = EPOLLIN;
-	event.data.fd = server_socket;
-	if (epoll_ctl(epoll_fd, EPOLL_CTL_ADD, server_socket, &event) == -1) {
-		// handle error
-	}
-	```
-
-	3. Wait for events
-	You can wait for events using the `epoll_wait()` function. This function blocks until there are events to process, or until a timeout occurs. When there are events to process, `epoll_wait()` returns an array of `struct epoll_event` that describes the events.
-
-	```c++
-	const int MAX_EVENTS = 10;
-	struct epoll_event events[MAX_EVENTS];
-
-	int num_events = epoll_wait(epoll_fd, events, MAX_EVENTS, -1);
-	if (num_events == -1) {
-		// handle error
-	}
-	```
-
-	4. Process events
-	You should loop through the array of `struct epoll_event` and handle each event. If the event is for the server socket, you should accept the connection and add the new client socket to the epoll instance.
-
-	```c++
-	for (int i = 0; i < num_events; i++) {
-		if (events[i].data.fd == server_socket) {
-			// accept the connection
-			int client_socket = accept(server_socket, nullptr, nullptr);
-			if (client_socket == -1) {
-				// handle error
-			}
-
-			// add the new client socket to the epoll instance
-			struct epoll_event event;
-			event.events = EPOLLIN | EPOLLET;
-			event.data.fd = client_socket;
-			if (epoll_ctl(epoll_fd, EPOLL_CTL_ADD, client_socket, &event) == -1) {
-				// handle error
-			}
-		} else {
-			// handle data from the client socket
-			int client_socket = events[i].data.fd;
-			// read data from the client socket
-			// process the data
-		}
-	}
-	```
-
-	5. Close the epoll instance
-	Finally, when you are finished using the epoll instance, you should close it using the `close()` function.
-
-	```c++
-	close(epoll_fd);
-	```
-
-	Note that this is just a brief overview of how to use `epoll()` to monitor sockets in a C++ program that acts as an IRC server. There are many details that you will need to consider when implementing a production-quality IRC server.
-*/

@@ -58,3 +58,104 @@ bool	isSpecialCharacter(char checkMe)
 {
 	return (checkMe == '!' || checkMe == '-' || checkMe == '#');
 }
+
+// Send several numeric replies to one client
+void	sendNumericReplies(const size_t& numberOfReplies, const size_t clientFd, ...)
+{
+	std::va_list	messages;
+
+	va_start(messages, clientFd);
+	if (numberOfReplies == 0)
+		return;
+	for (size_t i = 0; i < numberOfReplies; ++i)
+	{
+		std::string	message(va_arg(messages, char*));
+		send(clientFd, message.c_str(), message.length(), 0);
+	}
+	va_end(messages);
+}
+
+// Returns a human readable string of the current date
+std::string	getCurrentDate()
+{
+ 	std::time_t time = std::time(0);
+	std::stringstream	timeStream;
+	timeStream << time;
+	return timeStream.str();
+}
+
+// Custom numeric replies
+void	sendCustomNumericReply(const std::string& message, const int& code, const Client& client)
+{
+	std::stringstream messageStream;
+	messageStream << ":" << client.getServerName() << " " << code << " " << client.getNickname() << " :" << message << "\r\n";
+	std::string returnMessage = messageStream.str();
+	sendNumericReplies(1, client.getClientSocket(), returnMessage.c_str());
+}
+
+// trim functions
+void	leftTrim(std::string& str, std::string trimmer)
+{
+	size_t pos = str.find_first_not_of(trimmer);
+	str.erase(0, pos);
+}
+
+void	rightTrim(std::string& str, std::string trimmer)
+{
+	size_t pos = str.find_first_of(trimmer);
+	str.erase(pos);
+}
+
+void	rlTrim(std::string& str, std::string trimmer)
+{
+	leftTrim(str, trimmer);
+	rightTrim(str, trimmer);
+}
+
+// Send welcome message
+void	sendWelcomeMessage(const Client& client)
+{
+	sendCustomNumericReply(" ", 999, client);
+	sendCustomNumericReply("  ░█░█░█▀▀░█░░░█▀▀░█▀█░█▄█░█▀▀░", 999, client);
+	sendCustomNumericReply("  ░█▄█░█▀▀░█░░░█░░░█░█░█░█░█▀▀░", 999, client);
+	sendCustomNumericReply("  ░▀░▀░▀▀▀░▀▀▀░▀▀▀░▀▀▀░▀░▀░▀▀▀░", 999, client);
+	sendCustomNumericReply("  ░▀█▀░█▀█░", 999, client);
+	sendCustomNumericReply("  ░░█░░█░█░", 999, client);
+	sendCustomNumericReply("  ░░▀░░▀▀▀░", 999, client);
+	sendCustomNumericReply("  ░▀█▀░█░█░█▀▀░", 999, client);
+	sendCustomNumericReply("  ░░█░░█▀█░█▀▀░", 999, client);
+	sendCustomNumericReply("  ░░▀░░▀░▀░▀▀▀░", 999, client);
+	sendCustomNumericReply("  ░█▀█░█▀█░█░█░█▀▀░▀█▀░", 999, client);
+	sendCustomNumericReply("  ░█▀▀░█░█░█░█░█▀▀░░█░░ 💜", 999, client);
+	sendCustomNumericReply("  ░▀░░░▀▀▀░▀▀▀░▀▀▀░░▀░░", 999, client);
+	sendCustomNumericReply(" ", 999, client);
+}
+
+// Output users and channels
+void	outputUsersChannels(std::map<int, Client>& clients, std::map<std::string, Channel>& channels)
+{
+	int i = 0;
+	for (std::map<int, Client>::iterator it = clients.begin(); it != clients.end(); ++it)
+	{
+		if (it == clients.begin())
+			std::cout << UNDERLINE << "Connected clients:" << RESET << " ";
+		std::cout << "[" << DIM << i++ << RESET << " " << it->second.getNickname() << "]" << ((it != --clients.end()) ? ", " : "\n");
+	}
+	std::cout << std::endl;
+	i = 0;
+	for (std::map<std::string, Channel>::iterator it = channels.begin(); it != channels.end(); ++it)
+	{
+		if (it == channels.begin())
+			std::cout << UNDERLINE << "Available channels:" << RESET << " ";
+		std::cout << "[" << DIM << i++ << RESET << " " << it->second.getName() << "]" << ((it != --channels.end()) ? ", " : "\n");
+	}
+}
+
+void	printServerTitle()
+{
+	std::cout << std::endl;
+	std::cout << "░█░░░█▀▀░░░█▀█░█▀█░█░█░█▀▀░▀█▀░░░█▀▀░█▀▀░█▀▄░█░█░█▀▀░█▀▄░" << std::endl;
+	std::cout << "░█░░░█▀▀░░░█▀▀░█░█░█░█░█▀▀░░█░░░░▀▀█░█▀▀░█▀▄░▀▄▀░█▀▀░█▀▄░" << std::endl;
+	std::cout << "░▀▀▀░▀▀▀░░░▀░░░▀▀▀░▀▀▀░▀▀▀░░▀░░░░▀▀▀░▀▀▀░▀░▀░░▀░░▀▀▀░▀░▀░" << std::endl;
+	std::cout << std::endl;
+}

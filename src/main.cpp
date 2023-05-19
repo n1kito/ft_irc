@@ -1,20 +1,15 @@
 #include "ft_irc.hpp"
 #include "Server.hpp"
 #include <cerrno>
-
-/*
-Classes:
-	- server
-	- client
-	- command
-	- channel
-*/
+#include "ACommand.hpp"
 
 int	main(int argc, char* argv[])
 {
 	try
 	{
 		errno = 0;
+		// TODO: uncomment this before push
+		// branch mj-fixing-password-parsing
 		// int			port = 0;
 		// std::string	password;
 		// checkArguments(argc, argv, port, password);
@@ -22,7 +17,7 @@ int	main(int argc, char* argv[])
 		if (argc != 3)
 			throw std::invalid_argument("Wrong argument count.\nUsage: \033[3m./ircserv <port> <password>\033[0m");
 		int port = 6667;
-		Server	server(port, argv[2]);
+		Server	server(port, argv[2], "pouetMania");
 		return (0);	
 	}
 	catch (const std::exception& e)

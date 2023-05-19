@@ -1,0 +1,20 @@
+#!/bin/bash
+
+quickPush() {
+	echo "  @@@@@@@  @@@ @@@@@@@    @@@@@@@  @@@  @@@  @@@@@@ @@@  @@@ "
+	echo " !@@       @@!   @!!      @@!  @@@ @@!  @@@ !@@     @@!  @@@ "
+	echo " !@! @!@!@ !!@   @!!      @!@@!@!  @!@  !@!  !@@!!  @!@!@!@! "
+	echo " :!!   !!: !!:   !!:      !!:      !!:  !!!     !:! !!:  !!! "
+	echo "  :: :: :  :::   :::      :::       :.:: :  ::.:.:  :::  :.: "
+	echo
+	if ! git status &> /dev/null; then echo "This is not a git repository !" && return; fi
+	if [ $# -ne 1 ]; then echo "You forgot to add a commit message.\nUsage: quickPush \"MESSAGE\"" && return; fi
+	if [ -f Makefile ]; then echo "\033[7;37m[ RUNNING MAKE FCLEAN ]\033[0m" && make fclean; fi
+	echo
+	echo "\033[7;37m[ ADD ]\033[0m"
+	git add .
+	echo "\n\033[7;37m[ COMMIT ]\033[0m $1"
+	git commit -m "$1"
+	echo "\n\033[7;37m[ PUSH ]\033[0m"
+	git push
+}

@@ -7,7 +7,7 @@ User::User() : ACommand()
 	// std::cout << "Default constructor called" << std::endl;
 }
 
-User::User( const std::map< int, Client >* clients ) : ACommand(clients)
+User::User( std::map< int, Client >* clients ) : ACommand(clients)
 {
 	// std::cout << "Default constructor called" << std::endl;
 }
@@ -43,26 +43,38 @@ void		User::setRealname( std::string realname ) { _realname = realname; }
 
 /* METHODS ********************************************************************/
 
-std::string	User::handleRequest( Client& client, std::string argument )
+void	User::handleRequest( Client& client, std::string argument )
 {
-	// send(client.getClientSocket(), "", reply.length(), 0);
+	std::string message = "";
 	std::string ret_parsing = parseArgument(client, argument);
-	if (!ret_parsing.empty())
-		return ret_parsing;
-
 	std::string ret_action = action(client, _username, _realname);
-	if (!ret_action.empty())
-		return ret_action;
-	
-	client.setRegisterState(true);
-	return USER_SUCCESS("coucoucestmoi", client.getNickname());
-	// return ":server: User created successfully!\r\n";
+	if (!ret_parsing.empty())
+	{
+		message = ret_parsing;
+		killClient(client.getClientSocket(), message, "user authentification failed");
+		return ;
+	}
+	else if (!ret_action.empty())
+		message = ret_action;
+	else
+	{
+		client.setRegisterState(true);
+		// message = RPL_WELCOME(client.getServerName(), client.getNickname());
+		message = USER_SUCCESS(client.getServerName(), client.getNickname());
+	}
+	if (!message.empty())
+		send(client.getClientSocket(), message.c_str(), message.length(), 0);
 }
 
 void		User::parseArgument() {}
 
 std::string	User::parseArgument( Client& client, std::string argument )
 {
+	// first ==> username
+	// second ==> hostname
+	// third ==> servername
+	// last ==> realname
+
 	std::stringstream	iss(argument);
 	
 	iss >> _username;
@@ -70,20 +82,18 @@ std::string	User::parseArgument( Client& client, std::string argument )
 	if ( _username.size() > USERLEN )
 		_username.erase(_username.at(USERLEN));
 
-	// hostname and servername are typically ignored when user comes from a client
+	// hostname and servername are typically ignored when USER comes from a client
 	iss.ignore(std::numeric_limits< std::streamsize >::max(), ' ');
 	iss.ignore(std::numeric_limits< std::streamsize >::max(), ' ');
 
-	iss >> _realname;
+	char tmp_name[REALNAMELEN];
+	iss.getline(tmp_name, REALNAMELEN);
+	_realname = tmp_name;
 	if (_realname[0] != ':')
 		_realname = client.getNickname();
-
-	if  (!iss.good())
-		return (ERR_NEEDMOREPARAMS("server", client.getNickname(), "USER"));
-	// first ==> username
-	// second ==> hostname
-	// third ==> servername
-	// last ==> string with spaces (realname) 
+	_realname.erase(0, 1);
+	if (_username.empty() || _realname.empty())
+		return (ERR_NEEDMOREPARAMS(client.getServerName(), client.getNickname(), "USER"));
 	return "";
 }
 
@@ -92,15 +102,8 @@ void		User::action() {}
 std::string	User::action( Client& client, std::string username, std::string realname )
 {
 	if (client.getRegisterState())
-		return (ERR_ALREADYREGISTERED("server", client.getNickname()));
-	if (username.empty())
-		return (ERR_NEEDMOREPARAMS("server", client.getNickname(), "USER"));
+		return (ERR_ALREADYREGISTERED(client.getServerName(), client.getNickname()));
 	client.setUsername(username);
 	client.setRealname(realname);
-
-	std::cout	<< RED << "Username : " << RESET
-				<< client.getUsername() << " | "
-				<< "Realname : " << client.getRealname() << std::endl;
-
 	return "";
 }
