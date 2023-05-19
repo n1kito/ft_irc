@@ -126,23 +126,12 @@ Server::Server(const int& port, const std::string& password, const std::string& 
 						{
 							Client*			client		= &_clients.at(clientSocket);
 							std::string		nickname	= client->getNickname();
-							/* 
-								- RPL_WELCOME (001)
-								- RPL_YOURHOST (002)
-								- RPL_CREATED (003)
-								- RPL_MYINFO (004)
-								- At least one RPL_ISUPPORT (005) numeric to the client
-								- The server SHOULD then respond as though the client sent the LUSERS command and return the appropriate numerics.
-								- If the user has client modes set on them automatically upon joining the network, the server SHOULD send the client the RPL_UMODEIS (221) reply or a MODE message with the client as target, preferably the former.
-								- The server MUST then respond as though the client sent it the MOTD command, i.e. it must send either the successful Message of the Day numerics or the ERR_NOMOTD (422) numeric.
-							*/
-							sendNumericReplies(7, clientSocket, \
+							sendNumericReplies(6, clientSocket, \
 												RPL_WELCOME(_serverName, nickname).c_str(), \
 												RPL_YOURHOST(_serverName, nickname, "1.0").c_str(),
-												RPL_CREATED(_serverName, nickname, "1684502461").c_str(), \
+												RPL_CREATED(_serverName, nickname, "in 1942").c_str(), \
 												RPL_MYINFO(_serverName, nickname, "1.0", "+i", "+t").c_str(), \
 												RPL_ISUPPORT(_serverName, nickname, getSupportedParams()).c_str(), \
-												RPL_UMODEIS(_serverName, nickname, client->getUserModes()).c_str(), \
 												ERR_NOMOTD(_serverName, nickname).c_str());
 							sendWelcomeMessage(_clients.at(clientSocket));
 							_clients.at(clientSocket).setWelcomeState(true);
