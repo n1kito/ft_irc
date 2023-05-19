@@ -93,12 +93,8 @@
 // #define INVITE(server, sourceNickname, channel) (std::string(":") + server + " " + sourceNickname + " invites you to " + channel + "\r\n")
 // TODO: check that server is not needed here
 #define INVITE(sourceNickname, targetNickname, channel) (std::string(":") + sourceNickname + " INVITE " + targetNickname + " " + channel + "\r\n")
-// :<inviter> INVITE <target> <channel>
 
-// :chacha!~coucou@C4118BBD.B270E442.5F584402.IP KICK #channel1 jee_ :chacha
-// :nickname!~username@hostname KICK channel kickedNickname :reason
 #define KICK_MSG(kickerNick, kickerUsername, channel, kickedNick, reason) (std::string(":") + kickerNick + "!~" + kickerUsername + "@localhost" + " KICK " + channel + " " + kickedNick + " :" + reason + "\r\n")
-// #define KICK_MSG(server, kicker, channel, nick, reason) (std::string(":") + kicker + " KICK " + channel + " " + nick + " " + reason + "\r\n")
 #define KILL(server, nickname, reason ) (std::string(":") + server + " KILL " + nickname + " :" + server + "\r\n")
 
 // JOIN
