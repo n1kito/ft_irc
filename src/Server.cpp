@@ -122,9 +122,7 @@ Server::Server(const int& port, const std::string& password, const std::string& 
 					// if the client is authentificated (PASS NICK USER) and not RPL_WELCOMEd
 					try
 					{
-						if (_clients.find(clientSocket) != _clients.end()
-							&& _clients.at(clientSocket).isAuthentificated()
-							&& _clients.at(clientSocket).getWelcomeState() == 0)
+						if (_clients.at(clientSocket).isAuthentificated() && _clients.at(clientSocket).getWelcomeState() == 0)
 						{
 							Client*			client		= &_clients.at(clientSocket);
 							std::string		nickname	= client->getNickname();
@@ -276,7 +274,7 @@ void								Server::initCommands()
 	_commands["MODE"]	= new Mode(&_clients, &_channels);
 	_commands["PRIVMSG"] = new Privmsg(&_clients, &_channels);
 	_commands["NOTICE"] = new Notice(&_clients, &_channels);
-	_commands["QUIT"] = new Quit(&_clients, &_channels);
+	_commands["QUIT"] = new Quit(&_clients);
 }
 
 void								Server::handleRequest(Client& client, const std::string& request)
