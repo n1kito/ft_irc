@@ -122,7 +122,9 @@ Server::Server(const int& port, const std::string& password, const std::string& 
 					// if the client is authentificated (PASS NICK USER) and not RPL_WELCOMEd
 					try
 					{
-						if (_clients.at(clientSocket).isAuthentificated() && _clients.at(clientSocket).getWelcomeState() == 0)
+						if (_clients.find(clientSocket) != _clients.end()
+							&& _clients.at(clientSocket).isAuthentificated()
+							&& _clients.at(clientSocket).getWelcomeState() == 0)
 						{
 							// TODO replace with sendNumericReplies
 							sendNumericReplies(1, clientSocket, \

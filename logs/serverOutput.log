@@ -1,0 +1,216 @@
+
+░█░░░█▀▀░░░█▀█░█▀█░█░█░█▀▀░▀█▀░░░█▀▀░█▀▀░█▀▄░█░█░█▀▀░█▀▄░
+░█░░░█▀▀░░░█▀▀░█░█░█░█░█▀▀░░█░░░░▀▀█░█▀▀░█▀▄░▀▄▀░█▀▀░█▀▄░
+░▀▀▀░▀▀▀░░░▀░░░▀▀▀░▀▀▀░▀▀▀░░▀░░░░▀▀▀░▀▀▀░▀░▀░░▀░░▀▀▀░▀░▀░
+
+
+[2m****************************************[0m
+
+[30;43m Client connecting [0m
+[1mSocket:		[0m6
+[1mClients:	[0m1
+
+[2m****************************************[0m
+
+[30;43m Client connecting [0m
+[1mSocket:		[0m7
+[1mClients:	[0m2
+
+[2m****************************************[0m
+
+[7;37m[1m #1 [0m[2m Request received [0m
+
+[1mCAP LS
+PASS pwd
+NICK chacha
+USER cgosseli cgosseli localhost :Charlotte GOSSELIN
+[0m
+[4mConnected clients:[0m [[2m0[0m chacha], [[2m1[0m ]
+
+
+[2m****************************************[0m
+
+[7;37m[1m #2 [0m[2m Request received [0m
+
+[1mMODE chacha +i
+MODE chacha +i
+[0m
+[4mConnected clients:[0m [[2m0[0m chacha], [[2m1[0m ]
+
+
+[2m****************************************[0m
+
+[7;37m[1m #3 [0m[2m Request received [0m
+
+[1mCAP LS
+PASS pwd
+NICK jee
+USER cgosseli cgosseli localhost :Charlotte GOSSELIN
+[0m
+[4mConnected clients:[0m [[2m0[0m chacha], [[2m1[0m jee]
+
+
+[2m****************************************[0m
+
+[7;37m[1m #4 [0m[2m Request received [0m
+
+[1mMODE jee +i
+MODE jee +i
+[0m
+[4mConnected clients:[0m [[2m0[0m chacha], [[2m1[0m jee]
+
+
+[2m****************************************[0m
+
+📍[2m PING![0m
+
+[2m****************************************[0m
+
+📍[2m PING![0m
+
+[2m****************************************[0m
+
+[7;37m[1m #5 [0m[2m Request received [0m
+
+[1mJOIN #c1
+[0m
+[4mConnected clients:[0m [[2m0[0m chacha], [[2m1[0m jee]
+
+[4mAvailable channels:[0m [[2m0[0m #c1]
+[2m****************************************[0m
+
+[7;37m[1m #6 [0m[2m Request received [0m
+
+[1mMODE #c1
+[0m
+[4mConnected clients:[0m [[2m0[0m chacha], [[2m1[0m jee]
+
+[4mAvailable channels:[0m [[2m0[0m #c1]
+[2m****************************************[0m
+
+[7;37m[1m #7 [0m[2m Request received [0m
+
+[1mWHO #c1
+[0m
+[4mConnected clients:[0m [[2m0[0m chacha], [[2m1[0m jee]
+
+[4mAvailable channels:[0m [[2m0[0m #c1]
+[2m****************************************[0m
+
+[7;37m[1m #8 [0m[2m Request received [0m
+
+[1mMODE #c1 +i
+[0m
+[4mConnected clients:[0m [[2m0[0m chacha], [[2m1[0m jee]
+
+[4mAvailable channels:[0m [[2m0[0m #c1]
+[2m****************************************[0m
+
+[7;37m[1m #9 [0m[2m Request received [0m
+
+[1mINVITE jee #c1
+[0m
+Received invite request: <jee #c1>
+User is:	<jee>
+Channel is:	<#c1>
+[4mConnected clients:[0m [[2m0[0m chacha], [[2m1[0m jee]
+
+[4mAvailable channels:[0m [[2m0[0m #c1]([2m0[0m jee)
+
+[2m****************************************[0m
+
+[7;37m[1m #10 [0m[2m Request received [0m
+
+[1mJOIN #c1
+[0m
+[4mConnected clients:[0m [[2m0[0m chacha], [[2m1[0m jee]
+
+[4mAvailable channels:[0m [[2m0[0m #c1]([2m0[0m jee)
+
+[2m****************************************[0m
+
+[7;37m[1m #11 [0m[2m Request received [0m
+
+[1mMODE #c1
+[0m
+[4mConnected clients:[0m [[2m0[0m chacha], [[2m1[0m jee]
+
+[4mAvailable channels:[0m [[2m0[0m #c1]([2m0[0m jee)
+
+[2m****************************************[0m
+
+[7;37m[1m #12 [0m[2m Request received [0m
+
+[1mWHO #c1
+[0m
+[4mConnected clients:[0m [[2m0[0m chacha], [[2m1[0m jee]
+
+[4mAvailable channels:[0m [[2m0[0m #c1]([2m0[0m jee)
+
+[2m****************************************[0m
+
+[7;37m[1m #13 [0m[2m Request received [0m
+
+[1mPART #c1
+[0m
+[4mConnected clients:[0m [[2m0[0m chacha], [[2m1[0m jee]
+
+[4mAvailable channels:[0m [[2m0[0m #c1]
+[2m****************************************[0m
+
+[7;37m[1m #14 [0m[2m Request received [0m
+
+[1mJOIN #c1
+[0m
+[4mConnected clients:[0m [[2m0[0m chacha], [[2m1[0m jee]
+
+[4mAvailable channels:[0m [[2m0[0m #c1]
+[2m****************************************[0m
+
+📍[2m PING![0m
+
+[2m****************************************[0m
+
+📍[2m PING![0m
+
+[2m****************************************[0m
+
+📍[2m PING![0m
+
+[2m****************************************[0m
+
+[7;37m[1m #15 [0m[2m Request received [0m
+
+[1mWHO #c1
+[0m
+[4mConnected clients:[0m [[2m0[0m chacha], [[2m1[0m jee]
+
+[4mAvailable channels:[0m [[2m0[0m #c1]
+[2m****************************************[0m
+
+📍[2m PING![0m
+
+[2m****************************************[0m
+
+📍[2m PING![0m
+
+[2m****************************************[0m
+
+📍[2m PING![0m
+
+[2m****************************************[0m
+
+📍[2m PING![0m
+
+[2m****************************************[0m
+
+[7;37m[1m #16 [0m[2m Request received [0m
+
+[1mMODE #c1 b
+[0m
+[4mConnected clients:[0m [[2m0[0m chacha], [[2m1[0m jee]
+
+[4mAvailable channels:[0m [[2m0[0m #c1]
+[2m****************************************[0m
+
+📍[2m PING![0m
