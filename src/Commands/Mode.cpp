@@ -176,7 +176,9 @@ void		Mode::applyChannelModes(Client& client, Channel& channel, std::string mode
 
 	for (size_t modesIndex = 1; modesIndex < modes.length(); ++modesIndex)
 	{
-		if (modes[modesIndex] == 'i' || modes[modesIndex] == 't')
+		if (successfullyChanged.find(modes[modesIndex], 0) != std::string::npos)
+			continue ;
+		else if (modes[modesIndex] == 'i' || modes[modesIndex] == 't')
 		{
 			if (changeMode == '+' && channel.modeIs(modes[modesIndex]) == false)
 			{
