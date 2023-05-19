@@ -79,9 +79,6 @@ void	Mode::handleRequest(Client &client, std::string arg)
 				// std::cout << HIGHLIGHT << RPL_CHANNELMODEIS(client.getServerName(), client.getNickname(), channel->getName(), channel->listModes(), channel->listModeParameters()) << RESET << std::endl;
 				// std::cout << HIGHLIGHT << RPL_CREATIONTIME(client.getServerName(), client.getNickname(), channel->getName(), channel->getCreationTime()) << RESET << std::endl;
 				// std::cout << "MODES MSG: " << RPL_CHANNELMODEIS(client.getServerName(), client.getNickname(), channel->getName(), channel->listModes(), channel->listModeParameters()) << std::endl;
-				// TODO: this actually diplays a new message on the channel window, but I don't know why I would send this "MODE" message, this is not what the doc asks.
-				sendNumericReplies(1, client.getClientSocket(), \
-					":pouetmania MODE #c1 +t\r\n");
 				sendNumericReplies(2, client.getClientSocket(), \
 					RPL_CHANNELMODEIS(client.getServerName(), client.getNickname(), channel->getName(), channel->listModes(), channel->listModeParameters()).c_str(),
 					RPL_CREATIONTIME(client.getServerName(), client.getNickname(), channel->getName(), channel->getCreationTime()).c_str());

@@ -67,6 +67,8 @@
 #define ERR_CHANOPRIVSNEEDED(server, client, channel) (std::string(":") + server + " 482 " + client + " " + channel + " :You're not channel operator\r\n")
 
 // MODE
+// Custom
+#define CSTM_SERVER_MODE_MSG(server, channel, modes) (std::string(":") + server + " MODE " + channel + " +" + modes + "\r\n")
 // 502
 #define ERR_USERSDONTMATCH(server, client) (std::string(":") + server + " 502 " + client + " :Cannot change mode for other users\r\n")
 // 221

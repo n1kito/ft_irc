@@ -21,10 +21,15 @@ Channel::Channel( std::string name, const Client& client ) :
 	_timeTopicWasSet(""),
 	_timeChannelWasCreated(getCurrentDate())
 {
+	// sendNumericReplies(2, client.getClientSocket(),
+		// std::string(":pouetmania 353 " + client.getNickname() + " = " + getName() + " :" + getUsersList() + "\r\n").c_str(), \
+		// std::string(":pouetmania 366 " + client.getNickname() + " " + getName() + " :End of /NAMES list.\r\n").c_str());
+		// :nikito!~c@783829BF.B270E442.5F584402.IP JOIN :#channelito
+		// :roubaix.fr.epiknet.org 333 nikito #channel coffee 1543326238
+		// :roubaix.fr.epiknet.org 353 nikito = #channel :nikito jee @coffee
+		// :roubaix.fr.epiknet.org 366 nikito #channel :End of /NAMES list.
 	addOperator(client);
-	addConnectedClient(client);
-	addOperator(client);
-	addChannelMode('t');
+	addConnectedClient(client, true);
 }
 
 Channel::Channel(const Channel &copyMe)
@@ -243,7 +248,7 @@ void							Channel::setName(const std::string& newName) { _name = newName; }
 // void							Channel::setChannelProtection(const bool& status) { _channelIsProtected = status; }
 
 // void							Channel::setInviteOnly(const bool& status) { _inviteOnly = status; }
-void							Channel::addConnectedClient(const Client& clientRef)
+void							Channel::addConnectedClient(const Client& clientRef, bool isChannelCreator)
 {
 	//TODO: what is this condition for, is it necessary ?    
 	if (_connectedClients.find(clientRef.getNickname()) == _connectedClients.end())
@@ -257,6 +262,13 @@ void							Channel::addConnectedClient(const Client& clientRef)
 	std::cout << "JOIN_MSG: " << JOIN_MSG(nickname, username, channel) << std::endl;;
 	// Let everyone on the Channel know that user has joined
 	broadcastNumericReplies(1, JOIN_MSG(nickname, username, channel).c_str());
+	if (isChannelCreator == true)
+	{
+		addChannelMode('t');
+		// Send a MODE message to let the client know that we decided to add this mode
+		sendNumericReplies(1, clientRef.getClientSocket(), \
+						CSTM_SERVER_MODE_MSG(clientRef.getServerName(), getName(), "t").c_str());
+	}
 	if (_topic.empty() == false)
 		sendNumericReplies(2, clientRef.getClientSocket(), \
 							RPL_TOPIC(server, nickname, channel, _topic).c_str(), \
