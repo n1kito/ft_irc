@@ -179,12 +179,7 @@ void			Client::QuitServer(const std::string& message, std::map< std::string, Cha
 	}
 	_connectedToChannels.clear();
 	for (std::map< std::string, Channel >::iterator it = channelsMap->begin(); it != channelsMap->end(); ++it)
-	{
-		std::vector< std::string > invitedClients = it->second.getInvitedClients();
-		for (std::vector< std::string >::iterator itInvited = invitedClients.begin(); itInvited != invitedClients.end(); ++itInvited)
-			if (*itInvited == _nickname)
-				it->second.removeInvitedClient(_nickname);
-	}
+		it->second.removeInvitedClient(_nickname);
 	
 	// std::cout << RESET << "\n";
 
