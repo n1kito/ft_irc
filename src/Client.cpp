@@ -172,7 +172,7 @@ void			Client::QuitServer(const std::string& message)
 	while (itChannel != _connectedToChannels.end())
 	{
 		// std::cout << YELLOW << itChannel->first << "\n";
-		itChannel->second->broadcastNumericReply(QUIT_MSG(_serverName, _nickname, itChannel->first, message));
+		itChannel->second->broadcastNumericReply(QUIT_MSG(_serverName, _nickname, _username, itChannel->first, message));
 		itChannel->second->removeConnectedClient(_nickname);
 		itChannel->second->removeOperator(_nickname);
 		itChannel++;
