@@ -52,7 +52,7 @@ class Client
 		void			addChannel(Channel& channelRef);
 		void			removeChannel(const std::string& channelName);
 		void			leaveAllChannels();
-		void			QuitServer(const std::string& message, std::map< std::string, Channel >* channelsMap);
+		void			QuitServer(const std::string& message);
 
 	protected:
 		// add protected elements here

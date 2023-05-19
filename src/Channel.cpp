@@ -1,7 +1,5 @@
 #include "Channel.hpp"
 
-#define TOPICLEN 100
-
 /* CONSTRUCTORS ***************************************************************/
 
 Channel::Channel() :
@@ -250,12 +248,13 @@ void							Channel::addConnectedClient(const Client& clientRef)
 		_connectedClients[clientRef.getNickname()] = &clientRef;
 	
 	std::string nickname = clientRef.getNickname();
+	std::string username = clientRef.getUsername();
 	std::string server = clientRef.getServerName();
 	std::string	channel = _name;
 
 	// std::cout << "JOIN_MSG: " << JOIN_MSG(server, _name, nickname) << std::endl;;
 	// Let everyone on the Channel know that user has joined
-	broadcastNumericReplies(1, JOIN_MSG(server, _name, nickname).c_str());
+	broadcastNumericReplies(1, JOIN_MSG(server, _name, nickname, username).c_str());
 	if (_topic.empty() == false)
 		sendNumericReplies(2, clientRef.getClientSocket(), \
 							RPL_TOPIC(server, nickname, channel, _topic).c_str(), \
@@ -318,6 +317,7 @@ bool							Channel::checkName(const std::string name)
 	return  true;
 }
 
+// TODO: this is not used anywhere
 bool							Channel::checkTopic(const std::string arg)
 {
 	if (arg.size() > TOPICLEN)

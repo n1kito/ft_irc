@@ -122,13 +122,17 @@ Server::Server(const int& port, const std::string& password, const std::string& 
 					// if the client is authentificated (PASS NICK USER) and not RPL_WELCOMEd
 					try
 					{
-						if (_clients.find(clientSocket) != _clients.end()
-							&& _clients.at(clientSocket).isAuthentificated()
-							&& _clients.at(clientSocket).getWelcomeState() == 0)
+						if (_clients.at(clientSocket).isAuthentificated() && _clients.at(clientSocket).getWelcomeState() == 0)
 						{
-							// TODO replace with sendNumericReplies
-							sendNumericReplies(1, clientSocket, \
-												RPL_WELCOME(_serverName, _clients.at(clientSocket).getNickname()).c_str());
+							Client*			client		= &_clients.at(clientSocket);
+							std::string		nickname	= client->getNickname();
+							sendNumericReplies(6, clientSocket, \
+												RPL_WELCOME(_serverName, nickname).c_str(), \
+												RPL_YOURHOST(_serverName, nickname, "1.0").c_str(),
+												RPL_CREATED(_serverName, nickname, "in 1942").c_str(), \
+												RPL_MYINFO(_serverName, nickname, "1.0", "+i", "+t").c_str(), \
+												RPL_ISUPPORT(_serverName, nickname, getSupportedParams()).c_str(), \
+												ERR_NOMOTD(_serverName, nickname).c_str());
 							sendWelcomeMessage(_clients.at(clientSocket));
 							_clients.at(clientSocket).setWelcomeState(true);
 						}
@@ -187,7 +191,23 @@ std::map< int, Client >				Server::getClients() const { return _clients; }
 const std::map< int, Client >*		Server::getClientsPtr() const { return &_clients; }
 std::map< std::string, ACommand* >	Server::getCommands() const { return _commands; }
 std::string							Server::getCreationDate() const { return _creationDate; }
+std::string							Server::getSupportedParams() const 
+{
+	std::stringstream	replyStream;
 
+	replyStream << "CHANLIMIT="		<< CHANLIMIT << " ";
+	replyStream << "CHANMODES="		<< CHANMODES << " ";
+	replyStream << "CHANNELLEN="	<< CHANNELLEN << " ";
+	replyStream << "CHANTYPES="		<< CHANTYPES << " ";
+	replyStream << "KICKLEN="		<< KICKLEN << " ";
+	replyStream << "MODES="			<< MODES << " ";
+	replyStream << "NICKLEN="		<< NICKLEN << " ";
+	replyStream << "PREFIX="		<< PREFIX << " ";
+	replyStream << "TOPICLEN="		<< TOPICLEN << " ";
+	replyStream << "USERLEN="		<< USERLEN;
+
+	return (replyStream.str());
+}
 void								Server::setPort( int port ) { _port = port; };
 void								Server::setPassword( std::string password ) { _password = password; };
 void								Server::setClients( std::map< int, Client > clients ) { _clients = clients; };
@@ -254,7 +274,7 @@ void								Server::initCommands()
 	_commands["MODE"]	= new Mode(&_clients, &_channels);
 	_commands["PRIVMSG"] = new Privmsg(&_clients, &_channels);
 	_commands["NOTICE"] = new Notice(&_clients, &_channels);
-	_commands["QUIT"] = new Quit(&_clients, &_channels);
+	_commands["QUIT"] = new Quit(&_clients);
 }
 
 void								Server::handleRequest(Client& client, const std::string& request)

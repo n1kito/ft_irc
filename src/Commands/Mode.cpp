@@ -165,7 +165,7 @@ void	Mode::applyUserModes(Client& client, const std::string& target, std::string
 	}
 	if (successfullyChanged.length() > 1)
 		sendNumericReplies(1, client.getClientSocket(), \
-			MODE_MSG(client.getServerName(), client.getNickname(), target, successfullyChanged).c_str());
+			MODE_MSG(client.getServerName(), client.getNickname(), client.getUsername(), target, successfullyChanged).c_str());
 }
 
 void		Mode::applyChannelModes(Client& client, Channel& channel, std::string modes, std::vector<std::string>& arguments)
@@ -176,7 +176,9 @@ void		Mode::applyChannelModes(Client& client, Channel& channel, std::string mode
 
 	for (size_t modesIndex = 1; modesIndex < modes.length(); ++modesIndex)
 	{
-		if (modes[modesIndex] == 'i' || modes[modesIndex] == 't')
+		if (successfullyChanged.find(modes[modesIndex], 0) != std::string::npos)
+			continue ;
+		else if (modes[modesIndex] == 'i' || modes[modesIndex] == 't')
 		{
 			if (changeMode == '+' && channel.modeIs(modes[modesIndex]) == false)
 			{
@@ -229,7 +231,7 @@ void		Mode::applyChannelModes(Client& client, Channel& channel, std::string mode
 		successfullyChanged += " " + changedParametersStr;
 	}
 	if (successfullyChanged.length() > 1)
-		channel.broadcastNumericReply(MODE_MSG(client.getServerName(), client.getNickname(), channel.getName(), successfullyChanged).c_str());
+		channel.broadcastNumericReply(MODE_MSG(client.getServerName(), client.getNickname(), client.getUsername(), channel.getName(), successfullyChanged).c_str());
 }
 
 bool	Mode::toggleKeyMode(Channel& channel, const char& changeMode, std::vector<std::string>& arguments, std::vector<std::string>& parametersSet)
