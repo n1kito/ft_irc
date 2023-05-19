@@ -47,6 +47,7 @@ class Server
 		const clientMap*					getClientsPtr() const;
 		commandMap							getCommands() const;
 		std::string							getCreationDate() const;
+		std::string							getSupportedParams() const;
 
 		void								setPort( int port );
 		void								setPassword( std::string password );

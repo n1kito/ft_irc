@@ -124,9 +124,26 @@ Server::Server(const int& port, const std::string& password, const std::string& 
 					{
 						if (_clients.at(clientSocket).isAuthentificated() && _clients.at(clientSocket).getWelcomeState() == 0)
 						{
-							// TODO replace with sendNumericReplies
-							sendNumericReplies(1, clientSocket, \
-												RPL_WELCOME(_serverName, _clients.at(clientSocket).getNickname()).c_str());
+							Client*			client		= &_clients.at(clientSocket);
+							std::string		nickname	= client->getNickname();
+							/* 
+								- RPL_WELCOME (001)
+								- RPL_YOURHOST (002)
+								- RPL_CREATED (003)
+								- RPL_MYINFO (004)
+								- At least one RPL_ISUPPORT (005) numeric to the client
+								- The server SHOULD then respond as though the client sent the LUSERS command and return the appropriate numerics.
+								- If the user has client modes set on them automatically upon joining the network, the server SHOULD send the client the RPL_UMODEIS (221) reply or a MODE message with the client as target, preferably the former.
+								- The server MUST then respond as though the client sent it the MOTD command, i.e. it must send either the successful Message of the Day numerics or the ERR_NOMOTD (422) numeric.
+							*/
+							sendNumericReplies(7, clientSocket, \
+												RPL_WELCOME(_serverName, nickname).c_str(), \
+												RPL_YOURHOST(_serverName, nickname, "1.0").c_str(),
+												RPL_CREATED(_serverName, nickname, "1684502461").c_str(), \
+												RPL_MYINFO(_serverName, nickname, "1.0", "+i", "+t").c_str(), \
+												RPL_ISUPPORT(_serverName, nickname, getSupportedParams()).c_str(), \
+												RPL_UMODEIS(_serverName, nickname, client->getUserModes()).c_str(), \
+												ERR_NOMOTD(_serverName, nickname).c_str());
 							sendWelcomeMessage(_clients.at(clientSocket));
 							_clients.at(clientSocket).setWelcomeState(true);
 						}
@@ -185,7 +202,23 @@ std::map< int, Client >				Server::getClients() const { return _clients; }
 const std::map< int, Client >*		Server::getClientsPtr() const { return &_clients; }
 std::map< std::string, ACommand* >	Server::getCommands() const { return _commands; }
 std::string							Server::getCreationDate() const { return _creationDate; }
+std::string							Server::getSupportedParams() const 
+{
+	std::stringstream	replyStream;
 
+	replyStream << "CHANLIMIT="		<< CHANLIMIT << " ";
+	replyStream << "CHANMODES="		<< CHANMODES << " ";
+	replyStream << "CHANNELLEN="	<< CHANNELLEN << " ";
+	replyStream << "CHANTYPES="		<< CHANTYPES << " ";
+	replyStream << "KICKLEN="		<< KICKLEN << " ";
+	replyStream << "MODES="			<< MODES << " ";
+	replyStream << "NICKLEN="		<< NICKLEN << " ";
+	replyStream << "PREFIX="		<< PREFIX << " ";
+	replyStream << "TOPICLEN="		<< TOPICLEN << " ";
+	replyStream << "USERLEN="		<< USERLEN;
+
+	return (replyStream.str());
+}
 void								Server::setPort( int port ) { _port = port; };
 void								Server::setPassword( std::string password ) { _password = password; };
 void								Server::setClients( std::map< int, Client > clients ) { _clients = clients; };

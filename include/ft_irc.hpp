@@ -34,12 +34,32 @@
 #define SEPARATOR std::cout << std::endl << DIM << "****************************************" << RESET << std::endl << std::endl
 #define PRINT(x, y) std::cout << x << ": " << y << std::endl
 
+// TODO: check that these are all used
+// SERVER PARAMETERS
+#define REALNAMELEN 50 // not part of RPL_ISUPPORT REPLY
+// Maximum length of a username
 #define USERLEN 10
-#define REALNAMELEN 50
+// Max length of the nickname a user can set
 #define NICKLEN 10
-#define CHANLEN 10
-#define MAXCHANNELS 20
+// Max name of channel name
+#define CHANNELLEN 10
+// Number of channels a client can join
+#define CHANLIMIT 20
+//
 #define MAXCLIENTS 100
+// Maximum length of the reason of the KICK command. May not be applied.
+#define KICKLEN 255
+// Maximum number of modes that can be specified in one MODE command
+#define MODES 50
+// Max length of topic a user can set on a channel
+// 307 is the default value for most servers
+#define TOPICLEN 307
+// Types of channel available
+#define CHANTYPES "#"
+// Modes of channel available
+#define CHANMODES ",k,l,ti"
+// Prefixes available for channel members
+#define PREFIX "(o)@"
 
 #include <iostream>
 #include <sys/socket.h>

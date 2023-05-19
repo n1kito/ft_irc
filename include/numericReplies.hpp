@@ -1,14 +1,19 @@
 #ifndef NUMERICREPLIES_HPP
 #define NUMERICREPLIES_HPP
 
+// REGISTRATION
 // 001
 #define RPL_WELCOME(server, nickname) (std::string(":") + server + " 001 " + nickname + " :Welcome to the " + server + " Network, " + nickname + "\r\n")
 // 002
-#define RPL_YOURHOST(server, nickname, serverName, version) (std::string(":") + server + " 002 " + nickname + " :Your host is " + serverName + ", running version " + version + "\r\n")
+#define RPL_YOURHOST(server, nickname, version) (std::string(":") + server + " 002 " + nickname + " :Your host is " + server + ", running version " + version + "\r\n")
 // 003
-#define RPL_CREATED(server, nickname, datetime) (std::string(":") + server + " 003 " + nickname + " :This server was created " + datetime + "\r\n")
+#define RPL_CREATED(server, nickname, createdAt) (std::string(":") + server + " 003 " + nickname + " :This server was created " + createdAt + "\r\n")
 // 004
-#define RPL_MYINFO(server, nickname, serverName, version, userModes, channelModes) (std::string(":") + server + " 004 " + nickname + " :" + serverName + " " + version + " " + userModes + " " + channelModes + "\r\n")
+#define RPL_MYINFO(server, nickname, version, userModes, channelModes) (std::string(":") + server + " 004 " + nickname + " :" + server + " " + version + " " + userModes + " " + channelModes + "\r\n")
+// 005
+#define RPL_ISUPPORT(server, nickname, tokens) (std::string(":") + server + " 005 " + nickname + " " + tokens + " :are supported by this server\r\n")
+// 422
+#define ERR_NOMOTD(server, nickname) (std::string(":") + server + " 422 " + nickname + " :There is no message today ! Live your life, be happy. Smell the flowers.\r\n")
 
 // TOPIC
 // Custom
