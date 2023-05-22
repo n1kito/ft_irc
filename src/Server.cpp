@@ -253,6 +253,7 @@ void								Server::initCommands()
 	_commands["PRIVMSG"] = new Privmsg(&_clients, &_channels);
 	_commands["NOTICE"] = new Notice(&_clients, &_channels);
 	_commands["QUIT"] = new Quit(&_clients);
+	_commands["WHO"] = new Who(&_clients, &_channels);
 }
 
 void								Server::handleRequest(Client& client, const std::string& request)

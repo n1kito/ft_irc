@@ -123,9 +123,26 @@
 // 473
 #define ERR_INVITEONLYCHAN(server, nickname, channel) (std::string(":") + server + " 473 " + nickname + " " + channel + " :Cannot join channel (+i)\r\n")
 
-#define QUIT_MSG(server, nickname, channel, message) (std::string(":") + nickname + "!" +nickname +"@"+ server + " QUIT " + message + "\r\n")
+#define QUIT_MSG(server, nickname, channel, message) (std::string(":") + nickname + "!" + nickname +"@"+ server + " QUIT " + message + "\r\n")
 
 #define PRIVMSG(senderNickname, senderUsername, receiver, message) (std::string(":") + senderNickname + "!~" + senderUsername + "@localhost" + " PRIVMSG " + receiver + " :" + message + "\r\n")
 
 #define NOTICE(senderNickname, senderUsername, receiver, message) (std::string(":") + senderNickname + "!~" + senderUsername + "@localhost" + " NOTICE " + receiver + " :" + message + "\r\n")
+
+// WHO
+// 315
+#define RPL_ENDOFWHO(server, nickname, mask) (std::string(":") + server + " 315 " + nickname + " " + mask + " :End of WHO list\r\n")
+// 352
+// <client> <channel> <username> <host> <server> <nick> <flags> :<hopcount> <realname>
+#define RPL_WHOREPLY(server, client, channel, username, host, nick, flags, realname) (std::string(":") + server + " 352 " + client + " " + channel + " " + username + " " + host + " " + server + " " + nick + " " + flags + " :0 " + realname + "\r\n")
+// RPL_WHOREPLY (352) 
+//   "<client> <channel> <username> <host> <server> <nick> <flags> :<hopcount> <realname>"
+// Sent as a reply to the WHO command, this numeric gives information about the client with the nickname <nick>. Refer to RPL_WHOISUSER (311) for the meaning of the fields <username>, <host> and <realname>. <server> is the name of the server the client is connected to. If the WHO command was given a channel as the <mask> parameter, then the same channel MUST be returned in <channel>. Otherwise <channel> is an arbitrary channel the client is joined to or a literal asterisk character ('*', 0x2A) if no channel is returned. <hopcount> is the number of intermediate servers between the client issuing the WHO command and the client <nick>, it might be unreliable so clients SHOULD ignore it.
+
+// <flags> contains the following characters, in this order:
+
+// Away status: the letter H ('H', 0x48) to indicate that the user is here, or the letter G ('G', 0x47) to indicate that the user is gone.
+// Optionally, a literal asterisk character ('*', 0x2A) to indicate that the user is a server operator.
+// Optionally, the highest channel membership prefix that the client has in <channel>, if the client has one.
+// Optionally, one or more user mode characters and other arbitrary server-specific flags.
 #endif

@@ -25,6 +25,7 @@
 #include "Notice.hpp"
 #include "Quit.hpp"
 #include "Kick.hpp"
+#include "Who.hpp"
 
 #include <ctime>
 #include <unistd.h>
