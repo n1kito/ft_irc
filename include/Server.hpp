@@ -28,6 +28,7 @@
 
 #include <ctime>
 #include <unistd.h>
+#include <csignal>
 
 #define MAX_EVENTS 10
 
@@ -60,6 +61,7 @@ class Server
 		void								initCommands();
 		void								handleRequest(Client& client, const std::string& request);
 		std::string							cleanBuffer(std::string buffer) const;
+		// void								signalHandler(int signal);
 
 		// void								sendNumericReplies(const Client& target, const int count, ...);
 
@@ -83,6 +85,7 @@ class Server
 		commandMap							_commands;
 		std::string							_creationDate;
 		std::string							_serverName;
+		// int									_keepRunning;
 		Server();
 };
 

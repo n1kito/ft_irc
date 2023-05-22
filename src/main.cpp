@@ -3,8 +3,11 @@
 #include <cerrno>
 #include "ACommand.hpp"
 
+int running = 1;
 int	main(int argc, char* argv[])
 {
+	signal(SIGINT, signalHandler);
+
 	try
 	{
 		errno = 0;

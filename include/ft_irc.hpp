@@ -73,6 +73,7 @@
 #include <cctype>
 #include <cstdarg>
 #include <ctime>
+#include <csignal>
 
 #include <algorithm>
 // #include "ACommand.hpp"
@@ -81,6 +82,8 @@
 #include "Channel.hpp"
 class Client;
 class Channel;
+
+extern int	running;
 
 // Prototypes
 void 		checkArguments(const int &argc, char **arguments, int &port, std::string &password);
@@ -94,4 +97,5 @@ void		rlTrim(std::string& str, std::string trimmer);
 void		sendWelcomeMessage(const Client& client);
 void		outputUsersChannels(std::map<int, Client>& clients, std::map<std::string, Channel>& channels);
 void		printServerTitle();
+void		signalHandler(int signal);
 #endif // FT_IRC_HPP

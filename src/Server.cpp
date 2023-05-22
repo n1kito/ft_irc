@@ -12,6 +12,7 @@ Server::Server(const int& port, const std::string& password, const std::string& 
 	_creationDate(getCurrentDate()),
 	_serverName(serverName)
 {
+	// signal(SIGINT, signalHandler);
 	int requestIndex = 0;
 	initCommands();
 	printServerTitle();
@@ -62,12 +63,13 @@ Server::Server(const int& port, const std::string& password, const std::string& 
 	}
 	// in the loop, monitor events and if event on server socket, add new client to epoll,
 	// else, handle client event
-	while (true)
+	while (running)
 	{
 		struct epoll_event events[MAX_EVENTS];
 		int numEvents = epoll_wait(epollFd, events, MAX_EVENTS, -1);
-		if (numEvents == -1) {
-			throw std::runtime_error("Error epoll_wait");        
+		if (numEvents == -1 && errno != EINTR) {
+			throw std::runtime_error("Error epoll_wait");
+			// break ;
 		}
 		for (int i = 0; i < numEvents; i++)
 		{
@@ -78,9 +80,9 @@ Server::Server(const int& port, const std::string& password, const std::string& 
 				socklen_t clientaddrlen = sizeof(clientAddress);
 				// int client_socket = accept(serverSocket, NULL, 0);
 				int clientSocket = accept(serverSocket, (struct sockaddr *) &clientAddress, &clientaddrlen);	
-				if (clientSocket == -1)
+				if (clientSocket == -1 && errno != EINTR )
 				{
-					if ( errno != EAGAIN && errno != EWOULDBLOCK )
+					if ( errno != EAGAIN && errno != EWOULDBLOCK)
 						throw std::runtime_error("Error connecting with client");
 					continue ;
 				}
@@ -170,11 +172,19 @@ Server::Server(const Server &copyMe)
 
 Server::~Server()
 {
-	// std::cout << "Destructor called" << std::endl;
-	while(_commands.size() != 0)
-	{
-		delete _commands[0];
-	}
+	delete _commands["NICK"];
+	delete _commands["USER"];
+	delete _commands["PING"];
+	delete _commands["PASS"];
+	delete _commands["JOIN"];
+	delete _commands["TOPIC"];
+	delete _commands["INVITE"];
+	delete _commands["PART"];
+	delete _commands["KICK"];
+	delete _commands["MODE"];
+	delete _commands["PRIVMSG"];
+	delete _commands["NOTICE"];
+	delete _commands["QUIT"];
 }
 
 /* OVERLOADS ******************************************************************/
@@ -359,3 +369,12 @@ std::string						Server::cleanBuffer(std::string buffer) const
 	// std::cout << "[after cleanBuffer()]\n" << YELLOW << buffer << RESET << std::endl;
 	return buffer;
 }
+
+// void 							Server::signalHandler(int signal)
+// {
+//     if (signal == SIGINT) 
+// 	{
+//         std::cout << "CTRL+C detected. Closing the server gracefully..." << std::endl;
+//         _keepRunning = 0; // Set the flag to stop the server
+//     }
+// }
