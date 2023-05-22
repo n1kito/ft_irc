@@ -36,32 +36,22 @@ Server::Server(const int& port, const std::string& password, const std::string& 
 		}
 		for (int i = 0; i < numEvents; i++)
 		{
+			int clientSocket;
 			if (events[i].data.fd == _serverSocket)
 			{
-				// accept the connection
-				struct sockaddr_in clientAddress;
-				socklen_t clientaddrlen = sizeof(clientAddress);
-				// int client_socket = accept(_serverSocket, NULL, 0);
-				int clientSocket = accept(_serverSocket, (struct sockaddr *) &clientAddress, &clientaddrlen);	
+				acceptNewConnection(clientSocket);	
 				if (clientSocket == -1)
 				{
 					if ( errno != EAGAIN && errno != EWOULDBLOCK )
 						throw std::runtime_error("Error connecting with client");
 					continue ;
 				}
-				// add the new client socket to the epoll instance
-				struct epoll_event event;
-				memset(&event, 0, sizeof(event));
-				event.events = EPOLLIN;
-				event.data.fd = clientSocket;
-				if (epoll_ctl(_epollFd, EPOLL_CTL_ADD, clientSocket, &event) == -1)
-					throw std::runtime_error("Error adding client");
 				addClient(clientSocket, Client(clientSocket, _serverName));
 			}
 			else
 			{
 				// handle data from the client socket
-				int clientSocket = events[i].data.fd;
+				clientSocket = events[i].data.fd;
 				// read data from the client socket
 				// process the data
 				char buffer[1024] = {};
@@ -196,6 +186,14 @@ void								Server::createServerSocket()
 		perror("Error creating socket");
         throw std::runtime_error("Error creating socket");
     }
+	// make sure port is reusable
+
+	int opt =1;
+	if (setsockopt(_serverSocket, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) < 0) {
+        perror("Erreur lors de la configuration de setsockopt");
+        close(_serverSocket);
+	    throw std::runtime_error("Erreur lors de la configuration de setsockopt");
+    }
 
 }
 
@@ -203,13 +201,6 @@ void								Server::createServerSocket()
 // and configure address and port for server socket
 void	Server::configureServerSocket(struct sockaddr_in& addr)
 {
-	// make sure port is reusable
-	int opt =1;
-	if (setsockopt(_serverSocket, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) < 0) {
-        perror("Erreur lors de la configuration de setsockopt");
-        close(_serverSocket);
-	    throw std::runtime_error("Erreur lors de la configuration de setsockopt");
-    }
 	// set communication type to TCP/IPv4
 	addr.sin_family = AF_INET;
 	//  listen for connections on all available network
@@ -249,9 +240,26 @@ void								Server::createEpoll()
 	}
 }
 
+void								Server::acceptNewConnection(int& clientSocket)
+{
+	// accept the connection
+	struct sockaddr_in clientAddress;
+	socklen_t clientaddrlen = sizeof(clientAddress);
+	// int client_socket = accept(_serverSocket, NULL, 0);
+	clientSocket = accept(_serverSocket, (struct sockaddr *) &clientAddress, &clientaddrlen);
+}
+
+
 
 void								Server::addClient( int fd, Client client )
 {
+	struct epoll_event event;
+	memset(&event, 0, sizeof(event));
+	event.events = EPOLLIN;
+	event.data.fd = fd;
+	if (epoll_ctl(_epollFd, EPOLL_CTL_ADD, fd, &event) == -1)
+		throw std::runtime_error("Error adding client");
+
 	SEPARATOR;
 	std::cout	<< YELLOW_BLOC << " Client connecting " << RESET << std::endl;
 	std::cout	<< BOLD << "Socket:\t\t" << RESET << client.getClientSocket() << std::endl;

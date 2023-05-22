@@ -59,6 +59,7 @@ class Server
 		void								bindServerSocket(const struct sockaddr_in& addr);
 		void								listenServerSocket();
 		void								createEpoll();
+		void								acceptNewConnection(int& clientSocket);
 		void								addClient( int fd, Client client );
 		void								removeClient( int fd);
 		void								removeEmptyChannels();
