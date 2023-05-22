@@ -257,9 +257,9 @@ void							Channel::addConnectedClient(const Client& clientRef, bool isChannelCr
 	std::string server = clientRef.getServerName();
 	std::string	channel = _name;
 
-	std::cout << "JOIN_MSG: " << JOIN_MSG(nickname, username, channel) << std::endl;;
+	// std::cout << "JOIN_MSG: " << JOIN_MSG(nickname, username, channel) << std::endl;;
 	// Let everyone on the Channel know that user has joined
-	broadcastNumericReplies(1, JOIN_MSG(nickname, username, channel).c_str());
+	broadcastNumericReplies(1, JOIN_MSG(server, _name, nickname, username).c_str());
 	if (isChannelCreator == true)
 	{
 		addChannelMode('t');
