@@ -45,7 +45,7 @@ void	Join::action(Client &client)
 	for (size_t i = 0; i < _channelList.size(); i++)
 	{
 		// if client has joined too many channels (max=20) return error
-		if (client.getChannelsMap().size() >= MAXCHANNELS)
+		if (client.getChannelsMap().size() >= CHANLIMIT)
 		{
 			createErrorTooManyChannels(client, i);
 			return;
@@ -109,7 +109,7 @@ void	Join::parseArgument(Client& client, std::string& arg)
 	while (std::getline(channelStream, buffer, ','))
 	{
 		// check if channel name's length is at least 2 (including #)
-		if (buffer.size() < 2 || buffer.size() > CHANLEN)
+		if (buffer.size() < 2 || buffer.size() > CHANNELLEN)
 			sendNumericReplies(1, client.getClientSocket(), (ERR_BADCHANMASK(client.getServerName(), buffer)).c_str());
 		// check if channel name begins with '#' 
 		else if (buffer[0] != '#')

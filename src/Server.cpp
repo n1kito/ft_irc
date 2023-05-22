@@ -100,33 +100,46 @@ Server::Server(const int& port, const std::string& password, const std::string& 
 				// read data from the client socket
 				// process the data
 				char buffer[1024] = {};
-      			int received = recv(clientSocket, buffer, sizeof(buffer), 0);
-
-      			// Si la réception est inférieure ou égale à 0, le client s'est déconnecté.
-      			if (received <= 0) {
-        			std::cout << "Client disconnected" << std::endl;
-					removeClient( clientSocket ); // remove from the client map and close fd
-      			}
-				else
+				std::string bufferstr = "";
+				// If there is no \n, the command is not complete (ctrl+D)
+				while (bufferstr.find("\n") == std::string::npos)
 				{
-					SEPARATOR;
-					if (std::string(buffer).find("PING") == std::string::npos)
+					int received = recv(clientSocket, buffer, sizeof(buffer), 0);
+					bufferstr += buffer;
+					// Si la réception est inférieure ou égale à 0, le client s'est déconnecté.
+					if (received <= 0) {
+						std::cout << "Client disconnected" << std::endl;
+						removeClient( clientSocket ); // remove from the client map and close fd
+						break ;
+					}
+				}
+				if (bufferstr.find('\n') != std::string::npos)
+				{
+					if (bufferstr.find("PING") == std::string::npos)
 					{
 						std::cout	<< HIGHLIGHT << BOLD << " #" << ++requestIndex << " " << RESET
 									<< DIM << " Request received " << RESET << std::endl << std::endl;
-						std::cout << BOLD << buffer << RESET << std::endl;
+						std::cout << BOLD << bufferstr << RESET << std::endl;
 					}
 					else
 						std::cout << "📍" << DIM << " PING!" << RESET << std::endl;
-					handleRequest(_clients.at(clientSocket), cleanBuffer(buffer));
+					handleRequest(_clients.at(clientSocket), cleanBuffer(bufferstr));
 					// if the client is authentificated (PASS NICK USER) and not RPL_WELCOMEd
 					try
 					{
-						if (_clients.at(clientSocket).isAuthentificated() && _clients.at(clientSocket).getWelcomeState() == 0)
+						if (_clients.find(clientSocket) != _clients.end()
+							&& _clients.at(clientSocket).isAuthentificated()
+							&& _clients.at(clientSocket).getWelcomeState() == 0)
 						{
-							// TODO replace with sendNumericReplies
-							sendNumericReplies(1, clientSocket, \
-												RPL_WELCOME(_serverName, _clients.at(clientSocket).getNickname()).c_str());
+							Client*			client		= &_clients.at(clientSocket);
+							std::string		nickname	= client->getNickname();
+							sendNumericReplies(6, clientSocket, \
+												RPL_WELCOME(_serverName, nickname).c_str(), \
+												RPL_YOURHOST(_serverName, nickname, "1.0").c_str(),
+												RPL_CREATED(_serverName, nickname, "in 1942").c_str(), \
+												RPL_MYINFO(_serverName, nickname, "1.0", "+i", "+t").c_str(), \
+												RPL_ISUPPORT(_serverName, nickname, getSupportedParams()).c_str(), \
+												ERR_NOMOTD(_serverName, nickname).c_str());
 							sendWelcomeMessage(_clients.at(clientSocket));
 							_clients.at(clientSocket).setWelcomeState(true);
 						}
@@ -138,8 +151,8 @@ Server::Server(const int& port, const std::string& password, const std::string& 
 					}
 					if (std::string(buffer).find("PING") == std::string::npos)
 						outputUsersChannels(_clients, _channels);
-      			}
-				
+					SEPARATOR;
+				}
 			}
 		}
 	}
@@ -185,7 +198,23 @@ std::map< int, Client >				Server::getClients() const { return _clients; }
 const std::map< int, Client >*		Server::getClientsPtr() const { return &_clients; }
 std::map< std::string, ACommand* >	Server::getCommands() const { return _commands; }
 std::string							Server::getCreationDate() const { return _creationDate; }
+std::string							Server::getSupportedParams() const 
+{
+	std::stringstream	replyStream;
 
+	replyStream << "CHANLIMIT="		<< CHANLIMIT << " ";
+	replyStream << "CHANMODES="		<< CHANMODES << " ";
+	replyStream << "CHANNELLEN="	<< CHANNELLEN << " ";
+	replyStream << "CHANTYPES="		<< CHANTYPES << " ";
+	replyStream << "KICKLEN="		<< KICKLEN << " ";
+	replyStream << "MODES="			<< MODES << " ";
+	replyStream << "NICKLEN="		<< NICKLEN << " ";
+	replyStream << "PREFIX="		<< PREFIX << " ";
+	replyStream << "TOPICLEN="		<< TOPICLEN << " ";
+	replyStream << "USERLEN="		<< USERLEN;
+
+	return (replyStream.str());
+}
 void								Server::setPort( int port ) { _port = port; };
 void								Server::setPassword( std::string password ) { _password = password; };
 void								Server::setClients( std::map< int, Client > clients ) { _clients = clients; };
@@ -252,8 +281,8 @@ void								Server::initCommands()
 	_commands["MODE"]	= new Mode(&_clients, &_channels);
 	_commands["PRIVMSG"] = new Privmsg(&_clients, &_channels);
 	_commands["NOTICE"] = new Notice(&_clients, &_channels);
-	_commands["QUIT"] = new Quit(&_clients);
 	_commands["WHO"] = new Who(&_clients, &_channels);
+	_commands["QUIT"] = new Quit(&_clients, &_channels);
 }
 
 void								Server::handleRequest(Client& client, const std::string& request)
@@ -288,7 +317,7 @@ void								Server::handleRequest(Client& client, const std::string& request)
 		size_t		firstSpace;
 		std::string	line;
 		std::string	command;
-		std::string	request = "";
+		std::string	parameters = "";
 
 		std::getline(requestStream, line);
 		if (line.empty())
@@ -300,7 +329,7 @@ void								Server::handleRequest(Client& client, const std::string& request)
 		{
 			// PRINT("extracting command", "");
 			command = line.substr(0, firstSpace);
-			request = line.substr(firstSpace + 1, std::string::npos);
+			parameters = line.substr(firstSpace + 1, std::string::npos);
 		}
 		// if client has been disconnected
 		if (_clients.find(clientSocket) == _clients.end())
@@ -308,11 +337,10 @@ void								Server::handleRequest(Client& client, const std::string& request)
 		// else, if command is found
 		if (_commands.find(command) != _commands.end())
 		{
-			
 			// if the password is not set, accept only pass command
 			if ( command != "PASS" && client.getPassword().empty())
 				continue ;
-			_commands[command]->handleRequest(client, request);
+			_commands[command]->handleRequest(client, parameters);
 			removeEmptyChannels();
 		}
 	}

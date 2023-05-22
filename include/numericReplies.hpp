@@ -1,15 +1,19 @@
 #ifndef NUMERICREPLIES_HPP
 #define NUMERICREPLIES_HPP
 
+// REGISTRATION
 // 001
-// #define RPL_WELCOME(server, nickname) (std::string("001 ") + server + " :Welcome to the " + server + " Network, " + nickname + "\r\n")
 #define RPL_WELCOME(server, nickname) (std::string(":") + server + " 001 " + nickname + " :Welcome to the " + server + " Network, " + nickname + "\r\n")
 // 002
-#define RPL_YOURHOST(server, nickname, serverName, version) (std::string(":") + server + " 002 " + nickname + " :Your host is " + serverName + ", running version " + version + "\r\n")
+#define RPL_YOURHOST(server, nickname, version) (std::string(":") + server + " 002 " + nickname + " :Your host is " + server + ", running version " + version + "\r\n")
 // 003
-#define RPL_CREATED(server, nickname, datetime) (std::string(":") + server + " 003 " + nickname + " :This server was created " + datetime + "\r\n")
+#define RPL_CREATED(server, nickname, createdAt) (std::string(":") + server + " 003 " + nickname + " :This server was created " + createdAt + "\r\n")
 // 004
-#define RPL_MYINFO(server, nickname, serverName, version, userModes, channelModes) (std::string(":") + server + " 004 " + nickname + " :" + serverName + " " + version + " " + userModes + " " + channelModes + "\r\n")
+#define RPL_MYINFO(server, nickname, version, userModes, channelModes) (std::string(":") + server + " 004 " + nickname + " :" + server + " " + version + " " + userModes + " " + channelModes + "\r\n")
+// 005
+#define RPL_ISUPPORT(server, nickname, tokens) (std::string(":") + server + " 005 " + nickname + " " + tokens + " :are supported by this server\r\n")
+// 422
+#define ERR_NOMOTD(server, nickname) (std::string(":") + server + " 422 " + nickname + " :There is no message today ! Live your life, be happy. Smell the flowers.\r\n")
 
 // TOPIC
 // Custom
@@ -76,7 +80,7 @@
 // 501
 #define ERR_UMODEUNKNOWNFLAG(server, client, modeCharacter) (std::string(":") + server + " 501 " + client + " :Unknown mode flag " + modeCharacter + "\r\n") 
 // #define MODE_MSG(server, client, target, modes) (std::string(":") + server + "!" + client + " MODE " + target + " " + modes + "\r\n")
-#define MODE_MSG(server, client, target, modes) (std::string(":") + client + "!" + client + "@" + server + " MODE " + target + " " + modes + "\r\n")
+#define MODE_MSG(server, clientNickname, clientUsername, target, modes) (std::string(":") + clientNickname + "!" + clientUsername + "@" + server + " MODE " + target + " " + modes + "\r\n")
 // 324
 #define RPL_CHANNELMODEIS(server, client, channel, modes, modeArguments) (std::string(":") + server + " 324 " + client + " " + channel + " " + modes + modeArguments + "\r\n")
 // 329
@@ -95,19 +99,12 @@
 // #define INVITE(server, sourceNickname, channel) (std::string(":") + server + " " + sourceNickname + " invites you to " + channel + "\r\n")
 // TODO: check that server is not needed here
 #define INVITE(sourceNickname, targetNickname, channel) (std::string(":") + sourceNickname + " INVITE " + targetNickname + " " + channel + "\r\n")
-// :<inviter> INVITE <target> <channel>
 
-// :chacha!~coucou@C4118BBD.B270E442.5F584402.IP KICK #channel1 jee_ :chacha
-// :nickname!~username@hostname KICK channel kickedNickname :reason
 #define KICK_MSG(kickerNick, kickerUsername, channel, kickedNick, reason) (std::string(":") + kickerNick + "!~" + kickerUsername + "@localhost" + " KICK " + channel + " " + kickedNick + " :" + reason + "\r\n")
-// #define KICK_MSG(server, kicker, channel, nick, reason) (std::string(":") + kicker + " KICK " + channel + " " + nick + " " + reason + "\r\n")
 #define KILL(server, nickname, reason ) (std::string(":") + server + " KILL " + nickname + " :" + server + "\r\n")
 
 // JOIN
-// new JOIN message based on Charlotte's message for KICK_MSG
-// old JOIN message
-#define JOIN_MSG(nickname, username, channel) (std::string(":") + nickname + "!~" + username + "@localhost" + " JOIN :" + channel + "\r\n")
-// #define JOIN_MSG(server, channel, nickname) (std::string(":") + nickname + "!" + nickname + "@" + server + " JOIN :" + channel + "\r\n")
+#define JOIN_MSG(server, channel, nickname, username) (std::string(":") + nickname + "!" + username + "@" + server + " JOIN :" + channel + "\r\n")
 #define PART_MSG(server, channel, nickname, message) (std::string(":") + channel + "!" + server + " PART " + nickname +" :" + message+ "\r\n")
 
 // 448
@@ -123,7 +120,7 @@
 // 473
 #define ERR_INVITEONLYCHAN(server, nickname, channel) (std::string(":") + server + " 473 " + nickname + " " + channel + " :Cannot join channel (+i)\r\n")
 
-#define QUIT_MSG(server, nickname, channel, message) (std::string(":") + nickname + "!" + nickname +"@"+ server + " QUIT " + message + "\r\n")
+#define QUIT_MSG(server, nickname, username, channel, message) (std::string(":") + nickname + "!" + username + "@" + server + " QUIT " + message + "\r\n")
 
 #define PRIVMSG(senderNickname, senderUsername, receiver, message) (std::string(":") + senderNickname + "!~" + senderUsername + "@localhost" + " PRIVMSG " + receiver + " :" + message + "\r\n")
 

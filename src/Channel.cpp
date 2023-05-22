@@ -1,7 +1,5 @@
 #include "Channel.hpp"
 
-#define TOPICLEN 100
-
 /* CONSTRUCTORS ***************************************************************/
 
 Channel::Channel() :
@@ -331,6 +329,7 @@ bool							Channel::checkName(const std::string name)
 	return  true;
 }
 
+// TODO: this is not used anywhere
 bool							Channel::checkTopic(const std::string arg)
 {
 	if (arg.size() > TOPICLEN)
