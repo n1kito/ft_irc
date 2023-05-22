@@ -55,8 +55,7 @@ void	Kick::handleRequest(Client &client, std::string arg)
 		else
 			message = action(client);
 	}
-	send(client.getClientSocket(), message.c_str(), message.length(), 0);
-
+	sendNumericReplies(1, client.getClientSocket(), message.c_str());
 	// cleaning
 	std::fill(_channelList.begin(), _channelList.end(), "");
 	_channelList.clear();

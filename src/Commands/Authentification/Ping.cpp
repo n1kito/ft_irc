@@ -45,7 +45,7 @@ void	Ping::handleRequest( Client& client, std::string argument )
 		message = ret_parsing;
 	else
 		message = PONG_SUCCESS(client.getServerName(), argument);
-	send(client.getClientSocket(), message.c_str(), message.length(), 0);
+	sendNumericReplies(1, client.getClientSocket(), message.c_str());
 }
 
 void		Ping::parseArgument() {}

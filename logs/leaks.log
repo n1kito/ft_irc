@@ -1,26 +1,26 @@
-==3354369== Memcheck, a memory error detector
-==3354369== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
-==3354369== Using Valgrind-3.18.1 and LibVEX; rerun with -h for copyright info
-==3354369== Command: ./ircserv 6667 pwd
-==3354369== Parent PID: 3354353
-==3354369== 
-==3354369== 
-==3354369== Process terminating with default action of signal 2 (SIGINT)
-==3354369==    at 0x4CCAF9A: epoll_wait (epoll_wait.c:30)
-==3354369==    by 0x405D11: Server::Server(int const&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) (Server.cpp:68)
-==3354369==    by 0x404FBD: main (main.cpp:20)
-==3354369== 
-==3354369== HEAP SUMMARY:
-==3354369==     in use at exit: 81,160 bytes in 46 blocks
-==3354369==   total heap usage: 447 allocs, 401 frees, 113,228 bytes allocated
-==3354369== 
-==3354369== LEAK SUMMARY:
-==3354369==    definitely lost: 0 bytes in 0 blocks
-==3354369==    indirectly lost: 0 bytes in 0 blocks
-==3354369==      possibly lost: 0 bytes in 0 blocks
-==3354369==    still reachable: 81,160 bytes in 46 blocks
-==3354369==         suppressed: 0 bytes in 0 blocks
-==3354369== Rerun with --leak-check=full to see details of leaked memory
-==3354369== 
-==3354369== For lists of detected and suppressed errors, rerun with: -s
-==3354369== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==3358901== Memcheck, a memory error detector
+==3358901== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==3358901== Using Valgrind-3.18.1 and LibVEX; rerun with -h for copyright info
+==3358901== Command: ./ircserv 6667 pwd
+==3358901== Parent PID: 3358885
+==3358901== 
+==3358901== 
+==3358901== Process terminating with default action of signal 2 (SIGINT)
+==3358901==    at 0x4CCAF9A: epoll_wait (epoll_wait.c:30)
+==3358901==    by 0x405D11: Server::Server(int const&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) (Server.cpp:68)
+==3358901==    by 0x404FBD: main (main.cpp:20)
+==3358901== 
+==3358901== HEAP SUMMARY:
+==3358901==     in use at exit: 78,528 bytes in 32 blocks
+==3358901==   total heap usage: 450 allocs, 418 frees, 112,361 bytes allocated
+==3358901== 
+==3358901== LEAK SUMMARY:
+==3358901==    definitely lost: 0 bytes in 0 blocks
+==3358901==    indirectly lost: 0 bytes in 0 blocks
+==3358901==      possibly lost: 0 bytes in 0 blocks
+==3358901==    still reachable: 78,528 bytes in 32 blocks
+==3358901==         suppressed: 0 bytes in 0 blocks
+==3358901== Rerun with --leak-check=full to see details of leaked memory
+==3358901== 
+==3358901== For lists of detected and suppressed errors, rerun with: -s
+==3358901== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
