@@ -17,7 +17,7 @@ Server::Server(const int& port, const std::string& password, const std::string& 
 	printServerTitle();
 	// 1) SERVER SOCKET
 	// create ServerSocket
-	int serverSocket = socket(AF_INET, SOCK_STREAM, 0);
+	int serverSocket = socket(AF_INET, SOCK_STREAM | SOCK_NONBLOCK, 0);
     if (serverSocket < 0) {
 		perror("Error creating socket");
         throw std::runtime_error("Error creating socket");
