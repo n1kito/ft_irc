@@ -317,14 +317,6 @@ bool							Channel::checkName(const std::string name)
 	return  true;
 }
 
-// TODO: this is not used anywhere
-bool							Channel::checkTopic(const std::string arg)
-{
-	if (arg.size() > TOPICLEN)
-		return false;
-	return true;
-}
-
 void							Channel::broadcastNumericReplies(const size_t numberOfReplies, ...)
 {
 	std::va_list	messages;

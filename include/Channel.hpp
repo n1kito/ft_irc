@@ -80,7 +80,6 @@ class Channel
 		void					addInvitedClient(const std::string& clientNick);
 		void					removeInvitedClient(const std::string& clientNick);
 
-		bool					checkTopic(const std::string argument);
 		bool					checkName(const std::string name);
 		void					broadcastNumericReplies(const size_t numberofReplies, ...);
 		std::string				getUsersList();

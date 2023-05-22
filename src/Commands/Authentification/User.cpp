@@ -79,8 +79,7 @@ std::string	User::parseArgument( Client& client, std::string argument )
 	iss >> _username;
 	iss.ignore(std::numeric_limits< std::streamsize >::max(), ' ');
 	if ( _username.size() > USERLEN )
-		_username.erase(_username.at(USERLEN));
-
+		_username = _username.substr(0, USERLEN);
 	// hostname and servername are typically ignored when USER comes from a client
 	iss.ignore(std::numeric_limits< std::streamsize >::max(), ' ');
 	iss.ignore(std::numeric_limits< std::streamsize >::max(), ' ');

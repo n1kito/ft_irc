@@ -81,10 +81,10 @@ std::string	Kick::parseArgument(Client &client, std::string& arg)
 
 	if (users.empty())
 		return ERR_NEEDMOREPARAMS(client.getServerName(), client.getNickname(), "KICK");
-
 	if (!_kickReason.empty() && _kickReason.at(0) == ':') // can it throw an exception  ?
 		_kickReason.erase(0, 1);
-	
+	if (_kickReason.length() > KICKLEN)
+		_kickReason = _kickReason.substr(0, KICKLEN);
 	// init vector of channels
 	std::stringstream	channelsStream(channels);
 	while (std::getline(channelsStream, buffer, ','))
