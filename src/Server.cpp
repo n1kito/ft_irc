@@ -13,71 +13,36 @@ Server::Server(const int& port, const std::string& password, const std::string& 
 	_serverName(serverName)
 {
 	int requestIndex = 0;
+	struct sockaddr_in addr;
+
 	initCommands();
 	printServerTitle();
-	// 1) SERVER SOCKET
-	// create ServerSocket
-	int serverSocket = socket(AF_INET, SOCK_STREAM, 0);
-    if (serverSocket < 0) {
-		perror("Error creating socket");
-        throw std::runtime_error("Error creating socket");
-    }
-	// configure setsockopt to make sure port number is reusable
-	int opt =1;
-	if (setsockopt(serverSocket, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) < 0) {
-        perror("Erreur lors de la configuration de setsockopt");
-        close(serverSocket);
-	    throw std::runtime_error("Erreur lors de la configuration de setsockopt");
-    }
-	// configure address and port for server socket
-	struct sockaddr_in addr;
-	addr.sin_family = AF_INET;
-	addr.sin_addr.s_addr = htonl(INADDR_ANY);
-	addr.sin_port = htons(port);
 
-	
-	// bind server socket
-	int result = bind(serverSocket, (struct sockaddr*)&addr, sizeof(addr));
-    if (result < 0) {
-        throw std::runtime_error("Error binding socket");        
-    }
+	// create Server 
+	createServerSocket();
+	configureServerSocket(addr);
+	bindServerSocket(addr);
+	listenServerSocket();
 
-	// set server socket to listen
-	if (listen(serverSocket, SOMAXCONN) == -1)
-		throw std::runtime_error("Could not set server socket to listening state");
-
-	// 2) EPOLL
 	// create epoll instance
-	int epollFd = epoll_create1(0);
-	if (epollFd == -1) {
-		throw std::runtime_error("Error creating epoll instance");        
-	}
-	// add server socket to epoll instance
-	struct epoll_event event;
-	memset(&event, 0, sizeof(event));
-	event.events = EPOLLIN;
-	event.data.fd = serverSocket;
-	if (epoll_ctl(epollFd, EPOLL_CTL_ADD, serverSocket, &event) == -1) {
-		throw std::runtime_error("Error adding server socket to epoll instance");        
-	}
-	// in the loop, monitor events and if event on server socket, add new client to epoll,
-	// else, handle client event
+	createEpoll();
+
 	while (true)
 	{
 		struct epoll_event events[MAX_EVENTS];
-		int numEvents = epoll_wait(epollFd, events, MAX_EVENTS, -1);
+		int numEvents = epoll_wait(_epollFd, events, MAX_EVENTS, -1);
 		if (numEvents == -1) {
 			throw std::runtime_error("Error epoll_wait");        
 		}
 		for (int i = 0; i < numEvents; i++)
 		{
-			if (events[i].data.fd == serverSocket)
+			if (events[i].data.fd == _serverSocket)
 			{
 				// accept the connection
 				struct sockaddr_in clientAddress;
 				socklen_t clientaddrlen = sizeof(clientAddress);
-				// int client_socket = accept(serverSocket, NULL, 0);
-				int clientSocket = accept(serverSocket, (struct sockaddr *) &clientAddress, &clientaddrlen);	
+				// int client_socket = accept(_serverSocket, NULL, 0);
+				int clientSocket = accept(_serverSocket, (struct sockaddr *) &clientAddress, &clientaddrlen);	
 				if (clientSocket == -1)
 				{
 					if ( errno != EAGAIN && errno != EWOULDBLOCK )
@@ -89,7 +54,7 @@ Server::Server(const int& port, const std::string& password, const std::string& 
 				memset(&event, 0, sizeof(event));
 				event.events = EPOLLIN;
 				event.data.fd = clientSocket;
-				if (epoll_ctl(epollFd, EPOLL_CTL_ADD, clientSocket, &event) == -1)
+				if (epoll_ctl(_epollFd, EPOLL_CTL_ADD, clientSocket, &event) == -1)
 					throw std::runtime_error("Error adding client");
 				addClient(clientSocket, Client(clientSocket, _serverName));
 			}
@@ -156,7 +121,7 @@ Server::Server(const int& port, const std::string& password, const std::string& 
 			}
 		}
 	}
-	close(epollFd);
+	close(_epollFd);
 }
 
 Server::Server(const Server &copyMe)
@@ -221,6 +186,68 @@ void								Server::setClients( std::map< int, Client > clients ) { _clients = c
 void								Server::setCommands( std::map< std::string, ACommand* > commands ) { _commands = commands; }
 
 /* METHODS ********************************************************************/
+
+// create server socket and set options to ensure port is reusable if server is restarted.
+void								Server::createServerSocket()
+{
+	_serverSocket = socket(AF_INET, SOCK_STREAM, 0);
+    if (_serverSocket < 0)
+	{
+		perror("Error creating socket");
+        throw std::runtime_error("Error creating socket");
+    }
+
+}
+
+// Set options to ensure port is reusable if server is restarted
+// and configure address and port for server socket
+void	Server::configureServerSocket(struct sockaddr_in& addr)
+{
+	// make sure port is reusable
+	int opt =1;
+	if (setsockopt(_serverSocket, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) < 0) {
+        perror("Erreur lors de la configuration de setsockopt");
+        close(_serverSocket);
+	    throw std::runtime_error("Erreur lors de la configuration de setsockopt");
+    }
+	// set communication type to TCP/IPv4
+	addr.sin_family = AF_INET;
+	//  listen for connections on all available network
+	addr.sin_addr.s_addr = htonl(INADDR_ANY);
+	//set port number 
+	addr.sin_port = htons(_port);
+}
+
+void								Server::bindServerSocket(const struct sockaddr_in& addr)
+{
+	int result = bind(_serverSocket, (struct sockaddr*)&addr, sizeof(addr));
+    if (result < 0) {
+        throw std::runtime_error("Error binding socket");        
+    }
+}
+
+void								Server::listenServerSocket()
+{
+	if (listen(_serverSocket, SOMAXCONN) == -1)
+		throw std::runtime_error("Could not set server socket to listening state");
+}
+
+// create epoll instance and add server socket to it
+void								Server::createEpoll()
+{
+	_epollFd = epoll_create1(0);
+	if (_epollFd == -1) {
+		throw std::runtime_error("Error creating epoll instance");        
+	}
+	// add server socket to epoll instance
+	struct epoll_event event;
+	memset(&event, 0, sizeof(event));
+	event.events = EPOLLIN;
+	event.data.fd = _serverSocket;
+	if (epoll_ctl(_epollFd, EPOLL_CTL_ADD, _serverSocket, &event) == -1) {
+		throw std::runtime_error("Error adding server socket to epoll instance");        
+	}
+}
 
 
 void								Server::addClient( int fd, Client client )

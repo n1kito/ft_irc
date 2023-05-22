@@ -53,7 +53,12 @@ class Server
 		void								setPassword( std::string password );
 		void								setClients( clientMap clients );
 		void								setCommands( commandMap commands );
-
+		
+		void								createServerSocket();
+		void								configureServerSocket(struct sockaddr_in& addr);
+		void								bindServerSocket(const struct sockaddr_in& addr);
+		void								listenServerSocket();
+		void								createEpoll();
 		void								addClient( int fd, Client client );
 		void								removeClient( int fd);
 		void								removeEmptyChannels();
@@ -77,6 +82,8 @@ class Server
 		Client&		operator [] (const int fd);
 	
 		int									_port;
+		int									_serverSocket;
+		int									_epollFd;
 		std::string							_password;
 		channelMap							_channels;
 		clientMap							_clients;
