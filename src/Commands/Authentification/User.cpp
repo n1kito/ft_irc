@@ -62,7 +62,8 @@ void	User::handleRequest( Client& client, std::string argument )
 		message = USER_SUCCESS(client.getServerName(), client.getNickname());
 	}
 	if (!message.empty())
-		send(client.getClientSocket(), message.c_str(), message.length(), 0);
+		sendNumericReplies(1, client.getClientSocket(), message.c_str());
+
 }
 
 void		User::parseArgument() {}
