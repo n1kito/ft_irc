@@ -43,49 +43,38 @@ class Server
 		Server();
 		~Server();
 
-		void								launch(const int& port, const std::string& password, const std::string& serverName);
-		int									getPort() const;
-		std::string							getPassword() const;
-		clientMap							getClients() const;
-		const clientMap*					getClientsPtr() const;
-		commandMap							getCommands() const;
-		std::string							getCreationDate() const;
-		std::string							getSupportedParams() const;
-
-		void								setPort( int port );
-		void								setPassword( std::string password );
-		void								setClients( clientMap clients );
-		void								setCommands( commandMap commands );
+		void										launch(const int& port, const std::string& password, const std::string& serverName);
+		int											getPort() const;
+		std::string									getPassword() const;
+		clientMap									getClients() const;
+		const clientMap*							getClientsPtr() const;
+		commandMap									getCommands() const;
+		std::string									getCreationDate() const;
+		std::string									getSupportedParams() const;
 		
-		void								createServerSocket();
-		void								configureServerSocket(struct sockaddr_in& addr);
-		void								bindServerSocket(const struct sockaddr_in& addr);
-		void								listenServerSocket();
-		void								createEpoll();
-		void								acceptNewConnection(int& clientSocket);
-		void								addClient( int fd, Client client );
-		bool								handleNewClient(int& clientSocket);
-		bool								requestIsComplete(const int& clientSocket, std::string& bufferstr);
-		void								displayRequest(int& requestIndex, const std::string& buffer);
-		void								welcomeClient(const int& clientSocket);
-		void								removeClient( int fd);
-		void								removeEmptyChannels();
-		void								initCommands();
-		void								handleRequest(Client& client, const std::string& request);
-		std::string							cleanBuffer(std::string buffer) const;
-		// void								signalHandler(int signal);
-
-		// void								sendNumericReplies(const Client& target, const int count, ...);
-
-
+		void										setPort( int port );
+		void										setPassword( std::string password );
+		void										setClients( clientMap clients );
+		void										setCommands( commandMap commands );
+				
+		void										createServerSocket();
+		void										configureServerSocket(struct sockaddr_in& addr);
+		void										bindServerSocket(const struct sockaddr_in& addr);
+		void										listenServerSocket();
+		void										createEpoll();
+		void										acceptNewConnection(int& clientSocket);
+		void										addClient( int fd, Client client );
+		bool										handleNewClient(int& clientSocket);
+		bool										requestIsComplete(const int& clientSocket, std::string& bufferstr);
+		void										displayRequest(int& requestIndex, const std::string& buffer);
+		void										welcomeClient(const int& clientSocket);
+		void										removeClient( int fd);
+		void										removeEmptyChannels();
+		void										initCommands();
+		void										handleRequest(Client& client, const std::string& request);
+		std::string									cleanBuffer(std::string buffer) const;
 	
-	protected:
-		// add protected elements here
-
 	private:
-		// int createServerSocket();
-		// void setSocketOption(serverSocket);
-		// int bindSocket(serverSocket); 	
 		Server(const Server &copyMe);
 		Server&		operator = (const Server &copyMe);
 		Client&		operator [] (const int fd);
@@ -100,8 +89,5 @@ class Server
 		std::string							_creationDate;
 		std::string							_serverName;
 };
-
-// void	sendNumericReplies(const size_t& numberOfReplies, const size_t clientFd, ...);
-
 
 #endif
