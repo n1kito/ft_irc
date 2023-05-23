@@ -54,51 +54,31 @@ void		Server::launch(const int& port, const std::string& password, const std::st
 			{
 				// handle data from the client socket
 				clientSocket = events[i].data.fd;
-				// read data from the client socket
-				// process the data
-				// char buffer[1024] = {};
-				std::string bufferstr = "";
+				std::string buffer = "";
 				// If there is no \n, the command is not complete (ctrl+D)
-				while (bufferstr.find("\n") == std::string::npos)
-					if (requestIsComplete(clientSocket, bufferstr) == false)
+				while (buffer.find("\n") == std::string::npos)
+					if (requestIsComplete(clientSocket, buffer) == false)
 						break;
-
-				if (bufferstr.find('\n') != std::string::npos)
+				if (buffer.find('\n') != std::string::npos)
 				{
-					if (bufferstr.find("PING") == std::string::npos)
-					{
-						std::cout	<< HIGHLIGHT << BOLD << " #" << ++requestIndex << " " << RESET
-									<< DIM << " Request received " << RESET << std::endl << std::endl;
-						std::cout << BOLD << bufferstr << RESET << std::endl;
-					}
+					if (buffer.find("PING") == std::string::npos)
+						displayRequest(requestIndex, buffer);
 					else
 						std::cout << "📍" << DIM << " PING!" << RESET << std::endl;
-					handleRequest(_clients.at(clientSocket), cleanBuffer(bufferstr));
+					handleRequest(_clients.at(clientSocket), cleanBuffer(buffer));
 					// if the client is authentificated (PASS NICK USER) and not RPL_WELCOMEd
 					try
 					{
 						if (_clients.find(clientSocket) != _clients.end()
 							&& _clients.at(clientSocket).isAuthentificated()
 							&& _clients.at(clientSocket).getWelcomeState() == 0)
-						{
-							Client*			client		= &_clients.at(clientSocket);
-							std::string		nickname	= client->getNickname();
-							sendNumericReplies(6, clientSocket, \
-												RPL_WELCOME(_serverName, nickname).c_str(), \
-												RPL_YOURHOST(_serverName, nickname, "1.0").c_str(),
-												RPL_CREATED(_serverName, nickname, "in 1942").c_str(), \
-												RPL_MYINFO(_serverName, nickname, "1.0", "+i", "+t").c_str(), \
-												RPL_ISUPPORT(_serverName, nickname, getSupportedParams()).c_str(), \
-												ERR_NOMOTD(_serverName, nickname).c_str());
-							sendWelcomeMessage(_clients.at(clientSocket));
-							_clients.at(clientSocket).setWelcomeState(true);
-						}
+							welcomeClient(clientSocket);
 					}
 					catch(const std::exception& e)
 					{
-						std::cerr << e.what() << '\n';
+						std::cout << e.what() << '\n';
 					}
-					if (std::string(bufferstr).find("PING") == std::string::npos)
+					if (std::string(buffer).find("PING") == std::string::npos)
 						outputUsersChannels(_clients, _channels);
 					SEPARATOR;
 				}
@@ -300,6 +280,31 @@ bool								Server::requestIsComplete(const int& clientSocket, std::string& buff
 	return (true);
 }
 
+void								Server::displayRequest(int& requestIndex, const std::string& buffer)
+{
+	std::cout	<< HIGHLIGHT << BOLD << " #" << ++requestIndex << " " << RESET
+	<< DIM << " Request received " << RESET << std::endl << std::endl;
+	std::cout << BOLD << buffer << RESET << std::endl;
+	
+	return;
+}
+
+void								Server::welcomeClient(const int& clientSocket)
+{
+	Client*			client		= &_clients.at(clientSocket);
+	std::string		nickname	= client->getNickname();
+	sendNumericReplies(6, clientSocket, \
+						RPL_WELCOME(_serverName, nickname).c_str(), \
+						RPL_YOURHOST(_serverName, nickname, "1.0").c_str(),
+						RPL_CREATED(_serverName, nickname, "in 1942").c_str(), \
+						RPL_MYINFO(_serverName, nickname, "1.0", "+i", "+t").c_str(), \
+						RPL_ISUPPORT(_serverName, nickname, getSupportedParams()).c_str(), \
+						ERR_NOMOTD(_serverName, nickname).c_str());
+	sendWelcomeMessage(_clients.at(clientSocket));
+	_clients.at(clientSocket).setWelcomeState(true);
+	
+	return;
+}
 
 
 void								Server::removeClient( int fd )

@@ -66,6 +66,8 @@ class Server
 		void								addClient( int fd, Client client );
 		bool								handleNewClient(int& clientSocket);
 		bool								requestIsComplete(const int& clientSocket, std::string& bufferstr);
+		void								displayRequest(int& requestIndex, const std::string& buffer);
+		void								welcomeClient(const int& clientSocket);
 		void								removeClient( int fd);
 		void								removeEmptyChannels();
 		void								initCommands();
