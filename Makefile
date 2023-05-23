@@ -123,7 +123,7 @@ stop-irssi:
 
 -include $(OBJ_FILES:%.o=%.d)
 
-.PHONY: all clean fclean re title launch valgrind irssi stop-irssi launch-linux clear
+.PHONY: all clean fclean re title launch valgrind irssi stop-irssi launch-linux clear docker
 
 #░░░░█░█░▀█▀░▀█▀░█░░░▀█▀░▀█▀░▀█▀░█▀▀░█▀▀░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
 #░░░░█░█░░█░░░█░░█░░░░█░░░█░░░█░░█▀▀░▀▀█░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
