@@ -90,7 +90,7 @@ docker:
 	@make -C mjDocker
 
 launch-linux: clear $(LOG_DIR) all stop-irssi 
-	@tmux new-session -d -s $(TMUX_SESSION) 'valgrind --leak-check=full --log-file="$(LOG_DIR)/leaks.log" ./${NAME} 6667 pwd | tee $(LOG_DIR)/serverOutput.log'
+	@tmux new-session -d -s $(TMUX_SESSION) 'valgrind --leak-check=full --log-file="$(LOG_DIR)/leaks.log" ./${NAME} 6667 $(SERVER_PASSWORD) | tee $(LOG_DIR)/serverOutput.log'
 	@tmux split-window -v -t $(TMUX_SESSION) 'sleep 2 && irssi -c localhost -p 6667 -w $(SERVER_PASSWORD) -n chacha'
 	@tmux split-window -v -t $(TMUX_SESSION) 'sleep 2 && irssi -c localhost -p 6667 -w $(SERVER_PASSWORD) -n jee'
 	@tmux select-pane -t $(TMUX_SESSION):.1
