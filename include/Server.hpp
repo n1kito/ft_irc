@@ -61,6 +61,7 @@ class Server
 		void								createEpoll();
 		void								acceptNewConnection(int& clientSocket);
 		void								addClient( int fd, Client client );
+		bool								commandIsComplete()
 		void								removeClient( int fd);
 		void								removeEmptyChannels();
 		void								initCommands();

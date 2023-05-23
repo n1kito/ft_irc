@@ -61,11 +61,11 @@ MODE jee +i
 
 [7;37m[1m #5 [0m[2m Request received [0m
 
-[1mJOIN #1,#2,#4
+[1mJOIN #1
 [0m
 [4mConnected clients:[0m [[2m0[0m chacha], [[2m1[0m jee]
 
-[4mAvailable channels:[0m [[2m0[0m #1], [[2m1[0m #2], [[2m2[0m #4]
+[4mAvailable channels:[0m [[2m0[0m #1]
 
 [2m****************************************[0m
 
@@ -75,37 +75,17 @@ MODE jee +i
 [0m
 [4mConnected clients:[0m [[2m0[0m chacha], [[2m1[0m jee]
 
-[4mAvailable channels:[0m [[2m0[0m #1], [[2m1[0m #2], [[2m2[0m #4]
+[4mAvailable channels:[0m [[2m0[0m #1]
 
 [2m****************************************[0m
 
 [7;37m[1m #7 [0m[2m Request received [0m
 
-[1mMODE #2
-[0m
-[4mConnected clients:[0m [[2m0[0m chacha], [[2m1[0m jee]
-
-[4mAvailable channels:[0m [[2m0[0m #1], [[2m1[0m #2], [[2m2[0m #4]
-
-[2m****************************************[0m
-
-[7;37m[1m #8 [0m[2m Request received [0m
-
-[1mMODE #4
-[0m
-[4mConnected clients:[0m [[2m0[0m chacha], [[2m1[0m jee]
-
-[4mAvailable channels:[0m [[2m0[0m #1], [[2m1[0m #2], [[2m2[0m #4]
-
-[2m****************************************[0m
-
-[7;37m[1m #9 [0m[2m Request received [0m
-
 [1mWHO #1
 [0m
 [4mConnected clients:[0m [[2m0[0m chacha], [[2m1[0m jee]
 
-[4mAvailable channels:[0m [[2m0[0m #1], [[2m1[0m #2], [[2m2[0m #4]
+[4mAvailable channels:[0m [[2m0[0m #1]
 
 [2m****************************************[0m
 
@@ -113,11 +93,7 @@ MODE jee +i
 
 [2m****************************************[0m
 
-📍[2m PING![0m
-
-[2m****************************************[0m
-
-[7;37m[1m #10 [0m[2m Request received [0m
+[7;37m[1m #8 [0m[2m Request received [0m
 
 [1mQUIT :leaving
 [0m
@@ -126,11 +102,11 @@ MODE jee +i
 
 [2m****************************************[0m
 
-📍[2m PING![0m
+[7;37m[1m #9 [0m[2m Request received [0m
 
-[2m****************************************[0m
+[1mQUIT :leaving
+[0m
 
-📍[2m PING![0m
 
 [2m****************************************[0m
 
