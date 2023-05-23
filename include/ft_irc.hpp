@@ -45,7 +45,7 @@
 #define CHANNELLEN 10
 // Number of channels a client can join
 #define CHANLIMIT 20
-//
+// Max numbers of clients on a channel
 #define MAXCLIENTS 100
 // Maximum length of the reason of the KICK command. May not be applied.
 #define KICKLEN 255

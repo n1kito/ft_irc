@@ -62,6 +62,8 @@ void	Mode::handleRequest(Client &client, std::string arg)
 	if (target.empty())
 		sendNumericReplies(1, client.getClientSocket(), \
 			ERR_NEEDMOREPARAMS(client.getServerName(), client.getNickname(), "MODE").c_str());
+	if (modes.length() > MODES + 1)
+		modes = modes.substr(0, MODES + 1);
 	if (target[0] == '#')
 	{
 		// Target is channel
@@ -311,7 +313,7 @@ bool	Mode::updateChannelOperator(Client& client, Channel& channel, const char& c
 {
 	std::vector< std::string >	usernames;
 	std::string					tmpToken;
-	std::stringstream			parametersStream(arguments[0]);
+	std::stringstream			parametersStream(arguments.empty() ? "" : arguments[0]);
 	bool						updatedOperators = false;
 
 	while (std::getline(parametersStream, tmpToken, ','))

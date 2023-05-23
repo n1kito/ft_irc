@@ -90,6 +90,8 @@ void	Topic::action(std::string& topic, Channel& targetChannel, const Client& cli
 		// If user tried to clear the topic, empty the topic variable
 		if (topic == "\"\"")
 			topic = "";
+		else if (topic.length() > TOPICLEN)
+			topic = topic.substr(0, TOPICLEN);
 		// Can only update if channel topic is not protected or user is an Operator
 		if (targetChannel.modeIs("topic-protected") == false || targetChannel.isClientOperator(client))
 		{
