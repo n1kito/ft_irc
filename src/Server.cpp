@@ -87,7 +87,15 @@ void		Server::launch(const int& port, const std::string& password, const std::st
 				int clientSocket = accept(serverSocket, (struct sockaddr *) &clientAddress, &clientaddrlen);	
 				if (clientSocket == -1 && g_running)
 				{
-					std::cout	<< BRED << "Error" << RESET << ": Could not connect client." << std::endl;					continue ;
+					std::cout	<< BRED << "Error" << RESET << ": Could not connect client." << std::endl;
+					continue ;
+				}
+				if (_clients.size() >= MAXCONNECTED)
+				{
+					std::cout	<< BRED << "Error" << RESET << ": Too many clients connected already" << std::endl;
+					sendNumericReplies(1, clientSocket, std::string(":" + _serverName + " 999  :Too many clients connected already\r\n").c_str());
+					if(close(clientSocket) == -1)
+						throw std::runtime_error("Error when closing fd");
 					continue ;
 				}
 				// add the new client socket to the epoll instance
@@ -188,6 +196,7 @@ Server::~Server()
 	delete _commands["MODE"];
 	delete _commands["PRIVMSG"];
 	delete _commands["NOTICE"];
+	delete _commands["WHO"];
 	delete _commands["QUIT"];
 }
 
@@ -263,6 +272,7 @@ void								Server::removeClient( int fd )
 		throw std::runtime_error("Error when closing fd");
 	// _clients[fd].leaveAllChannels();
 	// std::cout << RED_BLOC << "Map size before erasing: " << RESET << _clients.size() << std::endl;
+	std::cout << RED << "coucou" << RESET << std::endl;
 	_clients.erase( fd );
 	// std::cout << RED_BLOC << "Map size after erasing: " << RESET << _clients.size() << std::endl;
 }

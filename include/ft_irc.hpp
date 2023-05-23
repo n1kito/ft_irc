@@ -60,6 +60,7 @@
 #define CHANMODES ",k,l,ti"
 // Prefixes available for channel members
 #define PREFIX "(o)@"
+#define MAXCONNECTED 4
 
 #include <iostream>
 #include <sys/socket.h>
