@@ -39,9 +39,10 @@ class Server
 		typedef std::map< std::string, Channel >	channelMap;
 		typedef std::map< std::string, ACommand* >	commandMap;
 		
-		Server(const int& port, const std::string& password, const std::string& serverName);
+		Server();
 		~Server();
 
+		void								launch(const int& port, const std::string& password, const std::string& serverName);
 		int									getPort() const;
 		std::string							getPassword() const;
 		clientMap							getClients() const;
@@ -86,7 +87,6 @@ class Server
 		std::string							_creationDate;
 		std::string							_serverName;
 		// int									_keepRunning;
-		Server();
 };
 
 // void	sendNumericReplies(const size_t& numberOfReplies, const size_t clientFd, ...);

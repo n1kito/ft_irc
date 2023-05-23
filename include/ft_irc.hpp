@@ -83,7 +83,7 @@
 class Client;
 class Channel;
 
-extern int	running;
+extern int	g_running;
 
 // Prototypes
 void 		checkArguments(const int &argc, char **arguments, int &port, std::string &password);
