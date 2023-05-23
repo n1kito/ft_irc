@@ -6,12 +6,19 @@
 #include "ft_irc.hpp"
 
 Server::Server() {}
-Server::Server(const int& port, const std::string& password, const std::string& serverName) :
-	_port(port),
-	_password(password),
-	_creationDate(getCurrentDate()),
-	_serverName(serverName)
+// Server::Server(const int& port, const std::string& password, const std::string& serverName) :
+// 	_port(port),
+// 	_password(password),
+// 	_creationDate(getCurrentDate()),
+// 	_serverName(serverName)
+
+void		Server::launch(const int& port, const std::string& password, const std::string& serverName)
 {
+	_port = port;
+	_password = password;
+	_creationDate = getCurrentDate();
+	_serverName = serverName;
+	// signal(SIGINT, signalHandler);
 	int requestIndex = 0;
 	initCommands();
 	printServerTitle();
@@ -62,12 +69,12 @@ Server::Server(const int& port, const std::string& password, const std::string& 
 	}
 	// in the loop, monitor events and if event on server socket, add new client to epoll,
 	// else, handle client event
-	while (true)
+	while (g_running)
 	{
 		struct epoll_event events[MAX_EVENTS];
 		int numEvents = epoll_wait(epollFd, events, MAX_EVENTS, -1);
-		if (numEvents == -1) {
-			throw std::runtime_error("Error epoll_wait");        
+		if (numEvents == -1 && g_running) {
+			throw std::runtime_error("Error epoll_wait");
 		}
 		for (int i = 0; i < numEvents; i++)
 		{
@@ -78,10 +85,9 @@ Server::Server(const int& port, const std::string& password, const std::string& 
 				socklen_t clientaddrlen = sizeof(clientAddress);
 				// int client_socket = accept(serverSocket, NULL, 0);
 				int clientSocket = accept(serverSocket, (struct sockaddr *) &clientAddress, &clientaddrlen);	
-				if (clientSocket == -1)
+				if (clientSocket == -1 && g_running)
 				{
-					if ( errno != EAGAIN && errno != EWOULDBLOCK )
-						throw std::runtime_error("Error connecting with client");
+					std::cout	<< BRED << "Error" << RESET << ": Could not connect client." << std::endl;					continue ;
 					continue ;
 				}
 				// add the new client socket to the epoll instance
@@ -170,11 +176,19 @@ Server::Server(const Server &copyMe)
 
 Server::~Server()
 {
-	// std::cout << "Destructor called" << std::endl;
-	while(_commands.size() != 0)
-	{
-		delete _commands[0];
-	}
+	delete _commands["NICK"];
+	delete _commands["USER"];
+	delete _commands["PING"];
+	delete _commands["PASS"];
+	delete _commands["JOIN"];
+	delete _commands["TOPIC"];
+	delete _commands["INVITE"];
+	delete _commands["PART"];
+	delete _commands["KICK"];
+	delete _commands["MODE"];
+	delete _commands["PRIVMSG"];
+	delete _commands["NOTICE"];
+	delete _commands["QUIT"];
 }
 
 /* OVERLOADS ******************************************************************/
