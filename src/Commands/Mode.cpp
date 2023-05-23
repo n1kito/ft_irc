@@ -308,7 +308,7 @@ bool	Mode::updateChannelOperator(Client& client, Channel& channel, const char& c
 {
 	std::vector< std::string >	usernames;
 	std::string					tmpToken;
-	std::stringstream			parametersStream(arguments[0]);
+	std::stringstream			parametersStream(arguments.empty() ? "" : arguments[0]);
 	bool						updatedOperators = false;
 
 	while (std::getline(parametersStream, tmpToken, ','))
