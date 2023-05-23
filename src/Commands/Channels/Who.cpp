@@ -17,7 +17,6 @@ Who::Who(const Who &copyMe) : ACommand()
 
 Who::~Who()
 {
-	(void)_channelMap; // TODO: remove this, c'etais juste pour que ca compile
 	// std::cout << "Destructor called" << std::endl;
 }
 

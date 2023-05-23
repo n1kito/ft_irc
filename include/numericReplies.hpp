@@ -90,14 +90,10 @@
 // Custom
 #define CSTM_MAXCLIENTS(server, client) (std::string(":") + server + " 999 " + client + " :+l: channels can welcome up to 100 users\r\n")
 
-// TODO: check custom message codes and whether we need them at all or not
 // Custom Messages
 #define NICK_SUCCESS(nickname1, nickname2) (std::string(":") + nickname1 + " NICK " + nickname2 + "\r\n")
 #define USER_SUCCESS(server, nickname) (std::string(":") + server + " 001 " + nickname + " :User created successfully!\r\n")
-#define PASS_SUCCESS(server, nickname) (std::string(":") + server + " 001 " + nickname + " :Password set successfully !\r\n")
 #define PONG_SUCCESS(server, token) (std::string(":") + server + " PONG :" + token + "\r\n")
-// #define INVITE(server, sourceNickname, channel) (std::string(":") + server + " " + sourceNickname + " invites you to " + channel + "\r\n")
-// TODO: check that server is not needed here
 #define INVITE(sourceNickname, targetNickname, channel) (std::string(":") + sourceNickname + " INVITE " + targetNickname + " " + channel + "\r\n")
 
 #define KICK_MSG(kickerNick, kickerUsername, channel, kickedNick, reason) (std::string(":") + kickerNick + "!~" + kickerUsername + "@localhost" + " KICK " + channel + " " + kickedNick + " :" + reason + "\r\n")

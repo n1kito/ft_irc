@@ -2,30 +2,24 @@
 
 /* CONSTRUCTORS ***************************************************************/
 
-// TODO: is this neede or should it be private ?
 Client::Client() :
-	// _connectedToChannels(),
 	_isRegistered(false),
 	_passwordStatus(false),
 	_password(""),
 	_clientSocket(-1),
 	_welcomeState(0),
 	_serverName("")
-	{}
+{}
 
 Client::Client(const int& clientSocket, const std::string& serverName ) :
-	// _connectedToChannels(),
 	_isRegistered(false),
 	_passwordStatus(false),
 	_password(""),
 	_clientSocket(clientSocket),
 	_welcomeState(0),
 	_serverName(serverName)
-{
+{}
 
-}
-
-// TODO: is this neede or should it be private ?
 Client::Client(const Client &copyMe)
 {
 	// std::cout << "Copy constructor called" << std::endl;
@@ -34,7 +28,6 @@ Client::Client(const Client &copyMe)
 
 /* DESTRUCTORS ****************************************************************/
 
-// TODO: is this neede or should it be private ?
 Client::~Client()
 {
 	// std::cout	<< BOLD << "Clients:\t" << RESET << _clients.size() << std::endl;
@@ -74,7 +67,6 @@ const Client::channelsMap&	Client::getChannelsMap() const { return _connectedToC
 std::string		Client::getUserModes() const { return _userModes.empty() ? _userModes : "+" + _userModes; }
 
 // getters -> channel modes
-// TODO: do we want these methods to take a char instead of a string ? Easier
 bool			Client::addUserMode(const char& mode)
 {
 	if (mode == 'i')

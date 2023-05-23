@@ -47,14 +47,14 @@ Channel::~Channel()
 
 Channel& Channel::operator = (const Channel &copyMe)
 {
-	// TODO: check that all the elements needed are here, because otherwise it breaks stuff
 	_connectedClients = copyMe.getClientMap();
 	_invitedClients = copyMe.getInvitedClients();
 	_operators = copyMe.getOperators();
 	_name = copyMe.getName();
 	_topic = copyMe.getTopic();
-	_timeChannelWasCreated = copyMe.getCreationTime();
+	_nicknameOfTopicSetter = copyMe.getNicknameOfTopicSetter();
 	_timeTopicWasSet = copyMe.getTimeTopicWasSet();
+	_timeChannelWasCreated = copyMe.getCreationTime();
 	_channelModes = copyMe.getChannelModes();
 	// std::cout << "Copy assignment operator called" << std::endl;
 	return *this;
@@ -248,9 +248,10 @@ void							Channel::setName(const std::string& newName) { _name = newName; }
 // void							Channel::setInviteOnly(const bool& status) { _inviteOnly = status; }
 void							Channel::addConnectedClient(const Client& clientRef, bool isChannelCreator)
 {
-	//TODO: what is this condition for, is it necessary ?    
-	if (_connectedClients.find(clientRef.getNickname()) == _connectedClients.end())
-		_connectedClients[clientRef.getNickname()] = &clientRef;
+	if (_connectedClients.find(clientRef.getNickname()) != _connectedClients.end())
+		return ;
+
+	_connectedClients[clientRef.getNickname()] = &clientRef;
 	
 	std::string nickname = clientRef.getNickname();
 	std::string	username = clientRef.getUsername();
@@ -288,14 +289,12 @@ void							Channel::addOperator(const Client& clientRef)
 	// std::cout << "[add operator]\n";
 	if (_operators.find(clientRef.getNickname()) == _operators.end())
 		_operators[clientRef.getNickname( )] = &clientRef;
-	// TODO: send numeric reply ?
 }
 void							Channel::removeOperator(const std::string& clientNickname)
 {
 	// std::cout << "[remove operator]\n";
 	if (_operators.find(clientNickname) != _operators.end())
 		_operators.erase(clientNickname);
-	// TODO: send numeric reply ?
 }
 
 void							Channel::setNicknameOfTopicSetter(const std::string& nickname) { _nicknameOfTopicSetter = nickname; }
