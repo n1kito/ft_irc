@@ -86,7 +86,6 @@ class Server
 		commandMap							_commands;
 		std::string							_creationDate;
 		std::string							_serverName;
-		// int									_keepRunning;
 };
 
 // void	sendNumericReplies(const size_t& numberOfReplies, const size_t clientFd, ...);

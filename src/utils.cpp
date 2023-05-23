@@ -166,7 +166,5 @@ void 	signalHandler(int signal)
 	{
         std::cout << "CTRL+C detected. Closing the server gracefully..." << std::endl;
 		g_running = 0;
-		// exit(EXIT_FAILURE);
-		// _keepRunning = 0; // Set the flag to stop the server
     }
 }

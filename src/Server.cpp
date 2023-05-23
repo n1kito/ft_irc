@@ -75,7 +75,6 @@ void		Server::launch(const int& port, const std::string& password, const std::st
 		int numEvents = epoll_wait(epollFd, events, MAX_EVENTS, -1);
 		if (numEvents == -1 && g_running) {
 			throw std::runtime_error("Error epoll_wait");
-			// break ;
 		}
 		for (int i = 0; i < numEvents; i++)
 		{
@@ -88,8 +87,6 @@ void		Server::launch(const int& port, const std::string& password, const std::st
 				int clientSocket = accept(serverSocket, (struct sockaddr *) &clientAddress, &clientaddrlen);	
 				if (clientSocket == -1 && g_running)
 				{
-					// if ( errno != EAGAIN && errno != EWOULDBLOCK)
-						// throw std::runtime_error("Error connecting with client");
 					std::cout	<< BRED << "Error" << RESET << ": Could not connect client." << std::endl;					continue ;
 					continue ;
 				}
@@ -376,12 +373,3 @@ std::string						Server::cleanBuffer(std::string buffer) const
 	// std::cout << "[after cleanBuffer()]\n" << YELLOW << buffer << RESET << std::endl;
 	return buffer;
 }
-
-// void 							Server::signalHandler(int signal)
-// {
-//     if (signal == SIGINT) 
-// 	{
-//         std::cout << "CTRL+C detected. Closing the server gracefully..." << std::endl;
-//         _keepRunning = 0; // Set the flag to stop the server
-//     }
-// }
