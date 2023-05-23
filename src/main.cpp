@@ -12,15 +12,13 @@ int	main(int argc, char* argv[])
 	try
 	{
 		errno = 0;
-		// TODO: uncomment this before push
-		// branch mj-fixing-password-parsing
-		// int			port = 0;
-		// std::string	password;
-		// checkArguments(argc, argv, port, password);
+		int			port = 0;
+		std::string	password;
+		checkArguments(argc, argv, port, password);
 
 		if (argc != 3)
 			throw std::invalid_argument("Wrong argument count.\nUsage: \033[3m./ircserv <port> <password>\033[0m");
-		int port = 6667;
+		// int port = 6667;
 		server.launch(port, argv[2], "pouetMania");
 		return (0);	
 	}

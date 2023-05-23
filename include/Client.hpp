@@ -5,7 +5,6 @@
 # include <unistd.h>
 # include <exception>
 # include <stdexcept>
-# include <iostream> // TODO: added this to debug, not necessary
 # include "Channel.hpp"
 
 class Channel;
@@ -17,8 +16,8 @@ class Client
 		Client();
 		Client(const int& clientSocket, const std::string& serverName);
 		~Client();
-		Client(const Client &copyMe);
 	
+		Client(const Client &copyMe);
 		Client&				operator = (const Client &copyMe);
 
 		bool				getRegisterState() const;

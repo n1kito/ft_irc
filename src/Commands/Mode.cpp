@@ -308,7 +308,7 @@ bool	Mode::toggleClientLimitMode(Client& client, Channel& channel, const char& c
 	}
 	return false;
 }
-//TODO: j'avoue ca fait beaucoup de parametres
+
 bool	Mode::updateChannelOperator(Client& client, Channel& channel, const char& changeMode, std::vector<std::string>& arguments, std::vector<std::string>& parametersSet)
 {
 	std::vector< std::string >	usernames;

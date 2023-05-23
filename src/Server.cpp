@@ -150,10 +150,9 @@ void		Server::launch(const int& port, const std::string& password, const std::st
 							_clients.at(clientSocket).setWelcomeState(true);
 						}
 					}
-					// TODO: not allowed to use std::cerr
 					catch(const std::exception& e)
 					{
-						std::cerr << e.what() << '\n';
+						std::cout << e.what() << '\n';
 					}
 					if (std::string(buffer).find("PING") == std::string::npos)
 						outputUsersChannels(_clients, _channels);
@@ -188,6 +187,7 @@ Server::~Server()
 	delete _commands["MODE"];
 	delete _commands["PRIVMSG"];
 	delete _commands["NOTICE"];
+	delete _commands["WHO"];
 	delete _commands["QUIT"];
 }
 
@@ -252,7 +252,7 @@ void								Server::addClient( int fd, Client client )
 void								Server::removeClient( int fd )
 {
 	// used to give the client enough time to print messages before closing the connection
-	// usleep(1000); //TODO: there has to be a better way to do this
+	// usleep(1000);
 	// send a quit message to IRSSI
 	// std::string message = "QUIT :Goodbye\r\n";
 	// if (send(fd, message.c_str(), message.size(), 0) == -1) {

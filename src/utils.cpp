@@ -1,6 +1,5 @@
 #include "ft_irc.hpp"
 
-//TODO test this
 void	checkArguments(const int& argc, char** arguments, int& port, std::string& password)
 {
 	if (argc != 3)
@@ -15,14 +14,12 @@ void	checkArguments(const int& argc, char** arguments, int& port, std::string& p
 	std::stringstream	argumentStream;
 	argumentStream << arguments[1];
 	argumentStream >> port;
-	// TODO is this check enough for cases where user passes port like 8080a ?
 	if (port == -1 || port > 65535)
 		throw std::invalid_argument("invalid port value");
-	argumentStream << arguments[2];
-	argumentStream >> password;
+	password = arguments[2];
 	// Check that password is not too short
-	if (password.length() < 12)
-		throw std::invalid_argument("password too short");
+	if (password.size() < 12)
+		throw std::invalid_argument("password too short. (Min: 12)");
 	bool	containsLowercase = false;
 	bool	containsUppercase = false;
 	bool	containsDigits = false;
@@ -32,7 +29,7 @@ void	checkArguments(const int& argc, char** arguments, int& port, std::string& p
 		if (password[i] == ' ' || password[i] == '\t')
 			throw std::invalid_argument("password contains whitespaces");
 		else if (isupper(static_cast<int>(password[i])))
-			containsUppercase = false;
+			containsUppercase = true;
 		else if (islower(static_cast<int>(password[i])))
 			containsLowercase = true;
 		else if (isdigit(static_cast<int>(password[i])))
@@ -163,8 +160,5 @@ void	printServerTitle()
 void 	signalHandler(int signal)
 {
     if (signal == SIGINT) 
-	{
-        std::cout << "CTRL+C detected. Closing the server gracefully..." << std::endl;
 		g_running = 0;
-    }
 }

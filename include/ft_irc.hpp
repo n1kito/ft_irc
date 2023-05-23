@@ -34,7 +34,6 @@
 #define SEPARATOR std::cout << std::endl << DIM << "****************************************" << RESET << std::endl << std::endl
 #define PRINT(x, y) std::cout << x << ": " << y << std::endl
 
-// TODO: check that these are all used
 // SERVER PARAMETERS
 #define REALNAMELEN 50 // not part of RPL_ISUPPORT REPLY
 // Maximum length of a username
@@ -66,6 +65,8 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <unistd.h>
+#include <limits>
+// #include <iostream>
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
