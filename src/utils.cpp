@@ -159,3 +159,12 @@ void	printServerTitle()
 	std::cout << "░▀▀▀░▀▀▀░░░▀░░░▀▀▀░▀▀▀░▀▀▀░░▀░░░░▀▀▀░▀▀▀░▀░▀░░▀░░▀▀▀░▀░▀░" << std::endl;
 	std::cout << std::endl;
 }
+
+void 	signalHandler(int signal)
+{
+    if (signal == SIGINT) 
+	{
+        std::cout << "CTRL+C detected. Closing the server gracefully..." << std::endl;
+		g_running = 0;
+    }
+}

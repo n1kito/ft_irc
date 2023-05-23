@@ -39,7 +39,7 @@ void	Pass::handleRequest(Client& client, std::string argument)
 		client.setPasswordStatus(true);
 	}
 	if (!message.empty())
-		send(client.getClientSocket(), message.c_str(), message.length(), 0);
+		sendNumericReplies(1, client.getClientSocket(), message.c_str());
 }
 
 /* DESTRUCTORS ****************************************************************/

@@ -62,6 +62,8 @@ void	Mode::handleRequest(Client &client, std::string arg)
 	if (target.empty())
 		sendNumericReplies(1, client.getClientSocket(), \
 			ERR_NEEDMOREPARAMS(client.getServerName(), client.getNickname(), "MODE").c_str());
+	if (modes.length() > MODES + 1)
+		modes = modes.substr(0, MODES + 1);
 	if (target[0] == '#')
 	{
 		// Target is channel
@@ -78,10 +80,15 @@ void	Mode::handleRequest(Client &client, std::string arg)
 				// std::cout << HIGHLIGHT << "SENDING CURRENT MODES" << RESET << std::endl;
 				// std::cout << HIGHLIGHT << RPL_CHANNELMODEIS(client.getServerName(), client.getNickname(), channel->getName(), channel->listModes(), channel->listModeParameters()) << RESET << std::endl;
 				// std::cout << HIGHLIGHT << RPL_CREATIONTIME(client.getServerName(), client.getNickname(), channel->getName(), channel->getCreationTime()) << RESET << std::endl;
+				// std::cout << "MODES MSG: " << RPL_CHANNELMODEIS(client.getServerName(), client.getNickname(), channel->getName(), channel->listModes(), channel->listModeParameters()) << std::endl;
 				sendNumericReplies(2, client.getClientSocket(), \
 					RPL_CHANNELMODEIS(client.getServerName(), client.getNickname(), channel->getName(), channel->listModes(), channel->listModeParameters()).c_str(),
 					RPL_CREATIONTIME(client.getServerName(), client.getNickname(), channel->getName(), channel->getCreationTime()).c_str());
 			}
+			// Special case for when IRSSI needs the list of banned users
+			else if (modes == "b")
+				sendNumericReplies(1, client.getClientSocket(), \
+					std::string(":pouetmania 368 " + client.getNickname() + " " + target + " :End of channel ban list\r\n").c_str());
 			// If there are modes supplied
 			else
 			{
@@ -151,7 +158,7 @@ void	Mode::applyUserModes(Client& client, const std::string& target, std::string
 				sendNumericReplies(1, client.getClientSocket(), \
 					ERR_UMODEUNKNOWNFLAG(client.getServerName(), client.getNickname(), std::string(1,  modes[i])).c_str());
 		}
-		else
+		else if (changeMode == '-')
 		{
 			if (modes[i] == 'i' && client.modeIs(modes[i]) == false)
 				continue;
@@ -306,7 +313,7 @@ bool	Mode::updateChannelOperator(Client& client, Channel& channel, const char& c
 {
 	std::vector< std::string >	usernames;
 	std::string					tmpToken;
-	std::stringstream			parametersStream(arguments[0]);
+	std::stringstream			parametersStream(arguments.empty() ? "" : arguments[0]);
 	bool						updatedOperators = false;
 
 	while (std::getline(parametersStream, tmpToken, ','))

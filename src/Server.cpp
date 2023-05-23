@@ -6,18 +6,24 @@
 #include "ft_irc.hpp"
 
 Server::Server() {}
-Server::Server(const int& port, const std::string& password, const std::string& serverName) :
-	_port(port),
-	_password(password),
-	_creationDate(getCurrentDate()),
-	_serverName(serverName)
+// Server::Server(const int& port, const std::string& password, const std::string& serverName) :
+// 	_port(port),
+// 	_password(password),
+// 	_creationDate(getCurrentDate()),
+// 	_serverName(serverName)
+
+void		Server::launch(const int& port, const std::string& password, const std::string& serverName)
 {
+	_port = port;
+	_password = password;
+	_creationDate = getCurrentDate();
+	_serverName = serverName;
+	// signal(SIGINT, signalHandler);
 	int requestIndex = 0;
 	struct sockaddr_in addr;
 
 	initCommands();
 	printServerTitle();
-
 	// create Server 
 	createServerSocket();
 	configureServerSocket(addr);
@@ -27,26 +33,22 @@ Server::Server(const int& port, const std::string& password, const std::string& 
 	// create epoll instance
 	createEpoll();
 
-	while (true)
+	// in the loop, monitor events and if event on server socket, add new client to epoll,
+	// else, handle client event
+	while (g_running)
 	{
 		struct epoll_event events[MAX_EVENTS];
 		int numEvents = epoll_wait(_epollFd, events, MAX_EVENTS, -1);
-		if (numEvents == -1) {
-			throw std::runtime_error("Error epoll_wait");        
+		if (numEvents == -1 && g_running) {
+			throw std::runtime_error("Error epoll_wait");
 		}
 		for (int i = 0; i < numEvents; i++)
 		{
 			int clientSocket;
 			if (events[i].data.fd == _serverSocket)
 			{
-				acceptNewConnection(clientSocket);	
-				if (clientSocket == -1)
-				{
-					if ( errno != EAGAIN && errno != EWOULDBLOCK )
-						throw std::runtime_error("Error connecting with client");
-					continue ;
-				}
-				addClient(clientSocket, Client(clientSocket, _serverName));
+				if (handleNewClient(clientSocket) == false)
+					continue;
 			}
 			else
 			{
@@ -54,20 +56,13 @@ Server::Server(const int& port, const std::string& password, const std::string& 
 				clientSocket = events[i].data.fd;
 				// read data from the client socket
 				// process the data
-				char buffer[1024] = {};
+				// char buffer[1024] = {};
 				std::string bufferstr = "";
 				// If there is no \n, the command is not complete (ctrl+D)
 				while (bufferstr.find("\n") == std::string::npos)
-				{
-					int received = recv(clientSocket, buffer, sizeof(buffer), 0);
-					bufferstr += buffer;
-					// Si la réception est inférieure ou égale à 0, le client s'est déconnecté.
-					if (received <= 0) {
-						std::cout << "Client disconnected" << std::endl;
-						removeClient( clientSocket ); // remove from the client map and close fd
-						break ;
-					}
-				}
+					if (requestIsComplete(clientSocket, bufferstr) == false)
+						break;
+
 				if (bufferstr.find('\n') != std::string::npos)
 				{
 					if (bufferstr.find("PING") == std::string::npos)
@@ -99,12 +94,11 @@ Server::Server(const int& port, const std::string& password, const std::string& 
 							_clients.at(clientSocket).setWelcomeState(true);
 						}
 					}
-					// TODO: not allowed to use std::cerr
 					catch(const std::exception& e)
 					{
 						std::cerr << e.what() << '\n';
 					}
-					if (std::string(buffer).find("PING") == std::string::npos)
+					if (std::string(bufferstr).find("PING") == std::string::npos)
 						outputUsersChannels(_clients, _channels);
 					SEPARATOR;
 				}
@@ -125,11 +119,20 @@ Server::Server(const Server &copyMe)
 
 Server::~Server()
 {
-	// std::cout << "Destructor called" << std::endl;
-	while(_commands.size() != 0)
-	{
-		delete _commands[0];
-	}
+	delete _commands["NICK"];
+	delete _commands["USER"];
+	delete _commands["PING"];
+	delete _commands["PASS"];
+	delete _commands["JOIN"];
+	delete _commands["TOPIC"];
+	delete _commands["INVITE"];
+	delete _commands["PART"];
+	delete _commands["KICK"];
+	delete _commands["MODE"];
+	delete _commands["PRIVMSG"];
+	delete _commands["NOTICE"];
+	delete _commands["WHO"];
+	delete _commands["QUIT"];
 }
 
 /* OVERLOADS ******************************************************************/
@@ -270,6 +273,35 @@ void								Server::addClient( int fd, Client client )
 	std::cout	<< BOLD << "Clients:\t" << RESET << _clients.size() << std::endl;
 }
 
+bool								Server::handleNewClient(int& clientSocket)
+{
+	acceptNewConnection(clientSocket);	
+	if (clientSocket == -1 && g_running)
+	{
+		std::cout	<< BRED << "Error" << RESET << ": Could not connect client." << std::endl;
+		return (false);
+	}
+	addClient(clientSocket, Client(clientSocket, _serverName));
+	return (true);
+}
+
+bool								Server::requestIsComplete(const int& clientSocket, std::string& bufferstr)
+{
+	char buffer[1024] = {};
+	int received = recv(clientSocket, buffer, sizeof(buffer), 0);
+	bufferstr += buffer;
+	// Si la réception est inférieure ou égale à 0, le client s'est déconnecté.
+	if (received <= 0) {
+		std::cout << "Client disconnected" << std::endl;
+		removeClient( clientSocket ); // remove from the client map and close fd
+		// break ;
+		return (false);
+	}
+	return (true);
+}
+
+
+
 void								Server::removeClient( int fd )
 {
 	// used to give the client enough time to print messages before closing the connection
@@ -316,6 +348,7 @@ void								Server::initCommands()
 	_commands["MODE"]	= new Mode(&_clients, &_channels);
 	_commands["PRIVMSG"] = new Privmsg(&_clients, &_channels);
 	_commands["NOTICE"] = new Notice(&_clients, &_channels);
+	_commands["WHO"] = new Who(&_clients, &_channels);
 	_commands["QUIT"] = new Quit(&_clients, &_channels);
 }
 

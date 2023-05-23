@@ -45,7 +45,7 @@
 #define CHANNELLEN 10
 // Number of channels a client can join
 #define CHANLIMIT 20
-//
+// Max numbers of clients on a channel
 #define MAXCLIENTS 100
 // Maximum length of the reason of the KICK command. May not be applied.
 #define KICKLEN 255
@@ -73,6 +73,7 @@
 #include <cctype>
 #include <cstdarg>
 #include <ctime>
+#include <csignal>
 
 #include <algorithm>
 // #include "ACommand.hpp"
@@ -81,6 +82,8 @@
 #include "Channel.hpp"
 class Client;
 class Channel;
+
+extern int	g_running;
 
 // Prototypes
 void 		checkArguments(const int &argc, char **arguments, int &port, std::string &password);
@@ -94,4 +97,5 @@ void		rlTrim(std::string& str, std::string trimmer);
 void		sendWelcomeMessage(const Client& client);
 void		outputUsersChannels(std::map<int, Client>& clients, std::map<std::string, Channel>& channels);
 void		printServerTitle();
+void		signalHandler(int signal);
 #endif // FT_IRC_HPP

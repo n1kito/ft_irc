@@ -25,9 +25,11 @@
 #include "Notice.hpp"
 #include "Quit.hpp"
 #include "Kick.hpp"
+#include "Who.hpp"
 
 #include <ctime>
 #include <unistd.h>
+#include <csignal>
 
 #define MAX_EVENTS 10
 
@@ -38,9 +40,10 @@ class Server
 		typedef std::map< std::string, Channel >	channelMap;
 		typedef std::map< std::string, ACommand* >	commandMap;
 		
-		Server(const int& port, const std::string& password, const std::string& serverName);
+		Server();
 		~Server();
 
+		void								launch(const int& port, const std::string& password, const std::string& serverName);
 		int									getPort() const;
 		std::string							getPassword() const;
 		clientMap							getClients() const;
@@ -61,12 +64,14 @@ class Server
 		void								createEpoll();
 		void								acceptNewConnection(int& clientSocket);
 		void								addClient( int fd, Client client );
-		bool								commandIsComplete()
+		bool								handleNewClient(int& clientSocket);
+		bool								requestIsComplete(const int& clientSocket, std::string& bufferstr);
 		void								removeClient( int fd);
 		void								removeEmptyChannels();
 		void								initCommands();
 		void								handleRequest(Client& client, const std::string& request);
 		std::string							cleanBuffer(std::string buffer) const;
+		// void								signalHandler(int signal);
 
 		// void								sendNumericReplies(const Client& target, const int count, ...);
 
@@ -92,7 +97,6 @@ class Server
 		commandMap							_commands;
 		std::string							_creationDate;
 		std::string							_serverName;
-		Server();
 };
 
 // void	sendNumericReplies(const size_t& numberOfReplies, const size_t clientFd, ...);

@@ -52,7 +52,7 @@ void	Privmsg::handleRequest(Client &client, std::string arg)
 			message = action(client);
 	}
 	if (message.length() > 0)
-		send(client.getClientSocket(), message.c_str(), message.length(), 0);
+		sendNumericReplies(1, client.getClientSocket(), message.c_str());
 
 	// cleaning
 	std::fill(_targetVector.begin(), _targetVector.end(), "");
