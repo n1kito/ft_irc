@@ -75,8 +75,6 @@
 #include <csignal>
 
 #include <algorithm>
-// #include "ACommand.hpp"
-// #include "Nick.hpp"
 #include "Client.hpp"
 #include "Channel.hpp"
 class Client;
