@@ -78,10 +78,15 @@ void	Mode::handleRequest(Client &client, std::string arg)
 				// std::cout << HIGHLIGHT << "SENDING CURRENT MODES" << RESET << std::endl;
 				// std::cout << HIGHLIGHT << RPL_CHANNELMODEIS(client.getServerName(), client.getNickname(), channel->getName(), channel->listModes(), channel->listModeParameters()) << RESET << std::endl;
 				// std::cout << HIGHLIGHT << RPL_CREATIONTIME(client.getServerName(), client.getNickname(), channel->getName(), channel->getCreationTime()) << RESET << std::endl;
+				// std::cout << "MODES MSG: " << RPL_CHANNELMODEIS(client.getServerName(), client.getNickname(), channel->getName(), channel->listModes(), channel->listModeParameters()) << std::endl;
 				sendNumericReplies(2, client.getClientSocket(), \
 					RPL_CHANNELMODEIS(client.getServerName(), client.getNickname(), channel->getName(), channel->listModes(), channel->listModeParameters()).c_str(),
 					RPL_CREATIONTIME(client.getServerName(), client.getNickname(), channel->getName(), channel->getCreationTime()).c_str());
 			}
+			// Special case for when IRSSI needs the list of banned users
+			else if (modes == "b")
+				sendNumericReplies(1, client.getClientSocket(), \
+					std::string(":pouetmania 368 " + client.getNickname() + " " + target + " :End of channel ban list\r\n").c_str());
 			// If there are modes supplied
 			else
 			{
@@ -151,7 +156,7 @@ void	Mode::applyUserModes(Client& client, const std::string& target, std::string
 				sendNumericReplies(1, client.getClientSocket(), \
 					ERR_UMODEUNKNOWNFLAG(client.getServerName(), client.getNickname(), std::string(1,  modes[i])).c_str());
 		}
-		else
+		else if (changeMode == '-')
 		{
 			if (modes[i] == 'i' && client.modeIs(modes[i]) == false)
 				continue;

@@ -281,6 +281,7 @@ void								Server::initCommands()
 	_commands["MODE"]	= new Mode(&_clients, &_channels);
 	_commands["PRIVMSG"] = new Privmsg(&_clients, &_channels);
 	_commands["NOTICE"] = new Notice(&_clients, &_channels);
+	_commands["WHO"] = new Who(&_clients, &_channels);
 	_commands["QUIT"] = new Quit(&_clients, &_channels);
 }
 

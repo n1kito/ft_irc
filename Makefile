@@ -26,6 +26,7 @@ SRC_FILES		:=	main\
 					Commands/Channels/Part\
 					Commands/Channels/Kick\
 					Commands/Channels/Quit\
+					Commands/Channels/Who\
 					Commands/Privmsg\
 					Commands/Notice\
 					utils
