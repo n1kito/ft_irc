@@ -22,7 +22,6 @@ class Channel
 		typedef std::map< char, std::string >			modeMap;
 
 		Channel( std::string name, const Client& client );
-		// TODO: should the copy constructors and default constructor be made private ?
 		Channel(const Channel &copyMe);
 		Channel&				operator = (const Channel &copyMe);
 		Channel();

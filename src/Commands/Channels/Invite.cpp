@@ -54,9 +54,6 @@ void		Invite::handleRequest(Client &client, std::string arg)
 		action(client, channel, invitedUser, *getClientByNickname(invitedUser));
 }
 
-// TODO: find out how to find out if a client is an existing user just from its nickname
-// and how to access to its Client instance
-
 void	Invite::action() { }
 void	Invite::action(const Client& client, const std::string& channel, const std::string& invitedUserNick, Client& invitedClient)
 {

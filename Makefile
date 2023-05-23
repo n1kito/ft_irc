@@ -39,6 +39,7 @@ INC_DIR			:=	-I include/Commands \
 					-I include
 
 TMUX_SESSION	:=	irssi-session
+SERVER_PASSWORD	:=	thisIsTheP4ssword-
 
 #░░░░█▀▄░█▀▀░█▀▀░▀█▀░█▀█░█▀▀░█▀▀░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
 #░░░░█▀▄░█▀▀░█░░░░█░░█▀▀░█▀▀░▀▀█░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
@@ -48,7 +49,6 @@ all: title $(NAME)
 
 $(NAME): $(OBJ_FILES)
 	@$(CXX) -o $(NAME) $(OBJ_FILES)
-# @echo "\n📣 $(GREEN_BLINK)$(NAME) compiled $(GREEN)!!! ‍️💻$(END_COLOR) \n"
 	@echo
 	@toilet -f term -F border --gay " $(NAME) compiled ! " | sed 's/^/\t/'
 	@echo
@@ -84,20 +84,20 @@ re: fclean all
 
 launch: all $(LOG_DIR)
 # @if tmux has-session -t $(TMUX_SESSION) 2>/dev/null; then tmux kill-session -t $(TMUX_SESSION); fi
-	@clear -x && make && clear -x && valgrind --log-file="$(LOG_DIR)/leaks.log" ./${NAME} 6667 pwd | tee $(LOG_DIR)/serverOutput.log
+	@clear -x && make && clear -x && valgrind --leak-check=full --log-file="$(LOG_DIR)/leaks.log" ./${NAME} 6667 $(SERVER_PASSWORD) | tee $(LOG_DIR)/serverOutput.log
 
 docker:
 	@make -C mjDocker
 
 launch-linux: clear $(LOG_DIR) all stop-irssi 
-	@tmux new-session -d -s $(TMUX_SESSION) 'valgrind --log-file="$(LOG_DIR)/leaks.log" ./${NAME} 6667 pwd | tee $(LOG_DIR)/serverOutput.log'
-	@tmux split-window -v -t $(TMUX_SESSION) 'sleep 2 && irssi -c localhost -p 6667 -w pwd -n chacha'
-	@tmux split-window -v -t $(TMUX_SESSION) 'sleep 2 && irssi -c localhost -p 6667 -w pwd -n jee'
+	@tmux new-session -d -s $(TMUX_SESSION) 'valgrind --leak-check=full --log-file="$(LOG_DIR)/leaks.log" ./${NAME} 6667 $(SERVER_PASSWORD) | tee $(LOG_DIR)/serverOutput.log'
+	@tmux split-window -v -t $(TMUX_SESSION) 'sleep 2 && irssi -c localhost -p 6667 -w $(SERVER_PASSWORD) -n chacha'
+	@tmux split-window -v -t $(TMUX_SESSION) 'sleep 2 && irssi -c localhost -p 6667 -w $(SERVER_PASSWORD) -n jee'
 	@tmux select-pane -t $(TMUX_SESSION):.1
 	@tmux attach -t $(TMUX_SESSION)
 
 valgrind: all
-	@clear -x && make && clear -x && valgrind ./${NAME} 6667 coucou
+	@clear -x && make && clear -x && valgrind ./${NAME} -p 6667 -w $(SERVER_PASSWORD) -n nikito
 
 # This one would allow to launch the server and then split two panels and connect them automatically to the server
 # Not practical when using docker and containers that do not have irssi and tmux installed
@@ -110,8 +110,8 @@ valgrind: all
 
 irssi: stop-irssi
 	@clear -x
-	tmux new-session -d -s $(TMUX_SESSION) 'irssi -c localhost -p 6667 -w pwd -n chacha'
-	tmux split-window -v -t $(TMUX_SESSION) 'irssi -c localhost -p 6667 -w pwd -n jee'
+	tmux new-session -d -s $(TMUX_SESSION) 'irssi -c localhost -p 6667 -w $(SERVER_PASSWORD) -n chacha'
+	tmux split-window -v -t $(TMUX_SESSION) 'irssi -c localhost -p 6667 -w $(SERVER_PASSWORD) -n jee'
 	tmux select-pane -t $(TMUX_SESSION):.0
 	tmux attach -t $(TMUX_SESSION)
 
@@ -123,7 +123,7 @@ stop-irssi:
 
 -include $(OBJ_FILES:%.o=%.d)
 
-.PHONY: all clean fclean re title launch valgrind irssi stop-irssi launch-linux clear
+.PHONY: all clean fclean re title launch valgrind irssi stop-irssi launch-linux clear docker
 
 #░░░░█░█░▀█▀░▀█▀░█░░░▀█▀░▀█▀░▀█▀░█▀▀░█▀▀░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
 #░░░░█░█░░█░░░█░░█░░░░█░░░█░░░█░░█▀▀░▀▀█░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░

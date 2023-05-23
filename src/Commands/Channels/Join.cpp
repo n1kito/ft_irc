@@ -41,7 +41,7 @@ void 	Join::createErrorTooManyChannels(Client const& client, size_t idx)
 
 void	Join::action(Client &client)
 {
-	//if channel does not exist, create channel
+	// if channel does not exist, create channel
 	for (size_t i = 0; i < _channelList.size(); i++)
 	{
 		// if client has joined too many channels (max=20) return error

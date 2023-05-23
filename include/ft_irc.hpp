@@ -34,7 +34,6 @@
 #define SEPARATOR std::cout << std::endl << DIM << "****************************************" << RESET << std::endl << std::endl
 #define PRINT(x, y) std::cout << x << ": " << y << std::endl
 
-// TODO: check that these are all used
 // SERVER PARAMETERS
 #define REALNAMELEN 50 // not part of RPL_ISUPPORT REPLY
 // Maximum length of a username
@@ -76,8 +75,6 @@
 #include <csignal>
 
 #include <algorithm>
-// #include "ACommand.hpp"
-// #include "Nick.hpp"
 #include "Client.hpp"
 #include "Channel.hpp"
 class Client;
