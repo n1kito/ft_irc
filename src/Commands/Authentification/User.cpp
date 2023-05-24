@@ -56,7 +56,8 @@ void		User::handleRequest(Client& client, std::string argument)
 		message = ret_action;
 	else
 	{
-		client.setRegisterState(true);
+		if (client.getNickname().empty() == false && client.getPassword().empty() == false)
+			client.setRegisterState(true);
 		message = USER_SUCCESS(client.getServerName(), client.getNickname());
 	}
 	if (!message.empty())

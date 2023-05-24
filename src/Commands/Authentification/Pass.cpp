@@ -59,6 +59,10 @@ void	Pass::handleRequest(Client& client, std::string argument)
 		client.setPassword(argument);
 		client.setPasswordStatus(true);
 	}
+	if (client.getNickname().empty() == false \
+		&& client.getUsername().empty() == false
+		&& client.getRealname().empty() == false)
+		client.setRegisterState(true);
 	if (!message.empty())
 		sendNumericReplies(1, client.getClientSocket(), message.c_str());
 }

@@ -267,7 +267,10 @@ bool								Server::requestIsComplete(const int& clientSocket, std::string& buff
 	// Si la réception est inférieure ou égale à 0, le client s'est déconnecté.
 	if (received <= 0) {
 		std::cout << "Client disconnected" << std::endl;
+		Client*	clientToRemove = &(_clients[clientSocket]);
+		clientToRemove->quitServer("disconnected", &(clientToRemove->getChannelsMap()));
 		removeClient(clientSocket);
+		removeEmptyChannels();
 		return (false);
 	}
 	return (true);
@@ -365,7 +368,11 @@ void								Server::handleRequest(Client& client, const std::string& request)
 			// if the password is not set, accept only pass command
 			if (command != "PASS" && client.getPassword().empty())
 				continue;
-			_commands[command]->handleRequest(client, parameters);
+			if (client.isAuthentificated() ||
+				command == "NICK" ||
+				command == "USER" ||
+				command == "PASS")
+				_commands[command]->handleRequest(client, parameters);
 			removeEmptyChannels();
 		}
 	}

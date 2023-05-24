@@ -99,6 +99,10 @@ void	Nick::handleRequest(Client &client, std::string arg)
 			chanIt->second->broadcastNumericReply(message.c_str());
 		else
 			sendNumericReplies(1, client.getClientSocket(), message.c_str());
+		if (client.getPassword().empty() == false \
+			&& client.getUsername().empty() == false \
+			&& client.getRealname().empty() == false)
+			client.setRegisterState(true);
 		return;
 	}
 	else
