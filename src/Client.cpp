@@ -11,7 +11,7 @@ Client::Client() :
 	_serverName("")
 {}
 
-Client::Client(const int& clientSocket, const std::string& serverName ) :
+Client::Client(const int& clientSocket, const std::string& serverName) :
 	_isRegistered(false),
 	_passwordStatus(false),
 	_password(""),
@@ -20,25 +20,16 @@ Client::Client(const int& clientSocket, const std::string& serverName ) :
 	_serverName(serverName)
 {}
 
-Client::Client(const Client &copyMe)
-{
-	// std::cout << "Copy constructor called" << std::endl;
-	*this = copyMe;
-}
+Client::Client(const Client &copyMe) { *this = copyMe; }
 
 /* DESTRUCTORS ****************************************************************/
 
-Client::~Client()
-{
-	// std::cout	<< BOLD << "Clients:\t" << RESET << _clients.size() << std::endl;
-	// std::cout << "Destructor called" << std::endl;
-}
+Client::~Client() {}
 
 /* OVERLOADS ******************************************************************/
 
 Client& Client::operator = (const Client &copyMe)
 {
-	// (void)copyMe;
 	_connectedToChannels = copyMe.getChannelsMap();
 	_isRegistered = copyMe.getRegisterState();
 	_clientSocket = copyMe.getClientSocket();
@@ -49,7 +40,6 @@ Client& Client::operator = (const Client &copyMe)
 	_passwordStatus = copyMe.getPasswordStatus();
 	_realname = copyMe.getRealname();
 	_serverName = copyMe.getServerName();
-	// std::cout << "Copy assignment operator called" << std::endl;
 	return *this;
 }
 
@@ -106,7 +96,6 @@ void			Client::setNickname(std::string nickname) { _nickname = nickname; }
 void			Client::setPassword(std::string password) { _password = password; }
 void			Client::setWelcomeState(const bool &state) { _welcomeState = state; }
 void			Client::setPasswordStatus(const bool& status) { _passwordStatus = status;}
-void			Client::setInvitationStatus(const bool& status) { _invitationStatus = status; }
 
 /* METHODS ********************************************************************/
 
@@ -117,20 +106,11 @@ bool			Client::isAuthentificated() const
 
 void			Client::addChannel(Channel& channelRef)
 {
-	// std::cout << "\n[Add Channel]\n";
 	_connectedToChannels[channelRef.getName()] = &channelRef;
-	
-    // channelsMap::iterator it;
-    // for (it = _connectedToChannels.begin(); it != _connectedToChannels.end(); ++it)
-    // {
-        // std::cout << YELLOW << it->second->getName() << "\n";
-    // }
-    // std::cout << RESET << "\n";
 }
 
 void			Client::removeChannel(const std::string& channelName)
 {
-	// std::cout << "\n[removeChannel]\n";
 	channelsMap::iterator it = _connectedToChannels.find(channelName);
 	if (it == _connectedToChannels.end())
 		return;
@@ -139,31 +119,24 @@ void			Client::removeChannel(const std::string& channelName)
 	_connectedToChannels.erase(channelName);
 }
 
-
 void			Client::leaveAllChannels()
 {
-	// std::cout << GREEN << "\n[leaveAllChannels]\n";
 	channelsMap::iterator itChannel = _connectedToChannels.begin();
 	while (itChannel != _connectedToChannels.end())
 	{
-		// std::cout << YELLOW << itChannel->first << "\n";
 		itChannel->second->broadcastNumericReply(PART_MSG(_serverName, _nickname, itChannel->first, ""));
 		itChannel->second->removeConnectedClient(_nickname);
 		itChannel->second->removeOperator(_nickname);
 		itChannel++;
 	}
 	_connectedToChannels.clear();
-	
-	// std::cout << RESET << "\n";
 }
 
-void			Client::QuitServer(const std::string& message, std::map< std::string, Channel >* channelsMap)
+void			Client::quitServer(const std::string& message, std::map< std::string, Channel >* channelsMap)
 {
-	// std::cout << GREEN << "\n[quitServer]\n";
 	channelsMap::iterator itChannel = _connectedToChannels.begin();
 	while (itChannel != _connectedToChannels.end())
 	{
-		// std::cout << YELLOW << itChannel->first << "\n";
 		itChannel->second->broadcastNumericReply(QUIT_MSG(_serverName, _nickname, _username, itChannel->first, message));
 		itChannel->second->removeConnectedClient(_nickname);
 		itChannel->second->removeOperator(_nickname);
@@ -172,9 +145,4 @@ void			Client::QuitServer(const std::string& message, std::map< std::string, Cha
 	_connectedToChannels.clear();
 	for (std::map< std::string, Channel >::iterator it = channelsMap->begin(); it != channelsMap->end(); ++it)
 		it->second.removeInvitedClient(_nickname);
-	
-	// std::cout << RESET << "\n";
-
 }
-
-
