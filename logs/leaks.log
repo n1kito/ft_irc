@@ -1,0 +1,15 @@
+==1801618== Memcheck, a memory error detector
+==1801618== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==1801618== Using Valgrind-3.18.1 and LibVEX; rerun with -h for copyright info
+==1801618== Command: ./ircserv 6667 thisIsTheP4ssword-
+==1801618== Parent PID: 1801612
+==1801618== 
+==1801618== 
+==1801618== HEAP SUMMARY:
+==1801618==     in use at exit: 0 bytes in 0 blocks
+==1801618==   total heap usage: 611 allocs, 611 frees, 119,342 bytes allocated
+==1801618== 
+==1801618== All heap blocks were freed -- no leaks are possible
+==1801618== 
+==1801618== For lists of detected and suppressed errors, rerun with: -s
+==1801618== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils.cpp                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: cgosseli, jeepark, mjallada                +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/05/24 13:39:54 by pouetTeam         #+#    #+#             */
+/*   Updated: 2023/05/24 13:39:55 by pouetTeam        ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "ft_irc.hpp"
 
 void	checkArguments(const int& argc, char** arguments, int& port, std::string& password)
