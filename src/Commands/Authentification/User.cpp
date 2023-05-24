@@ -81,9 +81,8 @@ std::string	User::parseArgument(Client& client, std::string argument)
 	char tmp_name[REALNAMELEN];
 	iss.getline(tmp_name, REALNAMELEN);
 	_realname = tmp_name;
-	if (_realname[0] != ':')
-		_realname = client.getNickname();
-	_realname.erase(0, 1);
+	if (_realname[0] == ':')
+		_realname.erase(0, 1);
 	if (_username.empty() || _realname.empty())
 		return (ERR_NEEDMOREPARAMS(client.getServerName(), client.getNickname(), "USER"));
 	return "";

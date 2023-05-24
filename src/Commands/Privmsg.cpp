@@ -110,7 +110,7 @@ std::string Privmsg::action(Client &client)
 		{
 			Client* targetClient = getClientByNickname(*targetIt);
 			if (!targetClient)
-				return ERR_NOSUCHCHANNEL(client.getServerName(), client.getNickname(), *targetIt);
+				return ERR_NOSUCHNICK(client.getServerName(), client.getNickname(), *targetIt);
 			sendNumericReplies(1, targetClient->getClientSocket(),\
 								PRIVMSG(client.getNickname(),\
 										client.getUsername(), \

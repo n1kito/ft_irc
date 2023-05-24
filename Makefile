@@ -51,7 +51,7 @@ INC_DIR			:=	-I include/Commands \
 					-I include
 
 TMUX_SESSION	:=	irssi-session
-SERVER_PASSWORD	:=	thisIsTheP4ssword-
+SERVER_PASSWORD	:=	thisIsTheP4ssword
 
 #░░░░█▀▄░█▀▀░█▀▀░▀█▀░█▀█░█▀▀░█▀▀░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
 #░░░░█▀▄░█▀▀░█░░░░█░░█▀▀░█▀▀░▀▀█░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
