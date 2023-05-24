@@ -17,18 +17,26 @@
 Client::Client() :
 	_isRegistered(false),
 	_passwordStatus(false),
+	_username(""),
+	_realname(""),
+	_nickname(""),
 	_password(""),
 	_clientSocket(-1),
 	_welcomeState(0),
+	_userModes(""),
 	_serverName("")
 {}
 
 Client::Client(const int& clientSocket, const std::string& serverName) :
 	_isRegistered(false),
 	_passwordStatus(false),
+	_username(""),
+	_realname(""),
+	_nickname(""),
 	_password(""),
 	_clientSocket(clientSocket),
 	_welcomeState(0),
+	_userModes(""),
 	_serverName(serverName)
 {}
 
@@ -44,13 +52,14 @@ Client& Client::operator = (const Client &copyMe)
 {
 	_connectedToChannels = copyMe.getChannelsMap();
 	_isRegistered = copyMe.getRegisterState();
-	_clientSocket = copyMe.getClientSocket();
+	_passwordStatus = copyMe.getPasswordStatus();
 	_username = copyMe.getUsername();
+	_realname = copyMe.getRealname();
 	_nickname = copyMe.getNickname();
 	_password = copyMe.getPassword();
+	_clientSocket = copyMe.getClientSocket();
 	_welcomeState = copyMe.getWelcomeState();
-	_passwordStatus = copyMe.getPasswordStatus();
-	_realname = copyMe.getRealname();
+	_userModes = copyMe.getUserModes();
 	_serverName = copyMe.getServerName();
 	return *this;
 }
@@ -157,4 +166,19 @@ void			Client::quitServer(const std::string& message, std::map< std::string, Cha
 	_connectedToChannels.clear();
 	for (std::map< std::string, Channel >::iterator it = channelsMap->begin(); it != channelsMap->end(); ++it)
 		it->second.removeInvitedClient(_nickname);
+}
+
+void			Client::quitServer(const std::string& message, const std::map< std::string, Channel* >* channelsMap)
+{
+	channelsMap::iterator itChannel = _connectedToChannels.begin();
+	while (itChannel != _connectedToChannels.end())
+	{
+		itChannel->second->broadcastNumericReply(QUIT_MSG(_serverName, _nickname, _username, itChannel->first, message));
+		itChannel->second->removeConnectedClient(_nickname);
+		itChannel->second->removeOperator(_nickname);
+		itChannel++;
+	}
+	_connectedToChannels.clear();
+	for (std::map< std::string, Channel* >::const_iterator it = channelsMap->begin(); it != channelsMap->end(); ++it)
+		it->second->removeInvitedClient(_nickname);
 }

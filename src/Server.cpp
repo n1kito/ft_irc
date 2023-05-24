@@ -11,8 +11,6 @@
 /* ************************************************************************** */
 
 #include "Server.hpp"
-/* CONSTRUCTORS ***************************************************************/
-
 #include <cerrno>
 #include "numericReplies.hpp"
 #include "ft_irc.hpp"
@@ -21,26 +19,22 @@ Server::Server() {}
 
 void		Server::launch(const int& port, const std::string& password, const std::string& serverName)
 {
+	int				 	requestIndex = 0;
+	struct sockaddr_in	addr;
+
 	_port = port;
 	_password = password;
 	_creationDate = getCurrentDate();
 	_serverName = serverName;
-	int requestIndex = 0;
-	struct sockaddr_in	addr;
 
 	initCommands();
 	printServerTitle();
-
-	// create Server 
 	createServerSocket();
 	configureServerSocket(addr);
 	bindServerSocket(addr);
 	listenServerSocket();
-
-	// create epoll instance
 	createEpoll();
-
-	// in the loop, monitor events and if event on server socket, add new client to epoll,
+	// In the loop, monitor events and if event on server socket, add new client to epoll,
 	// else, handle client event
 	while (g_running)
 	{
@@ -58,14 +52,14 @@ void		Server::launch(const int& port, const std::string& password, const std::st
 			}
 			else
 			{
-				// handle data from the client socket
+				// Handle data from the client socket
 				clientSocket = events[i].data.fd;
 				std::string buffer = "";
 				// If there is no \n, the command is not complete (ctrl+D)
 				while (buffer.find("\n") == std::string::npos)
 					if (requestIsComplete(clientSocket, buffer) == false)
 						break;
-				// handle request 
+				// Handle request 
 				if (buffer.find('\n') != std::string::npos)
 				{
 					if (buffer.find("PING") == std::string::npos)
@@ -95,11 +89,7 @@ void		Server::launch(const int& port, const std::string& password, const std::st
 	close(_epollFd);
 }
 
-Server::Server(const Server &copyMe)
-{
-	(void)copyMe;
-	*this = copyMe;
-}
+Server::Server(const Server &copyMe) { *this = copyMe; }
 
 /* DESTRUCTORS ****************************************************************/
 
@@ -123,13 +113,13 @@ Server::~Server()
 
 /* OVERLOADS ******************************************************************/
 
-Server& Server::operator = (const Server &copyMe)
+Server& 							Server::operator = (const Server &copyMe)
 {
 	(void)copyMe;
 	return *this;
 }
 
-Client& Server::operator[](const int fd) { return _clients[fd]; }
+Client& 							Server::operator[](const int fd) { return _clients[fd]; }
 
 /* ACCESSORS ******************************************************************/
 
@@ -148,13 +138,12 @@ std::string							Server::getSupportedParams() const
 	replyStream << "PREFIX="		<< PREFIX << " ";
 	replyStream << "TOPICLEN="		<< TOPICLEN << " ";
 	replyStream << "USERLEN="		<< USERLEN;
-
 	return (replyStream.str());
 }
 
 /* METHODS ********************************************************************/
 
-// create server socket and set options to ensure port is reusable if server is restarted.
+// Create server socket and set options to ensure port is reusable if server is restarted.
 void								Server::createServerSocket()
 {
 	_serverSocket = socket(AF_INET, SOCK_STREAM, 0);
@@ -180,9 +169,9 @@ void								Server::configureServerSocket(struct sockaddr_in& addr)
 {
 	// set communication type to TCP/IPv4
 	addr.sin_family = AF_INET;
-	//  listen for connections on all available network
+	// listen for connections on all available network
 	addr.sin_addr.s_addr = htonl(INADDR_ANY);
-	//set port number 
+	// set port number 
 	addr.sin_port = htons(_port);
 }
 
@@ -197,7 +186,7 @@ void								Server::listenServerSocket()
 {
 	if (listen(_serverSocket, SOMAXCONN) == -1)
 		throw std::runtime_error("Could not set server socket to listening state");
-}
+}SEPARATOR;
 
 // create epoll instance and add server socket to it
 void								Server::createEpoll()
@@ -232,11 +221,11 @@ void								Server::addClient(int fd, Client client)
 	if (epoll_ctl(_epollFd, EPOLL_CTL_ADD, fd, &event) == -1)
 		throw std::runtime_error("Error adding client");
 
-	SEPARATOR;
-	std::cout	<< YELLOW_BLOC << " Client connecting " << RESET << std::endl;
+	std::cout	<< YELLOW_BLOC << " + " << RESET << DIM << " Client connecting " << RESET << std::endl << std::endl;
 	std::cout	<< BOLD << "Socket:\t\t" << RESET << client.getClientSocket() << std::endl;
 	_clients[fd] = client;
 	std::cout	<< BOLD << "Clients:\t" << RESET << _clients.size() << std::endl;
+	SEPARATOR;
 }
 
 bool								Server::handleNewClient(int& clientSocket)
@@ -264,10 +253,14 @@ bool								Server::requestIsComplete(const int& clientSocket, std::string& buff
 	char buffer[1024] = {};
 	int received = recv(clientSocket, buffer, sizeof(buffer), 0);
 	bufferstr += buffer;
-	// Si la réception est inférieure ou égale à 0, le client s'est déconnecté.
-	if (received <= 0) {
+	// If received <= 0, client disconnected
+	if (received <= 0)
+	{
 		std::cout << "Client disconnected" << std::endl;
+		Client*	clientToRemove = &(_clients[clientSocket]);
+		clientToRemove->quitServer("disconnected", &(clientToRemove->getChannelsMap()));
 		removeClient(clientSocket);
+		removeEmptyChannels();
 		return (false);
 	}
 	return (true);
@@ -288,7 +281,7 @@ void								Server::welcomeClient(const int& clientSocket)
 						RPL_WELCOME(_serverName, nickname).c_str(), \
 						RPL_YOURHOST(_serverName, nickname, "1.0").c_str(),
 						RPL_CREATED(_serverName, nickname, "in 1942").c_str(), \
-						RPL_MYINFO(_serverName, nickname, "1.0", "+i", "+t").c_str(), \
+						RPL_MYINFO(_serverName, nickname, "1.0", "+i", "+it +kl").c_str(), \
 						RPL_ISUPPORT(_serverName, nickname, getSupportedParams()).c_str(), \
 						ERR_NOMOTD(_serverName, nickname).c_str());
 	sendWelcomeMessage(_clients.at(clientSocket));
@@ -302,7 +295,8 @@ void								Server::removeClient(int fd)
 	_clients.erase(fd);
 }
 
-// after handling each request, check is any channel in _channels is empty. If so, erase it
+// after handling each request, check is any channel in _channels is empty.
+// If so, erase it.
 void								Server::removeEmptyChannels()
 {
 	channelMap::iterator it = _channels.begin();
@@ -336,7 +330,6 @@ void								Server::initCommands()
 
 void								Server::handleRequest(Client& client, const std::string& request)
 {
-	// Parse the request
 	int	clientSocket = client.getClientSocket();
 	std::istringstream	requestStream(request);
 	while(!requestStream.eof())
@@ -365,7 +358,11 @@ void								Server::handleRequest(Client& client, const std::string& request)
 			// if the password is not set, accept only pass command
 			if (command != "PASS" && client.getPassword().empty())
 				continue;
-			_commands[command]->handleRequest(client, parameters);
+			if (client.isAuthentificated() ||
+				command == "NICK" ||
+				command == "USER" ||
+				command == "PASS")
+				_commands[command]->handleRequest(client, parameters);
 			removeEmptyChannels();
 		}
 	}

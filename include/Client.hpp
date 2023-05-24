@@ -35,6 +35,7 @@ class Client
 		// methods
 		void				leaveAllChannels();
 		void				quitServer(const std::string& message, std::map< std::string, Channel >* channelsMap);
+		void				quitServer(const std::string& message, const std::map< std::string, Channel* >* channelsMap);
 
 		// getters
 		bool				getRegisterState() const;

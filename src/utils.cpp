@@ -35,7 +35,6 @@ void	checkArguments(const int& argc, char** arguments, int& port, std::string& p
 	bool	containsLowercase = false;
 	bool	containsUppercase = false;
 	bool	containsDigits = false;
-	bool	containsSpecialChar = false;
 	for (size_t i = 0; i < password.length(); ++i)
 	{
 		if (password[i] == ' ' || password[i] == '\t')
@@ -46,10 +45,8 @@ void	checkArguments(const int& argc, char** arguments, int& port, std::string& p
 			containsLowercase = true;
 		else if (isdigit(static_cast<int>(password[i])))
 			containsDigits = true;
-		else if (isSpecialCharacter(password[i]))
-			containsSpecialChar = true;
 		else
-			throw std::invalid_argument("password contains forbidden characters. Allowed: [a-z], [A-Z], [! - #]");
+			throw std::invalid_argument("password contains forbidden characters. Allowed: [a-z], [A-Z], [0-9]");
 	}
 	if (containsLowercase == false)
 		throw std::invalid_argument("password must contain at least one lowercase letter");
@@ -57,15 +54,6 @@ void	checkArguments(const int& argc, char** arguments, int& port, std::string& p
 		throw std::invalid_argument("password must contain at least one uppercase letter");
 	else if (containsDigits == false)
 		throw std::invalid_argument("password must contain at least one digit");
-	else if (containsSpecialChar == false)
-		throw std::invalid_argument("password must contain at least one special character. Allowed: [! - #] ");
-}
-
-// Not really needed in a separate function
-// but useful if we want to accept more special characters later on.
-bool	isSpecialCharacter(char checkMe)
-{
-	return (checkMe == '!' || checkMe == '-' || checkMe == '#');
 }
 
 // Send several numeric replies to one client
