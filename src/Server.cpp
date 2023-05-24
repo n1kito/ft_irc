@@ -247,6 +247,14 @@ bool								Server::handleNewClient(int& clientSocket)
 		std::cout	<< BRED << "Error" << RESET << ": Could not connect client." << std::endl;
 		return (false);
 	}
+	if (_clients.size() >= MAXCONNECTED)
+	{
+		std::cout	<< BRED << "Error" << RESET << ": Too many clients connected already" << std::endl;
+		sendNumericReplies(1, clientSocket, std::string(":" + _serverName + " 999  :Too many clients connected already\r\n").c_str());
+		if(close(clientSocket) == -1)
+			throw std::runtime_error("Error when closing fd");
+		return (false);
+	}
 	addClient(clientSocket, Client(clientSocket, _serverName));
 	return (true);
 }
