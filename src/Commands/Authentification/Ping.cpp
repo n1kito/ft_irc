@@ -14,42 +14,25 @@
 
 /* CONSTRUCTORS ***************************************************************/
 
-Ping::Ping() : ACommand()
-{
-	// std::cout << "Default constructor called" << std::endl;
-}
-
-Ping::Ping( std::map< int, Client >* clients ) : ACommand(clients)
-{
-	// std::cout << "Default constructor called" << std::endl;
-}
-
-Ping::Ping(const Ping &copyMe) : ACommand()
-{
-	// std::cout << "Copy constructor called" << std::endl;
-	*this = copyMe;
-}
+Ping::Ping() : ACommand() {}
+Ping::Ping(std::map< int, Client >* clients) : ACommand(clients) {}
+Ping::Ping(const Ping &copyMe) : ACommand() { *this = copyMe; }
 
 /* DESTRUCTORS ****************************************************************/
 
-Ping::~Ping()
-{
-	// std::cout << "Destructor called" << std::endl;
-}
+Ping::~Ping() {}
 
 /* OVERLOADS ******************************************************************/
 
-Ping& Ping::operator = (const Ping &copyMe)
+Ping& 		Ping::operator = (const Ping &copyMe)
 {
 	(void)copyMe;
-	// std::cout << "Copy assignment operator called" << std::endl;
 	return *this;
 }
 
 /* METHODS ********************************************************************/
 
-
-void	Ping::handleRequest( Client& client, std::string argument )
+void		Ping::handleRequest(Client& client, std::string argument)
 {
 	 std::string message = "";
 	std::string ret_parsing = parseArgument(client, argument);
@@ -61,8 +44,7 @@ void	Ping::handleRequest( Client& client, std::string argument )
 }
 
 void		Ping::parseArgument() {}
-
-std::string	Ping::parseArgument( Client& client, std::string argument )
+std::string	Ping::parseArgument(Client& client, std::string argument)
 {
 	if (argument.empty())
 		return (ERR_NEEDMOREPARAMS(client.getServerName(), client.getNickname(), "PING"));
@@ -70,5 +52,3 @@ std::string	Ping::parseArgument( Client& client, std::string argument )
 }
 
 void		Ping::action() {}
-
-

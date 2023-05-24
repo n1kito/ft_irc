@@ -13,9 +13,9 @@
 #ifndef MODE_HPP
 # define MODE_HPP
 
-#include "ACommand.hpp"
-#include "ft_irc.hpp"
-#include "Channel.hpp"
+# include "ACommand.hpp"
+# include "ft_irc.hpp"
+# include "Channel.hpp"
 
 class Client;
 
@@ -39,15 +39,12 @@ class Mode : public ACommand
 		bool		toggleClientLimitMode(Client& client, Channel& channel, const char& changeMode, std::vector<std::string>& arguments, std::vector<std::string>& parametersSet);
 		bool		updateChannelOperator(Client& client, Channel& channel, const char& changeMode, std::vector<std::string>& arguments, std::vector<std::string>& parametersSet);
 
-	protected:
-		// add protected elements here
-
 	private:
+		channelMap*	_channelMap;
+
     	Mode();
 		Mode(const Mode &copyMe);
 		Mode&		operator = (const Mode &copyMe);
-
-		channelMap*	_channelMap;
 };
 
 #endif

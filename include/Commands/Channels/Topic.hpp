@@ -20,8 +20,6 @@
 # include "numericReplies.hpp"
 # include <string>
 
-// The TOPIC command is used to change or view the topic of the given channel.
-
 class Topic : public ACommand
 {
 	public:
@@ -37,15 +35,14 @@ class Topic : public ACommand
 		void				action();
 		void				action(std::string& topic, Channel& targetChannel, const Client& client);
 
-	protected:
-
 	private:
-		Topic();
 		void				parseArgument();
-		Topic(const Topic &copyMe);
-		Topic&				operator = (const Topic &copyMe);
 
 		channelMap*			_channelMap;
+
+		Topic();
+		Topic(const Topic &copyMe);
+		Topic&				operator = (const Topic &copyMe);
 };
 
 #endif

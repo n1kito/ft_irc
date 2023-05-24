@@ -25,26 +25,22 @@ class Part : public ACommand
 		Part(std::map< int, Client >* clients, std::map< std::string, Channel >* channels);
 		~Part();
 
-    	void		handleRequest(Client &client, std::string arg);
-    	void		parseArgument(std::string& arg);
-    	void		action(Client &client);
-
-	
-	protected:
-		// add protected elements here
+    	void									handleRequest(Client &client, std::string arg);
+    	void									parseArgument(std::string& arg);
+    	void									action(Client &client);
 
 	private:
+    	void									parseArgument();
+    	void									action();
+
 		std::map< std::string, Channel >*		_channels;
 		std::vector< std::string >				_channelList;
 		std::string								_reason;
 
-    	void		parseArgument();
-    	void		action();
 		Part();
 		Part(std::map< int, Client >* clients);
 		Part(const Part &copyMe);
-		Part&		operator = (const Part &copyMe);
-
+		Part&									operator = (const Part &copyMe);
 };
 
 #endif

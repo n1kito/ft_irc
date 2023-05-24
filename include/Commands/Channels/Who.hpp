@@ -13,10 +13,10 @@
 #ifndef WHO_HPP
 # define WHO_HPP
 
-#include "ACommand.hpp"
-#include "ft_irc.hpp"
-#include "Channel.hpp"
-#include "Client.hpp"
+# include "ACommand.hpp"
+# include "ft_irc.hpp"
+# include "Channel.hpp"
+# include "Client.hpp"
 
 class Client;
 
@@ -36,15 +36,12 @@ class Who : public ACommand
     	void		action();
 		void		action(const Client& client, const std::string& target);
 
-	protected:
-		// add protected elements here
-
 	private:
+		channelMap*	_channelMap;
+
     	Who();
 		Who(const Who &copyMe);
 		Who&		operator = (const Who &copyMe);
-
-		channelMap*	_channelMap;
 };
 
 #endif

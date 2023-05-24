@@ -14,10 +14,10 @@
 #ifndef NICK_HPP
 # define NICK_HPP
 
-#include "ACommand.hpp"
-#include "ft_irc.hpp"
-#include "Client.hpp"
-#include <map>
+# include "ACommand.hpp"
+# include "ft_irc.hpp"
+# include "Client.hpp"
+# include <map>
 
 class Client;
 
@@ -32,15 +32,12 @@ class Nick : public ACommand
     	std::string	action(Client &client, std::string nickname);
 		bool		isValidNickname(std::string nickname);
 
-	protected:
-
 	private:
     	Nick();
 		Nick(const Nick &copyMe);
 		Nick&		operator = (const Nick &copyMe);
 		void		parseArgument();
     	void		action();
-
 };
 
 #endif

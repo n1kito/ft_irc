@@ -30,7 +30,6 @@ int	main(int argc, char* argv[])
 
 		if (argc != 3)
 			throw std::invalid_argument("Wrong argument count.\nUsage: \033[3m./ircserv <port> <password>\033[0m");
-		// int port = 6667;
 		server.launch(port, argv[2], "pouetMania");
 		return (0);	
 	}

@@ -13,12 +13,12 @@
 #ifndef PASS_HPP
 # define PASS_HPP
 
-#include "ft_irc.hpp"
-#include "Client.hpp"
-#include <string>
-#include <map>
-#include "ACommand.hpp"
-#include "numericReplies.hpp"
+# include "ft_irc.hpp"
+# include "Client.hpp"
+# include <string>
+# include <map>
+# include "ACommand.hpp"
+# include "numericReplies.hpp"
 
 class Pass : public ACommand
 {
@@ -32,9 +32,6 @@ class Pass : public ACommand
 		void 		parseArgument();
 		void 		action();
 		void		handleRequest(Client& client, std::string argument);
-	
-	protected:
-		// add protected elements here
 
 	private:
 		Pass();

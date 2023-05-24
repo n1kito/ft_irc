@@ -19,7 +19,6 @@
 # include "Client.hpp"
 # include "Channel.hpp"
 
-
 class Kick   : public ACommand
 {
 	public:
@@ -28,26 +27,23 @@ class Kick   : public ACommand
 		Kick(std::map< int, Client >* clients, std::map< std::string, Channel >* channels);
 		~Kick();
 	
-		void		handleRequest(Client &client, std::string arg);
-    	std::string	parseArgument(Client &client, std::string& arg);
-    	std::string action(Client &client);
-
-	protected:
-		// add protected elements here
+		void									handleRequest(Client &client, std::string arg);
+    	std::string								parseArgument(Client &client, std::string& arg);
+    	std::string 							action(Client &client);
 
 	private:
+		void									parseArgument();
+    	void									action();
+
 		channelMap*								_channelMap;
 		std::string								_kickReason;
 		std::vector< std::string >				_channelList;
 		std::vector< std::string >				_userList;
 
-
-		void		parseArgument();
-    	void		action();
 		Kick();
 		Kick(std::map< int, Client >* clients);
 		Kick(const Kick &copyMe);
-		Kick&		operator = (const Kick &copyMe);
+		Kick&									operator = (const Kick &copyMe);
 };
 
 #endif

@@ -14,35 +14,21 @@
 
 /* CONSTRUCTORS ***************************************************************/
 
-User::User() : ACommand()
-{
-	// std::cout << "Default constructor called" << std::endl;
-}
+User::User() : ACommand() {}
 
-User::User( std::map< int, Client >* clients ) : ACommand(clients)
-{
-	// std::cout << "Default constructor called" << std::endl;
-}
+User::User(std::map< int, Client >* clients) : ACommand(clients) {}
 
-User::User(const User &copyMe) : ACommand()
-{
-	// std::cout << "Copy constructor called" << std::endl;
-	*this = copyMe;
-}
+User::User(const User &copyMe) : ACommand() { *this = copyMe; }
 
 /* DESTRUCTORS ****************************************************************/
 
-User::~User()
-{
-	// std::cout << "Destructor called" << std::endl;
-}
+User::~User() {}
 
 /* OVERLOADS ******************************************************************/
 
 User& User::operator = (const User &copyMe)
 {
 	(void)copyMe;
-	// std::cout << "Copy assignment operator called" << std::endl;
 	return *this;
 }
 
@@ -50,12 +36,12 @@ User& User::operator = (const User &copyMe)
 
 std::string	User::getUsername() const { return _username; }
 std::string	User::getRealname() const { return _realname; }
-void		User::setUsername( std::string username ) { _username = username; }
-void		User::setRealname( std::string realname ) { _realname = realname; }
+void		User::setUsername(std::string username) { _username = username; }
+void		User::setRealname(std::string realname) { _realname = realname; }
 
 /* METHODS ********************************************************************/
 
-void	User::handleRequest( Client& client, std::string argument )
+void		User::handleRequest(Client& client, std::string argument)
 {
 	std::string message = "";
 	std::string ret_parsing = parseArgument(client, argument);
@@ -64,7 +50,7 @@ void	User::handleRequest( Client& client, std::string argument )
 	{
 		message = ret_parsing;
 		killClient(client.getClientSocket(), message, "user authentification failed");
-		return ;
+		return;
 	}
 	else if (!ret_action.empty())
 		message = ret_action;
@@ -75,23 +61,17 @@ void	User::handleRequest( Client& client, std::string argument )
 	}
 	if (!message.empty())
 		sendNumericReplies(1, client.getClientSocket(), message.c_str());
-
 }
 
 void		User::parseArgument() {}
 
-std::string	User::parseArgument( Client& client, std::string argument )
+std::string	User::parseArgument(Client& client, std::string argument)
 {
-	// first ==> username
-	// second ==> hostname
-	// third ==> servername
-	// last ==> realname
-
 	std::stringstream	iss(argument);
 	
 	iss >> _username;
 	iss.ignore(std::numeric_limits< std::streamsize >::max(), ' ');
-	if ( _username.size() > USERLEN )
+	if (_username.size() > USERLEN)
 		_username = _username.substr(0, USERLEN);
 	// hostname and servername are typically ignored when USER comes from a client
 	iss.ignore(std::numeric_limits< std::streamsize >::max(), ' ');
@@ -109,8 +89,7 @@ std::string	User::parseArgument( Client& client, std::string argument )
 }
 
 void		User::action() {}
-
-std::string	User::action( Client& client, std::string username, std::string realname )
+std::string	User::action(Client& client, std::string username, std::string realname)
 {
 	if (client.getRegisterState())
 		return (ERR_ALREADYREGISTERED(client.getServerName(), client.getNickname()));

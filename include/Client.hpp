@@ -25,13 +25,18 @@ class Client
 {
 	public:
 		typedef std::map< std::string, Channel* > channelsMap;
+
 		Client();
 		Client(const int& clientSocket, const std::string& serverName);
 		~Client();
-	
 		Client(const Client &copyMe);
 		Client&				operator = (const Client &copyMe);
 
+		// methods
+		void				leaveAllChannels();
+		void				quitServer(const std::string& message, std::map< std::string, Channel >* channelsMap);
+
+		// getters
 		bool				getRegisterState() const;
 		std::string			getUsername() const;
 		std::string			getRealname() const;
@@ -42,37 +47,33 @@ class Client
 		std::string			getServerName() const;
 		bool				getPasswordStatus() const;
 		const channelsMap&	getChannelsMap() const;
-	
-		std::string		getUserModes() const;
+		std::string			getUserModes() const;
 
-		// getters -> channel modes
-		bool				addUserMode(const char& mode);
-		bool				removeUserMode(const char& mode);
-		bool				modeIs(const char &mode);
-
+		// setters
 		void				setRegisterState(bool state);
 		void				setUsername(std::string username);
 		void				setRealname(std::string realname);
 		void				setNickname(std::string nickname);
 		void				setPassword(std::string password);
 		void				setWelcomeState(const bool& state);
-	
-		bool				isAuthentificated() const;
 		void				setPasswordStatus(const bool& status);
-		void				setInvitationStatus(const bool& status);
 		void				addChannel(Channel& channelRef);
 		void				removeChannel(const std::string& channelName);
-		void				leaveAllChannels();
-		void				QuitServer(const std::string& message, std::map< std::string, Channel >* channelsMap);
 
-	protected:
-		// add protected elements here
+		// checkers
+		bool				isAuthentificated() const;
+
+		// MODE (channel modes)
+		// setters
+		bool				addUserMode(const char& mode);
+		bool				removeUserMode(const char& mode);
+		// checkers
+		bool				modeIs(const char &mode);
 
 	private:
 		channelsMap			_connectedToChannels;
 		bool				_isRegistered;
 		bool				_passwordStatus;
-		bool				_invitationStatus;
 		std::string			_username;
 		std::string			_realname;
 		std::string			_nickname;

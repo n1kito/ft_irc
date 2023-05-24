@@ -133,12 +133,7 @@ Client& Server::operator[](const int fd) { return _clients[fd]; }
 
 /* ACCESSORS ******************************************************************/
 
-int									Server::getPort() const { return _port; }
 std::string							Server::getPassword() const { return _password; }
-std::map< int, Client >				Server::getClients() const { return _clients; }
-const std::map< int, Client >*		Server::getClientsPtr() const { return &_clients; }
-std::map< std::string, ACommand* >	Server::getCommands() const { return _commands; }
-std::string							Server::getCreationDate() const { return _creationDate; }
 std::string							Server::getSupportedParams() const 
 {
 	std::stringstream	replyStream;
@@ -156,10 +151,6 @@ std::string							Server::getSupportedParams() const
 
 	return (replyStream.str());
 }
-void								Server::setPort( int port ) { _port = port; };
-void								Server::setPassword( std::string password ) { _password = password; };
-void								Server::setClients( std::map< int, Client > clients ) { _clients = clients; };
-void								Server::setCommands( std::map< std::string, ACommand* > commands ) { _commands = commands; }
 
 /* METHODS ********************************************************************/
 
@@ -232,8 +223,7 @@ void								Server::acceptNewConnection(int& clientSocket)
 }
 
 
-
-void								Server::addClient( int fd, Client client )
+void								Server::addClient(int fd, Client client)
 {
 	struct epoll_event event;
 	memset(&event, 0, sizeof(event));
@@ -269,7 +259,7 @@ bool								Server::requestIsComplete(const int& clientSocket, std::string& buff
 	// Si la réception est inférieure ou égale à 0, le client s'est déconnecté.
 	if (received <= 0) {
 		std::cout << "Client disconnected" << std::endl;
-		removeClient( clientSocket );
+		removeClient(clientSocket);
 		return (false);
 	}
 	return (true);
@@ -297,12 +287,11 @@ void								Server::welcomeClient(const int& clientSocket)
 	_clients.at(clientSocket).setWelcomeState(true);
 }
 
-
-void								Server::removeClient( int fd )
+void								Server::removeClient(int fd)
 {
-	if( close( fd ) == -1 )
+	if(close(fd) == -1)
 		throw std::runtime_error("Error when closing fd");
-	_clients.erase( fd );
+	_clients.erase(fd);
 }
 
 // after handling each request, check is any channel in _channels is empty. If so, erase it
@@ -342,7 +331,7 @@ void								Server::handleRequest(Client& client, const std::string& request)
 	// Parse the request
 	int	clientSocket = client.getClientSocket();
 	std::istringstream	requestStream(request);
-	while(!requestStream.eof() )
+	while(!requestStream.eof())
 	{
 		size_t		firstSpace;
 		std::string	line;
@@ -351,7 +340,7 @@ void								Server::handleRequest(Client& client, const std::string& request)
 
 		std::getline(requestStream, line);
 		if (line.empty())
-			continue ;
+			continue;
 		firstSpace = line.find(' ', 0);
 		if (firstSpace == std::string::npos)
 			command = line;
@@ -362,13 +351,12 @@ void								Server::handleRequest(Client& client, const std::string& request)
 		}
 		// if client has been disconnected
 		if (_clients.find(clientSocket) == _clients.end())
-			break ;
-		// else, if command is found
+			break;		// else, if command is found
 		if (_commands.find(command) != _commands.end())
 		{
 			// if the password is not set, accept only pass command
-			if ( command != "PASS" && client.getPassword().empty())
-				continue ;
+			if (command != "PASS" && client.getPassword().empty())
+				continue;
 			_commands[command]->handleRequest(client, parameters);
 			removeEmptyChannels();
 		}
