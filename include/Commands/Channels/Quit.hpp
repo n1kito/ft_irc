@@ -1,4 +1,3 @@
-
 #ifndef QUIT_HPP
 # define QUIT_HPP
 
@@ -11,29 +10,25 @@
 class Quit : public ACommand
 {
 	public:
-		typedef std::map< std::string, Channel >	channelMap;
+		typedef std::map< std::string, Channel > channelMap;
 		
 		Quit(ACommand::clientMap* clients, channelMap* channels);
-		// typedef std::map< std::string, Channel > channelMap;
-		// Quit(std::map< int, Client >* clients, std::map< std::string, Channel >* channels);
 		~Quit();
 
-		void		handleRequest(Client &client, std::string arg);
-		void		parseArgument(Client& client, std::string& arg);
-    	void		action(Client &client, std::string& arg);
-		
-	protected:
-		// add protected elements here
+		void			handleRequest(Client &client, std::string arg);
+		void			parseArgument(Client& client, std::string& arg);
+    	void			action(Client &client, std::string& arg);
 
 	private:
-		channelMap*		_channelMap;
-		Quit(std::map< int, Client >* clients);
-		
 	    void			parseArgument();
     	void			action();
+
+		channelMap*		_channelMap;
+
 		Quit();
 		Quit(const Quit &copyMe);
-		Quit&		operator = (const Quit &copyMe);
+		Quit(std::map< int, Client >* clients);
+		Quit&			operator = (const Quit &copyMe);
 };
 
 #endif

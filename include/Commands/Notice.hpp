@@ -16,25 +16,23 @@ class Notice : public ACommand
 		Notice(ACommand::clientMap* clients, channelMap* channels);
 		~Notice();
 	
-		void			handleRequest(Client &client, std::string arg);
-		std::string		parseArgument(std::string& arg);
-		void			action(Client &client);
-		void			sendToChannel(Client& client, Channel& channel, std::string& target);
-
-	protected:
-		// add protected elements here
+		void						handleRequest(Client &client, std::string arg);
+		std::string					parseArgument(std::string& arg);
+		void						action(Client &client);
+		void						sendToChannel(Client& client, Channel& channel, std::string& target);
 
 	private:
+		void						parseArgument();
+    	void						action();
+
 		std::string					_message;
 		std::vector< std::string >	_targetVector;
 		channelMap*					_channelMap;
-		
-		void			parseArgument();
-    	void			action();
+
 		Notice();
 		Notice(const Notice &copyMe);
 		Notice(std::map< int, Client >* clients);
-		Notice&			operator = (const Notice &copyMe);
+		Notice&						operator = (const Notice &copyMe);
 };
 
 #endif

@@ -1,12 +1,6 @@
 #ifndef FT_IRC_HPP
 #define FT_IRC_HPP
 
-/*
-░█▀▀░█▀█░█░░░█▀█░█▀▄░█▀▀
-░█░░░█░█░█░░░█░█░█▀▄░▀▀█
-░▀▀▀░▀▀▀░▀▀▀░▀▀▀░▀░▀░▀▀▀
-*/
-
 #define BLACK "\033[30m"
 #define RED "\033[31m"
 #define BRED "\033[1;31m"
@@ -32,7 +26,6 @@
 #define RESET "\033[0m"
 
 #define SEPARATOR std::cout << std::endl << DIM << "****************************************" << RESET << std::endl << std::endl
-#define PRINT(x, y) std::cout << x << ": " << y << std::endl
 
 // SERVER PARAMETERS
 #define REALNAMELEN 50 // not part of RPL_ISUPPORT REPLY
@@ -50,8 +43,7 @@
 #define KICKLEN 255
 // Maximum number of modes that can be specified in one MODE command
 #define MODES 50
-// Max length of topic a user can set on a channel
-// 307 is the default value for most servers
+// Max length of topic a user can set on a channel (307 is the default value for most servers)
 #define TOPICLEN 307
 // Types of channel available
 #define CHANTYPES "#"
@@ -60,23 +52,24 @@
 // Prefixes available for channel members
 #define PREFIX "(o)@"
 
-#include <iostream>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
-#include <unistd.h>
-#include <cstdio>
-#include <cstdlib>
-#include <cstring>
-#include <sstream>
-#include <cctype>
-#include <cstdarg>
-#include <ctime>
-#include <csignal>
+# include <iostream>
+# include <sys/socket.h>
+# include <netinet/in.h>
+# include <arpa/inet.h>
+# include <unistd.h>
+# include <cstdio>
+# include <cstdlib>
+# include <cstring>
+# include <sstream>
+# include <cctype>
+# include <cstdarg>
+# include <ctime>
+# include <csignal>
 
-#include <algorithm>
-#include "Client.hpp"
-#include "Channel.hpp"
+# include <algorithm>
+# include "Client.hpp"
+# include "Channel.hpp"
+
 class Client;
 class Channel;
 
@@ -95,4 +88,5 @@ void		sendWelcomeMessage(const Client& client);
 void		outputUsersChannels(std::map<int, Client>& clients, std::map<std::string, Channel>& channels);
 void		printServerTitle();
 void		signalHandler(int signal);
+
 #endif // FT_IRC_HPP

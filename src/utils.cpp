@@ -90,7 +90,7 @@ void	sendCustomNumericReply(const std::string& message, const int& code, const C
 	sendNumericReplies(1, client.getClientSocket(), returnMessage.c_str());
 }
 
-// trim functions
+// Trim functions
 void	leftTrim(std::string& str, std::string trimmer)
 {
 	size_t pos = str.find_first_not_of(trimmer);

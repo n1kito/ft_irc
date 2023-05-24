@@ -6,28 +6,19 @@ Mode::Mode() {}
 Mode::Mode(clientMap* clients) : ACommand(clients), _channelMap(NULL) {}
 Mode::Mode(clientMap* clients, channelMap* channels) : ACommand(clients), _channelMap(channels) {}
 
-Mode::Mode(const Mode &copyMe) : ACommand()
-{
-	// std::cout << "Copy constructor called" << std::endl;
-	(void)copyMe;
-	*this = copyMe;
-}
+Mode::Mode(const Mode &copyMe) : ACommand() { *this = copyMe; }
 
 /* DESTRUCTORS ****************************************************************/
 
-Mode::~Mode()
-{
-	// std::cout << "Destructor called" << std::endl;
-}
+Mode::~Mode() {}
 
 /* OVERLOADS ******************************************************************/
 
 Mode& Mode::operator = (const Mode &copyMe)
 {
-	// std::cout << "Copy assignment operator called" << std::endl;
 	(void)copyMe;
 	return *this;
-}
+} 
 
 /* METHODS ********************************************************************/
 
@@ -37,11 +28,8 @@ void		Mode::parseArgument(std::string& arg, std::string& target, std::string& mo
 	std::stringstream	argumentStream(arg);
 	std::string			argumentsStr = "";
 
-	// Extracting target
 	argumentStream >> target;
-	// Extracting modes token and adding them to modes vector
 	argumentStream >> modes;
-	// If stream is not empty yet, extract tokens into arguments vector
 	while (argumentStream.eof() == false)
 	{
 		std::string token = "";
@@ -53,7 +41,7 @@ void		Mode::parseArgument(std::string& arg, std::string& target, std::string& mo
 void	Mode::action() {}
 
 void	Mode::handleRequest(Client &client, std::string arg)
-{
+{ 
 	std::string					target;
 	std::string					modes;
 	std::vector<std::string>	arguments;
@@ -66,40 +54,26 @@ void	Mode::handleRequest(Client &client, std::string arg)
 		modes = modes.substr(0, MODES + 1);
 	if (target[0] == '#')
 	{
-		// Target is channel
-		// If the channel does not exist
 		if (_channelMap->find(target) == _channelMap->end())
 			sendNumericReplies(1, client.getClientSocket(), \
 			ERR_NOSUCHCHANNEL(client.getServerName(), client.getNickname(), target).c_str());
 		else
 		{
 			Channel*	channel = &(*_channelMap)[target];
-			// If there are no modes given, return the current modes of the channel and channel creation time
 			if (modes.empty())
-			{
-				// std::cout << HIGHLIGHT << "SENDING CURRENT MODES" << RESET << std::endl;
-				// std::cout << HIGHLIGHT << RPL_CHANNELMODEIS(client.getServerName(), client.getNickname(), channel->getName(), channel->listModes(), channel->listModeParameters()) << RESET << std::endl;
-				// std::cout << HIGHLIGHT << RPL_CREATIONTIME(client.getServerName(), client.getNickname(), channel->getName(), channel->getCreationTime()) << RESET << std::endl;
-				// std::cout << "MODES MSG: " << RPL_CHANNELMODEIS(client.getServerName(), client.getNickname(), channel->getName(), channel->listModes(), channel->listModeParameters()) << std::endl;
 				sendNumericReplies(2, client.getClientSocket(), \
 					RPL_CHANNELMODEIS(client.getServerName(), client.getNickname(), channel->getName(), channel->listModes(), channel->listModeParameters()).c_str(),
 					RPL_CREATIONTIME(client.getServerName(), client.getNickname(), channel->getName(), channel->getCreationTime()).c_str());
-			}
-			// Special case for when IRSSI needs the list of banned users
 			else if (modes == "b")
 				sendNumericReplies(1, client.getClientSocket(), \
 					std::string(":pouetmania 368 " + client.getNickname() + " " + target + " :End of channel ban list\r\n").c_str());
-			// If there are modes supplied
 			else
 			{
-				// If user cannot update modes on the channel
 				if (channel->isClientOperator(client) == false)
 					sendNumericReplies(1, client.getClientSocket(), \
 						ERR_CHANOPRIVSNEEDED(client.getServerName(), client.getNickname(), channel->getName()).c_str());
-				// If modes parameter does not start with + or -, do nothing
 				else if (modes[0] != '+' && modes[0] != '-')
-					return ;
-				// Handle the requests
+					return;
 				else
 					applyChannelModes(client, *channel, modes, arguments);
 			}
@@ -107,35 +81,20 @@ void	Mode::handleRequest(Client &client, std::string arg)
 	}
 	else
 	{
-		// Target is user
-		// If the target user does not exist
 		if (getClientByNickname(target) == NULL)
 			sendNumericReplies(1, client.getClientSocket(), \
 				ERR_NOSUCHNICK(client.getServerName(), client.getNickname(), target).c_str());
-		// If target is not the same nickname as the client who sent the command
 		else if (target != client.getNickname())
 			sendNumericReplies(1, client.getClientSocket(), \
 				ERR_USERSDONTMATCH(client.getServerName(), client.getNickname()).c_str());
-		// If there are no modes required, send back list of current modes
 		else if (modes.empty())
 			sendNumericReplies(1, client.getClientSocket(), \
 				RPL_UMODEIS(client.getServerName(), client.getNickname(), client.getUserModes()).c_str());
-		// If modes parameter does not start with + or -, do nothing
 		else if (modes[0] != '+' && modes[0] != '-')
-			return ;
+			return;
 		else
 			applyUserModes(client, target, modes);
 	}
-	// // This is useful to check what was actually parsed
-	// std::cout	<< "Target: <" << target << ">" << std::endl
-	// 			<< "Modes: <";
-	// for (std::vector<char>::iterator it = modes.begin(); it != modes.end(); ++it)
-	// 	std::cout << *it;
-	// std::cout	<< ">" << std::endl
-	// 			<< "Arguments: ";
-	// for (std::vector<std::string>::iterator it = arguments.begin(); it != arguments.end(); ++it)
-	// 	std::cout << "<" << *it << "> ";
-	// std::cout << std::endl;
 }
 
 void	Mode::applyUserModes(Client& client, const std::string& target, std::string modes)
@@ -143,7 +102,6 @@ void	Mode::applyUserModes(Client& client, const std::string& target, std::string
 	char 		changeMode = modes[0];
 	std::string successfullyChanged(1, changeMode);
 	std::string	parametersSet;
-	// std::string	failedToChange = "";
 
 	for (size_t i = 1; i < modes.length(); ++i)
 	{
@@ -154,7 +112,6 @@ void	Mode::applyUserModes(Client& client, const std::string& target, std::string
 			if (client.addUserMode(modes[i]) == true)
 				successfullyChanged.push_back(modes[i]);
 			else
-				// failedToChange.push_back(modes[i]);
 				sendNumericReplies(1, client.getClientSocket(), \
 					ERR_UMODEUNKNOWNFLAG(client.getServerName(), client.getNickname(), std::string(1,  modes[i])).c_str());
 		}
@@ -165,7 +122,6 @@ void	Mode::applyUserModes(Client& client, const std::string& target, std::string
 			if (client.removeUserMode(modes[i]) == true)
 				successfullyChanged.push_back(modes[i]);
 			else
-				// failedToChange.push_back(modes[i]);
 				sendNumericReplies(1, client.getClientSocket(), \
 					ERR_UMODEUNKNOWNFLAG(client.getServerName(), client.getNickname(), std::string(1, modes[i])).c_str());
 		}
@@ -179,13 +135,12 @@ void		Mode::applyChannelModes(Client& client, Channel& channel, std::string mode
 {
 	char 						changeMode = modes[0];
 	std::string					successfullyChanged(1, changeMode);
-	std::vector<std::string>	changedParameters;								// used to store the parameters that were successfully applied with MODE
+	std::vector<std::string>	changedParameters;
 
 	for (size_t modesIndex = 1; modesIndex < modes.length(); ++modesIndex)
 	{
 		if (successfullyChanged.find(modes[modesIndex], 0) != std::string::npos)
-			continue ;
-		else if (modes[modesIndex] == 'i' || modes[modesIndex] == 't')
+			continue;		else if (modes[modesIndex] == 'i' || modes[modesIndex] == 't')
 		{
 			if (changeMode == '+' && channel.modeIs(modes[modesIndex]) == false)
 			{
@@ -217,17 +172,8 @@ void		Mode::applyChannelModes(Client& client, Channel& channel, std::string mode
 			sendNumericReplies(1, client.getClientSocket(), \
 				ERR_UNKNOWNMODE(client.getServerName(), client.getNickname(), std::string(1, modes[modesIndex])).c_str());
 	}
-	// std::cout << "Changed parameters: ";
-	// for (std::vector<std::string>::iterator it = changedParameters.begin(); it != changedParameters.end(); ++it)
-	// {
-	// 	std::cout << *it;
-	// 	if (it != ++changedParameters.end())
-	// 		std::cout << " ";
-	// 	else
-	// 		std::cout << std::endl;
-	// }
 	std::string changedParametersStr = "";
-	if (/*successfullyChanged.length() > 1 && */changedParameters.empty() == false)
+	if (changedParameters.empty() == false)
 	{
 		for (std::vector<std::string>::iterator it = changedParameters.begin(); it != changedParameters.end(); ++it)
 		{
@@ -245,16 +191,11 @@ bool	Mode::toggleKeyMode(Channel& channel, const char& changeMode, std::vector<s
 {
 	if (changeMode == '+')
 	{
-		// This mode needs an argument, if there is none we ignore it
 		if (arguments.size())
 		{
-			// Store the argument and remove it from the vector, so we don't use it twice
 			std::string	password(arguments[0]);
-			// Set or update the channel's mode
 			channel.updateMode('k', password);
-			// Store the argument we just set in the corresponding vector, so we can output it later
 			parametersSet.push_back(password);
-			// And remove it from the arguments vector so we don't use it twice
 			arguments.erase(arguments.begin());
 			return true;
 		}
@@ -271,13 +212,10 @@ bool	Mode::toggleClientLimitMode(Client& client, Channel& channel, const char& c
 {
 	if (changeMode == '+')
 	{
-		// This mode needs an argument, if there is none we ignore it
 		if (arguments.size())
 		{
 			size_t				clientLimit;
-			// Store the argument
 			std::stringstream	parameter(arguments[0]);
-			// Check that it's actually a number.
 			parameter >> clientLimit;
 			if (parameter.fail())
 			{
@@ -292,11 +230,8 @@ bool	Mode::toggleClientLimitMode(Client& client, Channel& channel, const char& c
 						CSTM_MAXCLIENTS(client.getServerName(), client.getNickname()).c_str());
 				return false;
 			}
-			// Update the channel setting accordingly
 			channel.updateMode('l', arguments[0]);
-			// Store the argument we just set in the corresponding vector, so we can output it later
 			parametersSet.push_back(arguments[0]);
-			// And remove that argument from the arguments vector, so we never use it twice
 			arguments.erase(arguments.begin());
 			return true;
 		}

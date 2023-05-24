@@ -8,44 +8,28 @@ Channel::Channel() :
 	_nicknameOfTopicSetter(""),
 	_timeTopicWasSet(""),
 	_timeChannelWasCreated(getCurrentDate())
-{
-	// std::cout << "Default constructor called" << std::endl;
-}
+{}
 
-Channel::Channel( std::string name, const Client& client ) :
+Channel::Channel(std::string name, const Client& client) :
 	_name(name),
 	_topic(""),
 	_nicknameOfTopicSetter(""),
 	_timeTopicWasSet(""),
 	_timeChannelWasCreated(getCurrentDate())
 {
-	// sendNumericReplies(2, client.getClientSocket(),
-		// std::string(":pouetmania 353 " + client.getNickname() + " = " + getName() + " :" + getUsersList() + "\r\n").c_str(), \
-		// std::string(":pouetmania 366 " + client.getNickname() + " " + getName() + " :End of /NAMES list.\r\n").c_str());
-		// :nikito!~c@783829BF.B270E442.5F584402.IP JOIN :#channelito
-		// :roubaix.fr.epiknet.org 333 nikito #channel coffee 1543326238
-		// :roubaix.fr.epiknet.org 353 nikito = #channel :nikito jee @coffee
-		// :roubaix.fr.epiknet.org 366 nikito #channel :End of /NAMES list.
 	addOperator(client);
 	addConnectedClient(client, true);
 }
 
-Channel::Channel(const Channel &copyMe)
-{
-	// std::cout << "Copy constructor called" << std::endl;
-	*this = copyMe;
-}
+Channel::Channel(const Channel &copyMe) { *this = copyMe; }
 
 /* DESTRUCTORS ****************************************************************/
 
-Channel::~Channel()
-{
-	// std::cout << "Destructor called" << std::endl;
-}
+Channel::~Channel() {}
 
 /* OVERLOADS ******************************************************************/
 
-Channel& Channel::operator = (const Channel &copyMe)
+Channel&						Channel::operator = (const Channel &copyMe)
 {
 	_connectedClients = copyMe.getClientMap();
 	_invitedClients = copyMe.getInvitedClients();
@@ -56,7 +40,6 @@ Channel& Channel::operator = (const Channel &copyMe)
 	_timeTopicWasSet = copyMe.getTimeTopicWasSet();
 	_timeChannelWasCreated = copyMe.getCreationTime();
 	_channelModes = copyMe.getChannelModes();
-	// std::cout << "Copy assignment operator called" << std::endl;
 	return *this;
 }
 
@@ -69,7 +52,6 @@ void							Channel::broadcastNumericReply(const std::string message) const
 	for (Channel::clientNickMap::const_iterator it = _connectedClients.begin(); it != _connectedClients.end(); ++it)
 		send((*it).second->getClientSocket(), message.c_str(), message.size(), 0);
 }
-
 
 void							Channel::sendMessageToChannel(const std::string message, Client& client) const
 {
@@ -111,10 +93,6 @@ const Channel::modeMap&			Channel::getChannelModes() const { return _channelMode
 // getters -> channel modes
 bool							Channel::addChannelMode(const char& mode, const std::string& parameter)
 {
-	// i = invite only
-	// t = topic protected
-	// k = key
-	// l = client limit
 	if (mode == 'i' || mode == 't' || mode == 'k' || mode == 'l')
 	{
 		if (modeIs(mode) == false)
@@ -143,7 +121,7 @@ bool							Channel::modeIs(const std::string& modeStr) const
 
 	if (modeStr.length() == 1)
 		mode = modeStr[0];
-	else if (modeStr == "invite-only" )
+	else if (modeStr == "invite-only")
 		mode = 'i';
 	else if (modeStr == "topic-protected")
 		mode = 't';
@@ -187,8 +165,6 @@ std::string						Channel::listModes() const
 		if (it == _channelModes.begin())
 			returnStream << "+";
 		returnStream << (*it).first;
-		// if (it != --_channelModes.end())
-			// returnStream << ' ';
 	}
 	return returnStream.str();
 }
@@ -215,13 +191,11 @@ std::string						Channel::listModeParameters() const
 }
 
 // checkers
-// Checks if a client is an operator of the Channel
 bool							Channel::isClientOperator(const Client& clientRef) const
 {
 	return _operators.find(clientRef.getNickname()) != _operators.end();
 }
 
-// Checks if a client is connected to the Channel
 bool							Channel::isClientConnected(const Client& clientRef) const
 {
 	return _connectedClients.find(clientRef.getNickname()) != _connectedClients.end();
@@ -237,19 +211,10 @@ bool							Channel::isInvited(const std::string& clientNick) const
 
 // setters
 void							Channel::setTopic(const std::string& newTopic) { _topic = newTopic;}
-// void							Channel::setKey(const std::string& newKey) { _key = newKey;}
-
-
-void							Channel::setName(const std::string& newName) { _name = newName; }
-// void							Channel::setClientLimit(const size_t& limit) { _clientLimit = limit; }
-// void							Channel::setTopicProtection(const bool& status) { _topicIsProtected = status; }
-// void							Channel::setChannelProtection(const bool& status) { _channelIsProtected = status; }
-
-// void							Channel::setInviteOnly(const bool& status) { _inviteOnly = status; }
 void							Channel::addConnectedClient(const Client& clientRef, bool isChannelCreator)
 {
 	if (_connectedClients.find(clientRef.getNickname()) != _connectedClients.end())
-		return ;
+		return;
 
 	_connectedClients[clientRef.getNickname()] = &clientRef;
 	
@@ -258,13 +223,10 @@ void							Channel::addConnectedClient(const Client& clientRef, bool isChannelCr
 	std::string server = clientRef.getServerName();
 	std::string	channel = _name;
 
-	// std::cout << "JOIN_MSG: " << JOIN_MSG(nickname, username, channel) << std::endl;;
-	// Let everyone on the Channel know that user has joined
-	broadcastNumericReplies(1, JOIN_MSG(server, _name, nickname, username).c_str());
+	broadcastNumericReply(JOIN_MSG(server, _name, nickname, username).c_str());
 	if (isChannelCreator == true)
 	{
 		addChannelMode('t');
-		// Send a MODE message to let the client know that we decided to add this mode
 		sendNumericReplies(1, clientRef.getClientSocket(), \
 						CSTM_SERVER_MODE_MSG(clientRef.getServerName(), getName(), "t").c_str());
 	}
@@ -272,8 +234,6 @@ void							Channel::addConnectedClient(const Client& clientRef, bool isChannelCr
 		sendNumericReplies(2, clientRef.getClientSocket(), \
 							RPL_TOPIC(server, nickname, channel, _topic).c_str(), \
 							RPL_TOPICWHOTIME(server, nickname, channel, _nicknameOfTopicSetter, _timeTopicWasSet).c_str());
-	std::cout << "RPL_NAMREPLY: " << RPL_NAMREPLY(server, nickname, channel, getUsersList()) << std::endl;
-	std::cout << "RPL_ENDOFNAMES: " << RPL_ENDOFNAMES(server, nickname, channel) << std::endl;
 	sendNumericReplies(2, clientRef.getClientSocket(), \
 					RPL_NAMREPLY(server, nickname, channel, getUsersList()).c_str(), \
 					RPL_ENDOFNAMES(server, nickname, channel).c_str());
@@ -286,13 +246,11 @@ void							Channel::removeConnectedClient(const std::string& clientNickname)
 }
 void							Channel::addOperator(const Client& clientRef)
 { 
-	// std::cout << "[add operator]\n";
 	if (_operators.find(clientRef.getNickname()) == _operators.end())
-		_operators[clientRef.getNickname( )] = &clientRef;
+		_operators[clientRef.getNickname()] = &clientRef;
 }
 void							Channel::removeOperator(const std::string& clientNickname)
 {
-	// std::cout << "[remove operator]\n";
 	if (_operators.find(clientNickname) != _operators.end())
 		_operators.erase(clientNickname);
 }
@@ -314,41 +272,15 @@ void							Channel::removeInvitedClient(const std::string& clientNick)
 		if (*clientNickIt == clientNick)
 		{
 			_invitedClients.erase(clientNickIt);
-			break ;
-		}
+			break;		}
 	}
 }
 
-bool							Channel::checkName(const std::string name)
+const std::string						Channel::getUsersList() const
 {
-	if ( name.find_first_of(" ,") != std::string::npos
-			|| name.find(7) != std::string::npos
-			|| name[0] != '#' )
-			return false;
-	return  true;
-}
-
-void							Channel::broadcastNumericReplies(const size_t numberOfReplies, ...)
-{
-	std::va_list	messages;
-
-	va_start(messages, numberOfReplies);
-	if (numberOfReplies == 0)
-		return;
-	for (size_t i = 0; i < numberOfReplies; ++i)
-	{
-		std::string	message(va_arg(messages, char*));
-		for (Channel::clientNickMap::iterator it = _connectedClients.begin(); it != _connectedClients.end(); ++it)
-			send(it->second->getClientSocket(), message.c_str(), message.length(), 0);
-	}
-	va_end(messages);
-}
-
-std::string						Channel::getUsersList()
-{
-	std::string				usersList = "";
-	clientNickMap::iterator it = _connectedClients.begin();
-	clientNickMap::iterator ite = _connectedClients.end();
+	std::string						usersList = "";
+	clientNickMap::const_iterator	it = _connectedClients.begin();
+	clientNickMap::const_iterator	ite = _connectedClients.end();
 
 	while (it != ite)
 	{

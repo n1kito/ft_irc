@@ -16,28 +16,23 @@ class Privmsg : public ACommand
 		Privmsg(ACommand::clientMap* clients, channelMap* channels);
 		~Privmsg();
 	
-		void				handleRequest(Client &client, std::string arg);
-		std::string			parseArgument(Client &client, std::string& arg);
-		std::string			action(Client &client);
-		std::string			sendToChannel(Client& client, Channel& channel, std::string& target);
-
-	protected:
-		// add protected elements here
+		void						handleRequest(Client &client, std::string arg);
+		std::string					parseArgument(Client &client, std::string& arg);
+		std::string					action(Client &client);
+		std::string					sendToChannel(Client& client, Channel& channel, std::string& target);
 
 	private:
 		std::string					_message;
 		std::vector< std::string >	_targetVector;
 		channelMap*					_channelMap;
 		
+		void						parseArgument();
+    	void						action();
 
-		void		parseArgument();
-    	void		action();
 		Privmsg();
 		Privmsg(const Privmsg &copyMe);
 		Privmsg(std::map< int, Client >* clients);
-		Privmsg&		operator = (const Privmsg &copyMe);
-
-		// add private elements here
+		Privmsg&					operator = (const Privmsg &copyMe);
 };
 
 #endif
