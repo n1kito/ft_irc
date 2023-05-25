@@ -184,7 +184,7 @@ void								Server::bindServerSocket(const struct sockaddr_in& addr)
 
 void								Server::listenServerSocket()
 {
-	if (listen(_serverSocket, SOMAXCONN) == -1)
+	if (listen(_serverSocket, MAXCONNECTED) == -1)
 		throw std::runtime_error("Could not set server socket to listening state");
 }
 
