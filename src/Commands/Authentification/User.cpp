@@ -43,15 +43,17 @@ void		User::setRealname(std::string realname) { _realname = realname; }
 
 void		User::handleRequest(Client& client, std::string argument)
 {
+	if (client.getRegisterState())
+	{
+		sendNumericReplies(1, client.getClientSocket(),
+			ERR_ALREADYREGISTERED(client.getServerName(), client.getNickname()).c_str());
+		return ;
+	}
 	std::string message = "";
 	std::string ret_parsing = parseArgument(client, argument);
 	std::string ret_action = action(client, _username, _realname);
 	if (!ret_parsing.empty())
-	{
 		message = ret_parsing;
-		killClient(client.getClientSocket(), message, "user authentification failed");
-		return;
-	}
 	else if (!ret_action.empty())
 		message = ret_action;
 	else
