@@ -186,7 +186,7 @@ void								Server::listenServerSocket()
 {
 	if (listen(_serverSocket, SOMAXCONN) == -1)
 		throw std::runtime_error("Could not set server socket to listening state");
-}SEPARATOR;
+}
 
 // create epoll instance and add server socket to it
 void								Server::createEpoll()

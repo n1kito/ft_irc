@@ -155,6 +155,7 @@ void	printServerTitle()
 	std::cout << "░█░░░█▀▀░░░█▀▀░█░█░█░█░█▀▀░░█░░░░▀▀█░█▀▀░█▀▄░▀▄▀░█▀▀░█▀▄░" << std::endl;
 	std::cout << "░▀▀▀░▀▀▀░░░▀░░░▀▀▀░▀▀▀░▀▀▀░░▀░░░░▀▀▀░▀▀▀░▀░▀░░▀░░▀▀▀░▀░▀░" << std::endl;
 	std::cout << std::endl;
+	SEPARATOR;
 }
 
 void 	signalHandler(int signal)

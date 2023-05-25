@@ -28,7 +28,7 @@
 // 005
 # define RPL_ISUPPORT(server, nickname, tokens) (std::string(":") + server + " 005 " + nickname + " " + tokens + " :are supported by this server\r\n")
 // 422
-# define ERR_NOMOTD(server, nickname) (std::string(":") + server + " 422 " + nickname + " :There is no message today ! Live your life, be happy. Smell the flowers.\r\n")
+# define ERR_NOMOTD(server, nickname) (std::string(":") + server + " 422 " + nickname + " :There is no message today ! Live your life, be happy. Smell the flowers.🌻\r\n")
 
 // ░▀█▀░█▀█░█▀█░▀█▀░█▀▀
 // ░░█░░█░█░█▀▀░░█░░█░░
