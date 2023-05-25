@@ -17,7 +17,9 @@
 Privmsg::Privmsg() : ACommand() {}
 
 Privmsg::Privmsg(std::map< int, Client >* clients) : ACommand(clients) {}
-Privmsg::Privmsg(ACommand::clientMap* clients, Privmsg::channelMap* channels) : ACommand(clients), _channelMap(channels) {}
+Privmsg::Privmsg(ACommand::clientMap* clients, Privmsg::channelMap* channels) :
+	ACommand(clients),
+	_channelMap(channels) {}
 
 Privmsg::Privmsg(const Privmsg &copyMe) : ACommand(copyMe) { *this = copyMe; }
 

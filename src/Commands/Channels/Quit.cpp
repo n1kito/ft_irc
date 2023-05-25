@@ -17,7 +17,9 @@
 
 Quit::Quit() : ACommand() {}
 Quit::Quit(std::map< int, Client >* clients) : ACommand(clients) {}
-Quit::Quit(ACommand::clientMap* clients, Quit::channelMap* channels) : ACommand(clients), _channelMap(channels) {}
+Quit::Quit(ACommand::clientMap* clients, Quit::channelMap* channels) :
+	ACommand(clients),
+	_channelMap(channels) {}
 
 Quit::Quit(const Quit &copyMe) : ACommand() { *this = copyMe; }
 

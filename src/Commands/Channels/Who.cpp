@@ -16,7 +16,9 @@
 
 Who::Who() {}
 Who::Who(clientMap* clients) : ACommand(clients), _channelMap(NULL) {}
-Who::Who(clientMap* clients, channelMap* channels) : ACommand(clients), _channelMap(channels) {}
+Who::Who(clientMap* clients, channelMap* channels) :
+	ACommand(clients),
+	_channelMap(channels) {}
 
 Who::Who(const Who &copyMe) : ACommand() { *this = copyMe; }
 

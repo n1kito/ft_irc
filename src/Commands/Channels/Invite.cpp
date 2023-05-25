@@ -16,7 +16,9 @@
 
 Invite::Invite() {}
 Invite::Invite(ACommand::clientMap* clients) : ACommand(clients) {}
-Invite::Invite(ACommand::clientMap* clients, Invite::channelMap* channels) : ACommand(clients), _channelMap(channels) {}
+Invite::Invite(ACommand::clientMap* clients, Invite::channelMap* channels) :
+	ACommand(clients),
+	_channelMap(channels) {}
 Invite::Invite(const Invite &copyMe) : ACommand() { *this = copyMe; }
 
 /* DESTRUCTORS ****************************************************************/

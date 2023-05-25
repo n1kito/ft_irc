@@ -17,7 +17,9 @@
 Notice::Notice() : ACommand() {}
 
 Notice::Notice(std::map< int, Client >* clients) : ACommand(clients) {}
-Notice::Notice(ACommand::clientMap* clients, Notice::channelMap* channels) : ACommand(clients), _channelMap(channels) {}
+Notice::Notice(ACommand::clientMap* clients, Notice::channelMap* channels) :
+	ACommand(clients),
+	_channelMap(channels) {}
 
 Notice::Notice(const Notice &copyMe) : ACommand(copyMe) { *this = copyMe; }
 

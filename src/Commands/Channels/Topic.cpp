@@ -16,7 +16,9 @@
 
 Topic::Topic() {}
 Topic::Topic(Topic::clientMap* clients) : ACommand(clients) {}
-Topic::Topic(Topic::clientMap* clients, Topic::channelMap* channels) : ACommand(clients), _channelMap(channels) {}
+Topic::Topic(Topic::clientMap* clients, Topic::channelMap* channels) :
+	ACommand(clients), 
+	_channelMap(channels) {}
 
 Topic::Topic(const Topic &copyMe) : ACommand() { *this = copyMe; }
 
