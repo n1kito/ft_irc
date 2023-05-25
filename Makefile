@@ -91,22 +91,19 @@ re: fclean all
 launch: all
 	@clear -x && make && clear -x && ./${NAME} $(SERVER_PORT) $(SERVER_PASSWORD)
 
-super-launch: clear $(LOG_DIR) all stop-irssi 
-	@tmux new-session -d -s $(TMUX_SESSION) './${NAME} $(SERVER_PORT) $(SERVER_PASSWORD)'
-	@tmux split-window -v -t $(TMUX_SESSION) 'sleep 2 && irssi -c localhost -p $(SERVER_PORT) -w $(SERVER_PASSWORD) -n chacha'
-	@tmux split-window -v -t $(TMUX_SESSION) 'sleep 2 && irssi -c localhost -p $(SERVER_PORT) -w $(SERVER_PASSWORD) -n jee'
-	@tmux select-pane -t $(TMUX_SESSION):.1
-	@tmux attach -t $(TMUX_SESSION)
-
-valgrind: all
-	@clear -x && make && clear -x && valgrind ./${NAME} -p $(SERVER_PORT) -w $(SERVER_PASSWORD) -n nikito
-	
 irssi: stop-irssi
 	@clear -x
 	tmux new-session -d -s $(TMUX_SESSION) 'irssi -c localhost -p $(SERVER_PORT) -w $(SERVER_PASSWORD) -n chacha'
 	tmux split-window -v -t $(TMUX_SESSION) 'irssi -c localhost -p $(SERVER_PORT) -w $(SERVER_PASSWORD) -n jee'
 	tmux select-pane -t $(TMUX_SESSION):.0
 	tmux attach -t $(TMUX_SESSION)
+
+super-launch: clear $(LOG_DIR) all stop-irssi 
+	@tmux new-session -d -s $(TMUX_SESSION) './${NAME} $(SERVER_PORT) $(SERVER_PASSWORD)'
+	@tmux split-window -v -t $(TMUX_SESSION) 'sleep 2 && irssi -c localhost -p $(SERVER_PORT) -w $(SERVER_PASSWORD) -n chacha'
+	@tmux split-window -v -t $(TMUX_SESSION) 'sleep 2 && irssi -c localhost -p $(SERVER_PORT) -w $(SERVER_PASSWORD) -n jee'
+	@tmux select-pane -t $(TMUX_SESSION):.1
+	@tmux attach -t $(TMUX_SESSION)
 
 clear:
 	@clear -x
